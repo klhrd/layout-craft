@@ -1,27 +1,39 @@
-/* Builder Canvas Base */
+/* 畫布外圍容器，營造視窗感 */
 .canvas {
     flex: 1;
-    background: #ffffff;
-    margin: 80px 20px 20px 20px;
-    border: 2px dashed #cbd5e1;
-    border-radius: 8px;
-    position: relative;
-    padding: 20px;
+    background: #f1f5f9;
+    padding: 30px;
     overflow-y: auto;
+    display: flex;
+    justify-content: center;
 }
 
-/* Element Helper Outlines on Canvas (Editor Mode Only) */
-body:not(.preview-mode) .canvas * {
-    min-height: 45px;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px dashed #94a3b8;
-    background-color: rgba(248, 250, 252, 0.6);
+/* 真正供使用者排版的白底畫布紙張 */
+.canvas-container {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    padding: 24px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* 編輯模式下的輔助外框 */
+body:not(.preview-mode) .canvas-container * {
+    min-height: 40px;
+    padding: 16px;
+    margin: 12px 0;
+    border: 1px dashed #cbd5e1;
+    background-color: rgba(248, 250, 252, 0.4);
     position: relative;
 }
 
-/* Selected Element Highlight */
-body:not(.preview-mode) .canvas *.selected-element {
+/* 元件選取高亮 */
+body:not(.preview-mode) .canvas-container *.selected-element {
     outline: 2px solid #2563eb !important;
     outline-offset: -2px;
 }
@@ -30,23 +42,31 @@ body:not(.preview-mode) .canvas *.selected-element {
     pointer-events: none;
     color: #94a3b8;
     text-align: center;
-    margin-top: 150px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.95rem;
     border: none !important;
     background: transparent !important;
-    font-size: 1rem;
 }
 
-/* ================= PREVIEW MODE ACTIVE ================= */
-body.preview-mode .toolbox,
-body.preview-mode .properties-panel,
-body.preview-mode .control-bar {
-    display: none !important;
-}
-
+/* 預覽模式啟動時，完全還原網頁真實樣貌 */
 body.preview-mode .canvas {
-    margin: 0;
+    padding: 0;
+    background: #fff;
+}
+body.preview-mode .canvas-container {
     border: none;
     border-radius: 0;
+    box-shadow: none;
     padding: 0;
-    height: 100vh;
+    max-width: 100%;
+}
+body.preview-mode .canvas-container * {
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    margin: 0;
+    padding: 0;
 }

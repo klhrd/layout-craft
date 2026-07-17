@@ -9,55 +9,63 @@
     <style id="live-styles"></style>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
-<body class="mode-visual"> <div class="app-container">
+<body class="mode-visual">
+
+    <div class="app-container">
         <div class="control-bar">
-            <div class="mode-switcher">
-                <button id="switch-visual" class="active">🎨 Visual Mode</button>
-                <button id="switch-css">💻 CSS Expert Mode</button>
+            <div class="left-actions">
+                <div class="brand-title">LayoutCraft Studio</div>
+                <div class="mode-switcher">
+                    <button id="switch-visual" class="active">🎨 Visual Mode</button>
+                    <button id="switch-css">💻 CSS Expert Mode</button>
+                </div>
             </div>
-            <button id="btn-preview">👁️ Preview</button>
-            <button id="btn-export" class="primary-btn">💾 Export Project</button>
+            <div class="right-actions">
+                <button id="btn-preview" class="btn-secondary">👁️ Preview</button>
+                <button id="btn-export" class="primary-btn">💾 Export Project</button>
+            </div>
         </div>
 
-        <aside class="css-dictionary-panel">
-            <div class="brand-title">CSS Dictionary</div>
-            </aside>
+        <div class="main-workspace">
+            <aside class="css-dictionary-panel">
+                </aside>
 
-        <aside class="toolbox">
-            <div class="brand-title">LayoutCraft</div>
-            </aside>
+            <aside class="toolbox">
+                </aside>
 
-        <main class="canvas" id="canvas">
-            <div class="canvas-placeholder">Drag and drop elements here to start building...</div>
-        </main>
-
-        <div class="right-sidebar">
-            <aside class="properties-panel">
-                <h3>Inspector</h3>
-                <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
-                <div id="editor-form" class="hidden">
-                    <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
-                    
-                    <label for="input-id">ID</label>
-                    <input type="text" id="input-id" placeholder="e.g., hero-section">
-
-                    <label for="input-class">Classes</label>
-                    <input type="text" id="input-class" placeholder="e.g., container text-center">
-
-                    <label for="input-text">Text Content</label>
-                    <textarea id="input-text" rows="2" placeholder="Enter inner text..."></textarea>
-
-                    <div id="dynamic-properties"></div>
-                    
-                    <button id="btn-delete" class="danger-btn">Delete Element</button>
+            <main class="canvas" id="canvas-wrapper">
+                <div class="canvas-container" id="canvas">
+                    <div class="canvas-placeholder">Drag and drop elements here to start building...</div>
                 </div>
-            </aside>
+            </main>
 
-            <aside class="css-editor-panel">
-                <h3>Global CSS Editor</h3>
-                <div class="css-editor-hint">Write true CSS here (e.g., .box { color: red; } or .box:hover { opacity: 0.8; })</div>
-                <textarea id="global-css-textarea" rows="20" placeholder="/* Write your custom CSS styles here */&#10;.my-class {&#10;    background-color: #2563eb;&#10;    color: white;&#10;}"></textarea>
-            </aside>
+            <div class="right-sidebar">
+                <aside class="properties-panel">
+                    <h3>Inspector</h3>
+                    <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
+                    <div id="editor-form" class="hidden">
+                        <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
+                        
+                        <label for="input-id">ID</label>
+                        <input type="text" id="input-id" placeholder="e.g., hero-section">
+
+                        <label for="input-class">Classes</label>
+                        <input type="text" id="input-class" placeholder="e.g., container text-center">
+
+                        <label for="input-text">Text Content</label>
+                        <textarea id="input-text" rows="2" placeholder="Enter inner text..."></textarea>
+
+                        <div id="dynamic-properties"></div>
+                        
+                        <button id="btn-delete" class="danger-btn">Delete Element</button>
+                    </div>
+                </aside>
+
+                <aside class="css-editor-panel">
+                    <h3>Global CSS Editor</h3>
+                    <textarea id="global-css-textarea" placeholder="/* Write custom CSS here */&#10;.my-class {&#10;    background: #2563eb;&#10;    color: #fff;&#10;}"></textarea>
+                </aside>
+            </div>
         </div>
     </div>
 
