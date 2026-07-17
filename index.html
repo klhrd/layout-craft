@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LayoutCraft Studio - Visual Web Builder</title>
+    <link rel="stylesheet" href="src/css/editor.css">
+    <link rel="stylesheet" href="src/css/canvas-preview.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="control-bar">
+            <button id="btn-preview">👁️ Preview Mode</button>
+            <button id="btn-export" class="primary-btn">💾 Export Project (HTML/CSS)</button>
+        </div>
+
+        <aside class="toolbox">
+            <div class="brand-title">LayoutCraft</div>
+            </aside>
+
+        <main class="canvas" id="canvas">
+            <div class="canvas-placeholder">Drag and drop elements here to start building...</div>
+        </main>
+
+        <aside class="properties-panel">
+            <h3>Inspector</h3>
+            <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
+            <div id="editor-form" class="hidden">
+                <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
+                
+                <label for="input-id">ID</label>
+                <input type="text" id="input-id" placeholder="e.g., hero-section">
+
+                <label for="input-class">Classes</label>
+                <input type="text" id="input-class" placeholder="e.g., container text-center">
+
+                <label for="input-text">Text Content</label>
+                <textarea id="input-text" rows="3" placeholder="Enter inner text..."></textarea>
+
+                <label for="input-css">Inline CSS Custom Styles</label>
+                <textarea id="input-css" rows="6" placeholder="color: #333;&#10;padding: 20px;&#10;background: #f4f4f4;"></textarea>
+                
+                <button id="btn-delete" class="danger-btn">Delete Element</button>
+            </div>
+        </aside>
+    </div>
+
+    <script type="module" src="src/js/app.js"></script>
+</body>
+</html>
