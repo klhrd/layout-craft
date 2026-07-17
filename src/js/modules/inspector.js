@@ -1,5 +1,6 @@
 import { ELEMENT_CATEGORIES } from '../config/elements.js';
 
+// src/js/modules/inspector.js 頂部變數宣告區
 let selectedElement = null;
 
 const canvas = document.getElementById('canvas');
@@ -9,17 +10,12 @@ const selectedTagName = document.getElementById('selected-tag-name');
 const inputId = document.getElementById('input-id');
 const inputClass = document.getElementById('input-class');
 const inputText = document.getElementById('input-text');
-const inputCss = document.getElementById('input-css');
 const btnDelete = document.getElementById('btn-delete');
-
-// 用來放置動態生成屬性（如 href, src）的容器
-let dynamicPropsContainer = null;
+let dynamicPropsContainer = null; // 保持這個
 
 export function initInspector() {
-    // 在表單內建立一個用來放動態屬性的區塊（插在 Inline CSS 上方）
-    dynamicPropsContainer = document.createElement('div');
-    dynamicPropsContainer.id = 'dynamic-properties';
-    inputCss.parentNode.insertBefore(dynamicPropsContainer, inputCss.previousSibling);
+    // 修正點：直接抓取 HTML 裡預留的容器，不要再用 parentNode.insertBefore
+    dynamicPropsContainer = document.getElementById('dynamic-properties');
 
     canvas.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -30,15 +26,9 @@ export function initInspector() {
         selectElement(e.target);
     });
 
-    // 基礎屬性監聽
+    // 基礎屬性監聽 (移除了 inputCss 的監聽，因為全域 CSS 改在 app.js 處理)
     inputId.addEventListener('input', () => { if (selectedElement) selectedElement.id = inputId.value; });
     inputClass.addEventListener('input', () => { if (selectedElement) selectedElement.className = inputClass.value + ' selected-element'; });
-    inputCss.addEventListener('input', () => { 
-        if (selectedElement) {
-            selectedElement.style.cssText = inputCss.value;
-            selectedElement.classList.add('selected-element');
-        }
-    });
     inputText.addEventListener('input', () => {
         if (selectedElement) {
             let textNode = Array.from(selectedElement.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
@@ -68,14 +58,14 @@ export function selectElement(el) {
     
     inputId.value = el.id || '';
     inputClass.value = el.className.replace('selected-element', '').trim();
-    inputCss.value = el.style.cssText;
+    
+    // 修正點：移除 inputCss.value = el.style.cssText;
     
     inputText.value = Array.from(el.childNodes)
         .filter(node => node.nodeType === Node.TEXT_NODE)
         .map(node => node.textContent.trim())
         .join('');
 
-    // --- 【動態屬性核心邏輯】 ---
     renderDynamicAttributes(tagName, el);
 }
 
