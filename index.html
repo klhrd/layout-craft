@@ -28,9 +28,11 @@
 
         <div class="main-workspace">
             <aside class="css-dictionary-panel">
+                <div class="brand-title">CSS Blocks</div>
                 </aside>
 
             <aside class="toolbox">
+                <div class="brand-title">LayoutCraft</div>
                 </aside>
 
             <main class="canvas" id="canvas-wrapper">
@@ -45,25 +47,27 @@
                     <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
                     <div id="editor-form" class="hidden">
                         <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
-                        
                         <label for="input-id">ID</label>
                         <input type="text" id="input-id" placeholder="e.g., hero-section">
-
                         <label for="input-class">Classes</label>
                         <input type="text" id="input-class" placeholder="e.g., container text-center">
-
                         <label for="input-text">Text Content</label>
                         <textarea id="input-text" rows="2" placeholder="Enter inner text..."></textarea>
-
                         <div id="dynamic-properties"></div>
-                        
                         <button id="btn-delete" class="danger-btn">Delete Element</button>
                     </div>
                 </aside>
 
                 <aside class="css-editor-panel">
-                    <h3>Global CSS Editor</h3>
-                    <textarea id="global-css-textarea" placeholder="/* Write custom CSS here */&#10;.my-class {&#10;    background: #2563eb;&#10;    color: #fff;&#10;}"></textarea>
+                    <h3>Visual CSS Rules</h3>
+                    <div class="css-editor-hint">Create a selector, then drag CSS blocks inside it.</div>
+                    
+                    <div class="css-selector-creator">
+                        <input type="text" id="input-new-selector" placeholder="e.g., .my-card or h1:hover">
+                        <button id="btn-add-selector" class="btn-secondary">+ Add Rule</button>
+                    </div>
+
+                    <div id="visual-css-container" class="css-rules-container"></div>
                 </aside>
             </div>
         </div>

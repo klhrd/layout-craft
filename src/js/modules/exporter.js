@@ -1,12 +1,11 @@
 import { deselectAll } from './inspector.js';
+import { getActiveCssCode } from '../app.js'; // 💡 引入圖形化 CSS 編譯代碼
 
 const canvas = document.getElementById('canvas');
 const btnPreview = document.getElementById('btn-preview');
 const btnExport = document.getElementById('btn-export');
-const globalCssTextarea = document.getElementById('global-css-textarea');
 
 export function initExporter() {
-    // 預覽功能
     btnPreview.addEventListener('click', () => {
         deselectAll();
         document.body.classList.add('preview-mode');
@@ -20,13 +19,11 @@ export function initExporter() {
         });
     });
 
-    // 匯出專案 (HTML + 全域 CSS)
     btnExport.addEventListener('click', () => {
         const canvasClone = canvas.cloneNode(true);
         const tempPlaceholder = canvasClone.querySelector('.canvas-placeholder');
         if (tempPlaceholder) tempPlaceholder.remove();
 
-        // 清理畫布克隆體上的編輯專用狀態
         function cleanStyles(element) {
             element.classList.remove('selected-element');
             Array.from(element.children).forEach(child => cleanStyles(child));
@@ -38,7 +35,7 @@ export function initExporter() {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LayoutCraft Exported Site</title>
+    <title>LayoutCraft Site</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -46,8 +43,8 @@ ${canvasClone.innerHTML.trim()}
 </body>
 </html>`;
 
-        // 合併預設基礎樣式與使用者自訂的全域 CSS 程式碼
-        const finalCSS = `/* Generated via LayoutCraft Studio */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n` + globalCssTextarea.value;
+        // 💡 使用我們圖形化積木編譯出來的 CSS 程式碼匯出
+        const finalCSS = `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n` + getActiveCssCode();
 
         downloadFile('index.html', finalHTML);
         downloadFile('style.css', finalCSS);

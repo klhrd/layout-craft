@@ -281,3 +281,124 @@ body.mode-visual .css-editor-panel {
 body.mode-css .toolbox {
     display: none !important;
 }
+
+/* --- 🧱 可拖拽 CSS 積木樣式 (左側字典) --- */
+.css-dict-block {
+    padding: 10px 12px;
+    background: #f8fafc;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: grab;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: all 0.2s;
+}
+.css-dict-block:hover {
+    border-color: #3b82f6;
+    background: #eff6ff;
+}
+
+/* --- 📦 右側 Visual CSS 規則區塊 --- */
+.css-rules-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 1;
+    margin-top: 10px;
+}
+
+.css-rule-box {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.css-rule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #334155;
+    border-bottom: 1px dashed #cbd5e1;
+    padding-bottom: 6px;
+}
+
+.btn-delete-rule {
+    background: transparent;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+/* 屬性積木的落腳放置區 */
+.css-rule-body-dropzone {
+    min-height: 50px;
+    background: #ffffff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 6px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* --- 🎛️ 積木被拖入放置區後的樣式（帶有填入格子） --- */
+.applied-css-block {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+}
+
+.applied-css-block .block-label {
+    font-family: monospace;
+    font-weight: 600;
+    color: #475569;
+}
+
+/* 填入數值的格子樣式 */
+.applied-css-block .block-value-input {
+    width: 100px;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    margin-left: 8px;
+    font-family: monospace;
+}
+
+.btn-remove-block {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    margin-left: 6px;
+}
+.btn-remove-block:hover { color: #ef4444; }
+
+/* 結構微調 */
+.css-selector-creator {
+    display: flex;
+    gap: 6px;
+    margin-top: 5px;
+}
+.css-selector-creator input { margin-top: 0; flex: 1; }
+
+.css-editor-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
