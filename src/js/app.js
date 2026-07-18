@@ -111,54 +111,127 @@ function initVisualCssActions() {
     });
 }
 
-// 在右側介面建立一個 CSS 選擇器大盒子
+// 在右側介面建立一個全新的、支援「隨時編輯」與「閃爍偵測」的 CSS 選擇器大盒子
 function createRuleBoxUI(selector) {
     const ruleBox = document.createElement('div');
     ruleBox.className = 'css-rule-box';
     ruleBox.setAttribute('data-selector', selector);
 
+    // 💡 升級處：將標題改為輸入框（可直接修改），並加入 🎯 Hunt 偵測按鈕
     ruleBox.innerHTML = `
         <div class="css-rule-header">
-            <span>${selector} {</span>
-            <button class="btn-delete-rule">❌ Delete</button>
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <input type="text" class="editable-selector-input" value="${selector}">
+                <span style="color: #94a3b8">{</span>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <button class="btn-hunt-elements" title="Blink matching elements on canvas">🎯 Detect</button>
+                <button class="btn-delete-rule">❌ Delete</button>
+            </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
         <div style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
     `;
 
-    // 刪除整條 CSS 規則
-    ruleBox.querySelector('.btn-delete-rule').addEventListener('click', () => {
-        delete activeCssData[selector];
+    const selectorInput = ruleBox.querySelector('.editable-selector-input');
+    const huntBtn = ruleBox.querySelector('.btn-hunt-elements');
+    const deleteBtn = ruleBox.querySelector('.btn-delete-rule');
+    const dropzone = ruleBox.querySelector('.css-rule-body-dropzone');
+
+    let currentSelector = selector; // 追蹤當前盒子的選擇器名稱
+
+    // 💡【功能 1：選擇器建立後允許繼續編輯】
+    selectorInput.addEventListener('change', () => {
+        const newSelector = selectorInput.value.trim();
+        if (!newSelector || newSelector === currentSelector) {
+            selectorInput.value = currentSelector;
+            return;
+        }
+        if (activeCssData[newSelector]) {
+            alert('This selector name already exists!');
+            selectorInput.value = currentSelector;
+            return;
+        }
+
+        // 轉移記憶體中的資料到新選擇器名稱下
+        activeCssData[newSelector] = activeCssData[currentSelector];
+        delete activeCssData[currentSelector]; // 刪除舊的
+        
+        // 如果目前正在偵測閃爍，先關閉舊的閃爍
+        if (huntBtn.classList.contains('active')) {
+            toggleCanvasBlinking(currentSelector, false);
+            toggleCanvasBlinking(newSelector, true);
+        }
+
+        currentSelector = newSelector; // 更新指引
+        ruleBox.setAttribute('data-selector', newSelector);
+        compileAndRenderCss(); // 重新編譯渲染
+    });
+
+    // 💡【功能 2：開關打開後，受影響元素會閃爍提示】
+    huntBtn.addEventListener('click', () => {
+        const isActive = huntBtn.classList.toggle('active');
+        if (isActive) {
+            huntBtn.textContent = '🎯 Blinking';
+            toggleCanvasBlinking(currentSelector, true); // 開啟閃爍
+        } else {
+            huntBtn.textContent = '🎯 Detect';
+            toggleCanvasBlinking(currentSelector, false); // 關閉閃爍
+        }
+    });
+
+    // 刪除按鈕邏輯
+    deleteBtn.addEventListener('click', () => {
+        toggleCanvasBlinking(currentSelector, false); // 刪除前先確保清除畫布閃爍
+        delete activeCssData[currentSelector];
         ruleBox.remove();
         compileAndRenderCss();
     });
 
-    const dropzone = ruleBox.querySelector('.css-rule-body-dropzone');
-
-    // 處理積木丟入大盒子的事件
+    // 處理屬性積木丟入大盒子的事件 (維持原邏輯)
     dropzone.addEventListener('dragover', (e) => e.preventDefault());
     dropzone.addEventListener('drop', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (!draggedCssBlockData) return; // 確保丟進來的是 CSS 積木而不是畫布元件
+        if (!draggedCssBlockData) return;
 
         const { property, defaultValue, label } = draggedCssBlockData;
         
-        // 如果該選擇器還沒設定過這個屬性，就加入
-        if (!activeCssData[selector][property]) {
-            activeCssData[selector][property] = defaultValue;
-            addAppliedBlockUI(dropzone, selector, property, label, defaultValue);
+        if (!activeCssData[currentSelector][property]) {
+            activeCssData[currentSelector][property] = defaultValue;
+            addAppliedBlockUI(dropzone, currentSelector, property, label, defaultValue);
             compileAndRenderCss();
         }
-        
-        draggedCssBlockData = null; // 重置
+        draggedCssBlockData = null;
     });
 
     visualCssContainer.appendChild(ruleBox);
 }
 
-// 在大盒子內動態長出「帶有填入格子」的屬性積木
-function addAppliedBlockUI(dropzone, selector, property, label, value) {
+// 💡 輔助函數：控制畫布中符合選擇器的元素閃爍
+function toggleCanvasBlinking(selector, shouldBlink) {
+    const canvas = document.getElementById('canvas');
+    if (!canvas) return;
+
+    try {
+        // 只針對畫布容器內部的子元件進行搜尋，不污染外圍編輯器
+        const matchingElements = canvas.querySelectorAll(selector);
+        
+        matchingElements.forEach(el => {
+            if (shouldBlink) {
+                el.classList.add('css-hunting-active');
+            } else {
+                el.classList.remove('css-hunting-active');
+            }
+        });
+    } catch (error) {
+        // 防呆：如果使用者輸入了不合法的 CSS 選擇器語法（例如點打到一半），捕獲錯誤不崩潰
+        console.warn("Invalid CSS Selector query: ", selector);
+    }
+}
+
+// 修改 addAppliedBlockUI 以支援連動（因為選擇器有可能在半路改名，我們直接從 DOM 往上抓最新的 data-selector）
+function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
     const block = document.createElement('div');
     block.className = 'applied-css-block';
     
@@ -170,16 +243,26 @@ function addAppliedBlockUI(dropzone, selector, property, label, value) {
         </div>
     `;
 
-    // 💡【填入的格子】監聽輸入框的即時改動
     const valueInput = block.querySelector('.block-value-input');
+    
     valueInput.addEventListener('input', () => {
-        activeCssData[selector][property] = valueInput.value; // 即時同步數值
-        compileAndRenderCss(); // 即時渲染畫布
+        // 💡 關鍵優化：隨時動態向上查找外殼大盒子目前的最新選擇器名稱
+        const parentBox = dropzone.closest('.css-rule-box');
+        const currentSelector = parentBox.getAttribute('data-selector');
+        
+        if (activeCssData[currentSelector]) {
+            activeCssData[currentSelector][property] = valueInput.value;
+            compileAndRenderCss();
+        }
     });
 
-    // 移除單個屬性積木
     block.querySelector('.btn-remove-block').addEventListener('click', () => {
-        delete activeCssData[selector][property];
+        const parentBox = dropzone.closest('.css-rule-box');
+        const currentSelector = parentBox.getAttribute('data-selector');
+        
+        if (activeCssData[currentSelector]) {
+            delete activeCssData[currentSelector][property];
+        }
         block.remove();
         compileAndRenderCss();
     });

@@ -524,3 +524,87 @@ body.mode-css .right-sidebar {
     padding: 2px 4px;
 }
 .btn-remove-block:hover { color: #ef4444; }
+
+/* --- 🎯 畫布元件偵測閃爍與高亮效果 --- */
+.css-hunting-active {
+    outline: 3px solid #f59e0b !important; /* 橘黃色高亮外框 */
+    outline-offset: 2px;
+    animation: cssSelectorPulse 1.5s infinite ease-in-out;
+    position: relative;
+}
+
+/* 閃爍動畫：外框由實變虛，提示作用域 */
+@keyframes cssSelectorPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    }
+}
+
+/* --- 📦 升級後的 CSS 規則大盒子控制列 --- */
+.css-rule-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    font-size: 0.85rem;
+    color: #334155;
+    border-bottom: 1px dashed #cbd5e1;
+    padding-bottom: 8px;
+    gap: 8px;
+}
+
+/* 可編輯的選擇器輸入框樣式 */
+.editable-selector-input {
+    background: transparent;
+    border: 1px solid transparent;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #1e293b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    width: 140px;
+    margin-top: 0;
+}
+.editable-selector-input:hover {
+    background: #e2e8f0;
+    cursor: pointer;
+}
+.editable-selector-input:focus {
+    background: #ffffff;
+    border-color: var(--primary);
+    outline: none;
+    cursor: text;
+}
+
+/* 偵測開關按鈕樣式 */
+.btn-hunt-elements {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.btn-hunt-elements:hover {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #d97706;
+}
+/* 開關被打開時的激活狀態 */
+.btn-hunt-elements.active {
+    background: #d97706;
+    border-color: #d97706;
+    color: #ffffff;
+    font-weight: bold;
+}
