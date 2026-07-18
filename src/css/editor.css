@@ -402,3 +402,125 @@ body.mode-css .toolbox {
     display: flex;
     flex-direction: column;
 }
+
+/* --- 🗂️ 主要工作區域結構調整 --- */
+.main-workspace {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 60px);
+    overflow: hidden;
+}
+
+/* 側邊欄通用基礎樣式 */
+.toolbox, .css-dictionary-panel, .right-sidebar {
+    background: var(--bg-panel);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+    padding: 20px;
+    transition: width 0.3s ease; /* 讓寬度切換時有平滑的過渡動畫 */
+}
+
+/* 左側面板寬度固定 */
+.toolbox { width: 280px; border-right: 1px solid var(--border-color); }
+.css-dictionary-panel { width: 280px; border-right: 1px solid var(--border-color); }
+
+/* 右側邊欄基礎樣式 */
+.right-sidebar { 
+    border-left: 1px solid var(--border-color); 
+}
+
+/* 內部的 Inspector 和 CSS 面板各自撐滿 */
+.properties-panel, .css-editor-panel {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* 將 CSS 編輯面板的頂部邊框拿掉，因為它們現在不會同時出現了 */
+.css-editor-panel { 
+    padding: 0; 
+    border-top: none; 
+    flex: 1;
+}
+
+/* --- 🌓 終極 UI/UX 顯示與寬度配置公理 --- */
+
+/* 1. 🎨 視覺模式 (Visual Mode) */
+body.mode-visual .css-dictionary-panel,
+body.mode-visual .css-editor-panel {
+    display: none !important; /* 隱藏 CSS 相關面板 */
+}
+body.mode-visual .right-sidebar {
+    width: 320px; /* 視覺模式下，Inspector 保持標準寬度 */
+}
+
+/* 2. 💻 CSS 編輯模式 (CSS Expert Mode) */
+body.mode-css .toolbox,
+body.mode-css .properties-panel {
+    display: none !important; /* 💡 修正點：隱藏元件庫與 Inspector，兩者不共存！ */
+}
+body.mode-css .right-sidebar {
+    width: 420px; /* 💡 修正點：拓寬到 420px！給予數值填入格子超寬敞空間 */
+}
+
+/* 畫布外圍緩衝帶 */
+.canvas {
+    flex: 1;
+    background: #f1f5f9;
+    padding: 30px;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+}
+
+/* --- 🎛️ 積木被拖入放置區後的樣式優化 --- */
+.applied-css-block {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    gap: 10px;
+}
+
+.applied-css-block .block-label {
+    font-family: monospace;
+    font-weight: 600;
+    color: #475569;
+    min-width: 120px; /* 給予屬性名稱（如 flex-direction）足夠的寬度不換行 */
+}
+
+/* 讓填入數值的格子擁有更大的操作空間 */
+.applied-css-block .block-value-input {
+    flex: 1; /* 💡 自動拉伸，撐滿可用空間 */
+    min-width: 120px;
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-family: monospace;
+    background: #ffffff;
+}
+
+.applied-css-block .block-value-input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+.btn-remove-block {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    margin-left: 6px;
+    font-size: 0.9rem;
+    padding: 2px 4px;
+}
+.btn-remove-block:hover { color: #ef4444; }
