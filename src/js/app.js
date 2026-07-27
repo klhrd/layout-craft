@@ -12,7 +12,7 @@ const inputNewSelector = document.getElementById('input-new-selector');
 const btnAddSelector = document.getElementById('btn-add-selector');
 
 // Promote activeCssData to the global scope so storage.js can pack it.
-window.activeCssData = {}; 
+window.activeCssData = {};
 let draggedCssBlockData = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -23,9 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initExporter();
     initModeSwitcher();
     initVisualCssActions();
-    
+
     initStorage(); // Boot the storage manager.
-    
+
     // Auto-silently save every 30 seconds as a safety net.
     setInterval(() => {
         const currentProj = document.getElementById('select-project').value;
@@ -38,8 +38,8 @@ function renderToolbox() {
     const toolboxContainer = document.querySelector('.toolbox');
     if (!toolboxContainer) return;
     toolboxContainer.innerHTML = `<div class="brand-title">${t('ui.panels.layoutCraft')}</div>`; // clear & re-add brand title
-    
-    for (const [key, category] of Object.entries(ELEMENT_CATEGORIES)) {
+
+    for (const category of Object.values(ELEMENT_CATEGORIES)) {
         const wrapper = document.createElement('div');
         wrapper.className = 'category-wrapper';
         const categoryHeader = document.createElement('h3');
@@ -47,13 +47,13 @@ function renderToolbox() {
         categoryHeader.textContent = category.title;
         const itemsContainer = document.createElement('div');
         itemsContainer.className = 'category-items collapsed';
-        
+
         categoryHeader.addEventListener('click', () => {
             categoryHeader.classList.toggle('active');
             itemsContainer.classList.toggle('collapsed');
         });
-        
-        category.items.forEach(item => {
+
+        category.items.forEach((item) => {
             const elBtn = document.createElement('div');
             elBtn.className = 'draggable-item';
             elBtn.setAttribute('draggable', 'true');
@@ -72,15 +72,15 @@ function renderCssDictionaryBlocks() {
     const dictContainer = document.querySelector('.css-dictionary-panel');
     if (!dictContainer) return;
     dictContainer.innerHTML = `<div class="brand-title">${t('ui.panels.cssBlocks')}</div>`; // clear & re-add brand title
-    
-    for (const [key, category] of Object.entries(CSS_DICTIONARY)) {
+
+    for (const category of Object.values(CSS_DICTIONARY)) {
         const wrapper = document.createElement('div');
         wrapper.className = 'category-wrapper';
 
         const categoryHeader = document.createElement('h3');
         categoryHeader.className = 'category-header';
         categoryHeader.textContent = category.title;
-        
+
         const itemsContainer = document.createElement('div');
         itemsContainer.className = 'category-items collapsed';
 
@@ -89,12 +89,12 @@ function renderCssDictionaryBlocks() {
             itemsContainer.classList.toggle('collapsed');
         });
 
-        category.items.forEach(item => {
+        category.items.forEach((item) => {
             const blockEl = document.createElement('div');
             blockEl.className = 'css-dict-block';
             blockEl.setAttribute('draggable', 'true');
             blockEl.innerHTML = `<span>${item.label}</span> <small style="color:#94a3b8">${item.property}</small>`;
-            
+
             blockEl.addEventListener('dragstart', () => {
                 draggedCssBlockData = item;
             });
@@ -119,7 +119,7 @@ function initVisualCssActions() {
             return;
         }
 
-        window.activeCssData[selectorText] = {}; 
+        window.activeCssData[selectorText] = {};
         createRuleBoxUI(selectorText);
         inputNewSelector.value = '';
         compileAndRenderCss();
@@ -130,7 +130,7 @@ function initVisualCssActions() {
 
 // Exposed globally: when an old project is loaded, accurately rebuild the
 // rule boxes and input fields in the right-side UI from persisted data.
-window.rebuildCssRulesUI = function() {
+window.rebuildCssRulesUI = function () {
     visualCssContainer.innerHTML = '';
     for (const [selector, styles] of Object.entries(window.activeCssData)) {
         createRuleBoxUIFromData(selector, styles);
@@ -138,16 +138,19 @@ window.rebuildCssRulesUI = function() {
 };
 
 function createRuleBoxUIFromData(selector, styles) {
-    createRuleBoxUI(selector); 
+    createRuleBoxUI(selector);
     const ruleBox = visualCssContainer.querySelector(`.css-rule-box[data-selector="${selector}"]`);
     if (!ruleBox) return;
     const dropzone = ruleBox.querySelector('.css-rule-body-dropzone');
-    
+
     for (const [prop, val] of Object.entries(styles)) {
         let labelName = prop;
         for (const cat of Object.values(CSS_DICTIONARY)) {
-            const found = cat.items.find(i => i.property === prop);
-            if (found) { labelName = found.label; break; }
+            const found = cat.items.find((i) => i.property === prop);
+            if (found) {
+                labelName = found.label;
+                break;
+            }
         }
         addAppliedBlockUI(dropzone, selector, prop, labelName, val);
     }
@@ -182,12 +185,19 @@ function createRuleBoxUI(selector) {
 
     selectorInput.addEventListener('change', () => {
         const newSelector = selectorInput.value.trim();
-        if (!newSelector || newSelector === currentSelector) { selectorInput.value = currentSelector; return; }
-        if (window.activeCssData[newSelector]) { alert(t('ui.detection.selectorExistsAlert')); selectorInput.value = currentSelector; return; }
+        if (!newSelector || newSelector === currentSelector) {
+            selectorInput.value = currentSelector;
+            return;
+        }
+        if (window.activeCssData[newSelector]) {
+            alert(t('ui.detection.selectorExistsAlert'));
+            selectorInput.value = currentSelector;
+            return;
+        }
 
         window.activeCssData[newSelector] = window.activeCssData[currentSelector];
         delete window.activeCssData[currentSelector];
-        
+
         if (huntBtn.classList.contains('active')) {
             toggleCanvasBlinking(currentSelector, false);
             toggleCanvasBlinking(newSelector, true);
@@ -200,8 +210,13 @@ function createRuleBoxUI(selector) {
 
     huntBtn.addEventListener('click', () => {
         const isActive = huntBtn.classList.toggle('active');
-        if (isActive) { huntBtn.textContent = t('ui.detection.blinking'); toggleCanvasBlinking(currentSelector, true); } 
-        else { huntBtn.textContent = t('ui.detection.detect'); toggleCanvasBlinking(currentSelector, false); }
+        if (isActive) {
+            huntBtn.textContent = t('ui.detection.blinking');
+            toggleCanvasBlinking(currentSelector, true);
+        } else {
+            huntBtn.textContent = t('ui.detection.detect');
+            toggleCanvasBlinking(currentSelector, false);
+        }
     });
 
     deleteBtn.addEventListener('click', () => {
@@ -236,11 +251,13 @@ function toggleCanvasBlinking(selector, shouldBlink) {
     if (!canvas) return;
     try {
         const matchingElements = canvas.querySelectorAll(selector);
-        matchingElements.forEach(el => {
+        matchingElements.forEach((el) => {
             if (shouldBlink) el.classList.add('css-hunting-active');
             else el.classList.remove('css-hunting-active');
         });
-    } catch (e) {}
+    } catch (e) {
+        // Invalid selector for querySelectorAll; safely ignore.
+    }
 }
 
 function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
@@ -278,7 +295,7 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
 }
 
 export function compileAndRenderCss() {
-    let cssString = "";
+    let cssString = '';
     for (const [selector, styles] of Object.entries(window.activeCssData)) {
         cssString += `${selector} {\n`;
         for (const [prop, val] of Object.entries(styles)) {
@@ -297,7 +314,15 @@ function initModeSwitcher() {
     const switchVisualBtn = document.getElementById('switch-visual');
     const switchCssBtn = document.getElementById('switch-css');
     if (!switchVisualBtn || !switchCssBtn) return;
-    
-    switchVisualBtn.addEventListener('click', () => { document.body.className = 'mode-visual'; switchVisualBtn.classList.add('active'); switchCssBtn.classList.remove('active'); });
-    switchCssBtn.addEventListener('click', () => { document.body.className = 'mode-css'; switchCssBtn.classList.add('active'); switchVisualBtn.classList.remove('active'); });
+
+    switchVisualBtn.addEventListener('click', () => {
+        document.body.className = 'mode-visual';
+        switchVisualBtn.classList.add('active');
+        switchCssBtn.classList.remove('active');
+    });
+    switchCssBtn.addEventListener('click', () => {
+        document.body.className = 'mode-css';
+        switchCssBtn.classList.add('active');
+        switchVisualBtn.classList.remove('active');
+    });
 }

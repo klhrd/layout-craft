@@ -16,15 +16,15 @@ export function initStorage() {
 
 // 1. Initialize the project list and the dropdown.
 function setupProjectList() {
-    let list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
+    const list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
     if (list.length === 0) {
         list.push('Default_Project');
         localStorage.setItem(LIST_KEY, JSON.stringify(list));
     }
-    
+
     const select = document.getElementById('select-project');
     select.innerHTML = '';
-    list.forEach(proj => {
+    list.forEach((proj) => {
         const opt = document.createElement('option');
         opt.value = proj;
         opt.textContent = proj.replace(/_/g, ' ');
@@ -47,7 +47,7 @@ function bindStorageEvents() {
     // Project dropdown switch.
     select.addEventListener('change', () => {
         // Auto-save the previous project first as a safety net.
-        saveProject(currentProjectName, false); 
+        saveProject(currentProjectName, false);
         currentProjectName = select.value;
         localStorage.setItem('layoutcraft_last_active_proj', currentProjectName);
         loadProject(currentProjectName);
@@ -58,8 +58,8 @@ function bindStorageEvents() {
         const name = prompt(t('ui.project.newPrompt'));
         if (!name) return;
         const formattedName = name.trim().replace(/\s+/g, '_');
-        
-        let list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
+
+        const list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
         if (list.includes(formattedName)) {
             alert(t('ui.project.existsAlert'));
             return;
@@ -67,16 +67,17 @@ function bindStorageEvents() {
 
         list.push(formattedName);
         localStorage.setItem(LIST_KEY, JSON.stringify(list));
-        
+
         // Switch to the new project and clear the canvas.
         saveProject(currentProjectName, false);
         currentProjectName = formattedName;
         localStorage.setItem('layoutcraft_last_active_proj', currentProjectName);
-        
+
         // Initialize the new project's data.
-        window.activeCssData = {}; 
-        document.getElementById('canvas').innerHTML = `<div class="canvas-placeholder">${t('ui.panels.canvasPlaceholder')}</div>`;
-        
+        window.activeCssData = {};
+        document.getElementById('canvas').innerHTML =
+            `<div class="canvas-placeholder">${t('ui.panels.canvasPlaceholder')}</div>`;
+
         setupProjectList();
         select.value = currentProjectName;
         saveProject(currentProjectName, true);
@@ -91,11 +92,11 @@ function bindStorageEvents() {
 // 2. Project save implementation.
 export function saveProject(projName, showAlert = false) {
     deselectAll(); // Clear selection state before saving to avoid persisting the selection outline class.
-    
+
     const canvasHtml = document.getElementById('canvas').innerHTML;
     const projectData = {
         html: canvasHtml,
-        cssData: window.activeCssData || {}
+        cssData: window.activeCssData || {},
     };
 
     try {
@@ -104,7 +105,9 @@ export function saveProject(projName, showAlert = false) {
         if (showAlert) {
             const btn = document.getElementById('btn-save-project');
             btn.textContent = t('ui.project.saved');
-            setTimeout(() => { btn.textContent = t('ui.project.save'); }, 1200);
+            setTimeout(() => {
+                btn.textContent = t('ui.project.save');
+            }, 1200);
         }
     } catch (e) {
         alert(t('ui.storage.capacityFull'));
@@ -116,7 +119,7 @@ export function loadProject(projName) {
     const rawData = localStorage.getItem(STORAGE_KEY_PREFIX + projName);
     const canvas = document.getElementById('canvas');
     const visualCssContainer = document.getElementById('visual-css-container');
-    
+
     visualCssContainer.innerHTML = ''; // Clear the right-side visual CSS UI.
 
     if (!rawData) {
@@ -132,9 +135,22 @@ export function loadProject(projName) {
     window.activeCssData = projectData.cssData || {};
 
     // Key rehydration: restore the drag/sort behaviors (Sortable) for the loaded HTML.
-    const containerTags = ['div', 'section', 'header', 'footer', 'main', 'aside', 'nav', 'form', 'ul', 'ol', 'table', 'tr'];
-    containerTags.forEach(tag => {
-        canvas.querySelectorAll(tag).forEach(el => makeElementSortable(el));
+    const containerTags = [
+        'div',
+        'section',
+        'header',
+        'footer',
+        'main',
+        'aside',
+        'nav',
+        'form',
+        'ul',
+        'ol',
+        'table',
+        'tr',
+    ];
+    containerTags.forEach((tag) => {
+        canvas.querySelectorAll(tag).forEach((el) => makeElementSortable(el));
     });
     makeElementSortable(canvas); // The canvas body itself needs re-binding too.
 

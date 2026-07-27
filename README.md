@@ -33,24 +33,24 @@ layoutcraft-studio/
 
 ### 1. 🧱 雙重編輯模式
 
-* **🎨 Visual Mode (視覺模式)**：專注於網頁骨架排版。可從左側拉入 Layout、Typography、Forms 等元件，並透過右側 `Inspector` 直接修改文字或 ID/Class。
-* **💻 CSS Expert Mode (CSS 專家模式)**：點擊建立 CSS 選擇器大盒子（如 `.card`），即可從左側將 CSS 屬性像積木一樣拖入盒子中，完全不需手寫代碼。
+- **🎨 Visual Mode (視覺模式)**：專注於網頁骨架排版。可從左側拉入 Layout、Typography、Forms 等元件，並透過右側 `Inspector` 直接修改文字或 ID/Class。
+- **💻 CSS Expert Mode (CSS 專家模式)**：點擊建立 CSS 選擇器大盒子（如 `.card`），即可從左側將 CSS 屬性像積木一樣拖入盒子中，完全不需手寫代碼。
 
 ### 2. 填入數值的格子 (Visual Property Inputs)
 
-* CSS 積木拖入指定選擇器後，會自動長出專屬的**輸入欄位**。
-* 支援毫秒級的 `input` 即時監聽，修改數值（如 `padding: 20px`）時，畫布上的元件會立刻同步變形、變色。
+- CSS 積木拖入指定選擇器後，會自動長出專屬的**輸入欄位**。
+- 支援毫秒級的 `input` 即時監聽，修改數值（如 `padding: 20px`）時，畫布上的元件會立刻同步變形、變色。
 
 ### 3. 🎯 作用域雷達偵測 (Blinking / Detector)
 
-* 每個 CSS 規則盒子右上角皆有 `🎯 Detect` 開關。
-* 開啟後，畫布上所有**符合該 CSS 選擇器條件的元件會立刻進入高亮並啟動呼吸閃爍動畫**，讓操作者明確知道該樣式正在影響誰。
+- 每個 CSS 規則盒子右上角皆有 `🎯 Detect` 開關。
+- 開啟後，畫布上所有**符合該 CSS 選擇器條件的元件會立刻進入高亮並啟動呼吸閃爍動畫**，讓操作者明確知道該樣式正在影響誰。
 
 ### 4. 📊 多專案管理與記憶體防炸機制 (Storage Manager)
 
-* 支援 **+ New** 建立多個獨立專案，並可透過下拉選單隨時切換。
-* 內建每 30 秒自動靜默存檔防呆。
-* 右上角配備 **Storage Use 監測進度條**，精確計算 UTF-16 位元組大小，超過 85% 自動變紅警告，防止瀏覽器 LocalStorage（5MB）配額爆滿。
+- 支援 **+ New** 建立多個獨立專案，並可透過下拉選單隨時切換。
+- 內建每 30 秒自動靜默存檔防呆。
+- 右上角配備 **Storage Use 監測進度條**，精確計算 UTF-16 位元組大小，超過 85% 自動變紅警告，防止瀏覽器 LocalStorage（5MB）配額爆滿。
 
 ---
 
@@ -60,6 +60,7 @@ layoutcraft-studio/
 
 1. 將專案複製或下載至本機。
 2. 使用 VS Code 的 **Live Server** 套件，或是透過終端機啟動本機伺服器：
+
 ```bash
 # 使用 Python 啟動
 python -m http.server 8000
@@ -69,7 +70,8 @@ npx serve .
 
 ```
 
-
 3. 瀏覽器開啟 `http://localhost:8000` 即可開始創作！
+
+```
 
 ```

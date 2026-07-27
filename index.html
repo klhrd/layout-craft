@@ -1,101 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>LayoutCraft Studio - Visual Web Builder</title>
+        <link rel="stylesheet" href="src/css/editor.css" />
+        <link rel="stylesheet" href="src/css/canvas-preview.css" />
+        <style id="live-styles"></style>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LayoutCraft Studio - Visual Web Builder</title>
-    <link rel="stylesheet" href="src/css/editor.css">
-    <link rel="stylesheet" href="src/css/canvas-preview.css">
-    <style id="live-styles"></style>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-</head>
+    <body class="mode-visual">
+        <div class="app-container">
+            <div class="control-bar">
+                <div class="left-actions">
+                    <div class="brand-title">LayoutCraft Studio</div>
+                    <div class="mode-switcher">
+                        <button id="switch-visual" class="active">🎨 Visual Mode</button>
+                        <button id="switch-css">💻 CSS Expert Mode</button>
+                    </div>
 
-<body class="mode-visual">
-
-    <div class="app-container">
-        <div class="control-bar">
-            <div class="left-actions">
-                <div class="brand-title">LayoutCraft Studio</div>
-                <div class="mode-switcher">
-                    <button id="switch-visual" class="active">🎨 Visual Mode</button>
-                    <button id="switch-css">💻 CSS Expert Mode</button>
+                    <div
+                        class="project-storage-control"
+                        style="
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                            margin-left: 15px;
+                            border-left: 1px solid #e2e8f0;
+                            padding-left: 15px;
+                        "
+                    >
+                        <select
+                            id="select-project"
+                            style="
+                                padding: 6px;
+                                border-radius: 6px;
+                                font-size: 0.85rem;
+                                border: 1px solid #cbd5e1;
+                                margin-top: 0;
+                                width: 130px;
+                            "
+                        ></select>
+                        <button id="btn-new-project" class="btn-secondary" style="padding: 6px 10px; font-size: 0.8rem">
+                            + New
+                        </button>
+                        <button
+                            id="btn-save-project"
+                            class="primary-btn"
+                            style="padding: 6px 12px; font-size: 0.8rem; background-color: #10b981"
+                        >
+                            💾 Save
+                        </button>
+                    </div>
                 </div>
 
-                <div class="project-storage-control"
-                    style="display: flex; align-items: center; gap: 8px; margin-left: 15px; border-left: 1px solid #e2e8f0; padding-left: 15px;">
-                    <select id="select-project"
-                        style="padding: 6px; border-radius: 6px; font-size: 0.85rem; border: 1px solid #cbd5e1; margin-top:0; width:130px;"></select>
-                    <button id="btn-new-project" class="btn-secondary" style="padding: 6px 10px; font-size:0.8rem;">+
-                        New</button>
-                    <button id="btn-save-project" class="primary-btn"
-                        style="padding: 6px 12px; font-size:0.8rem; background-color:#10b981;">💾 Save</button>
+                <div class="right-actions">
+                    <div
+                        class="storage-badge"
+                        style="
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-end;
+                            gap: 2px;
+                            margin-right: 10px;
+                        "
+                    >
+                        <span style="font-size: 0.7rem; color: #64748b; font-weight: 600"
+                            >Storage Use: <span id="storage-text">0 / 5 MB</span></span
+                        >
+                        <div
+                            style="width: 100px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden"
+                        >
+                            <div
+                                id="storage-bar"
+                                style="width: 0%; height: 100%; background: #2563eb; transition: width 0.3s"
+                            ></div>
+                        </div>
+                    </div>
+                    <button id="btn-preview" class="btn-secondary">👁️ Preview</button>
+                    <button id="btn-export" class="primary-btn">💾 Export Project</button>
                 </div>
             </div>
 
-            <div class="right-actions">
-                <div class="storage-badge"
-                    style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; margin-right: 10px;">
-                    <span style="font-size: 0.7rem; color: #64748b; font-weight: 600;">Storage Use: <span
-                            id="storage-text">0 / 5 MB</span></span>
-                    <div style="width: 100px; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden;">
-                        <div id="storage-bar"
-                            style="width: 0%; height: 100%; background: #2563eb; transition: width 0.3s;"></div>
+            <div class="main-workspace">
+                <aside class="css-dictionary-panel">
+                    <div class="brand-title">CSS Blocks</div>
+                </aside>
+
+                <aside class="toolbox">
+                    <div class="brand-title">LayoutCraft</div>
+                </aside>
+
+                <main class="canvas" id="canvas-wrapper">
+                    <div class="canvas-container" id="canvas">
+                        <div class="canvas-placeholder">Drag and drop elements here to start building...</div>
                     </div>
+                </main>
+
+                <div class="right-sidebar">
+                    <aside class="properties-panel">
+                        <h3>Inspector</h3>
+                        <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
+                        <div id="editor-form" class="hidden">
+                            <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
+                            <label for="input-id">ID</label>
+                            <input type="text" id="input-id" placeholder="e.g., hero-section" />
+                            <label for="input-class">Classes</label>
+                            <input type="text" id="input-class" placeholder="e.g., container text-center" />
+                            <label for="input-text">Text Content</label>
+                            <textarea id="input-text" rows="2" placeholder="Enter inner text..."></textarea>
+                            <div id="dynamic-properties"></div>
+                            <button id="btn-delete" class="danger-btn">Delete Element</button>
+                        </div>
+                    </aside>
+
+                    <aside class="css-editor-panel">
+                        <h3>Visual CSS Rules</h3>
+                        <div class="css-editor-hint">Create a selector, then drag CSS blocks inside it.</div>
+
+                        <div class="css-selector-creator">
+                            <input type="text" id="input-new-selector" placeholder="e.g., .my-card or h1:hover" />
+                            <button id="btn-add-selector" class="btn-secondary">+ Add Rule</button>
+                        </div>
+
+                        <div id="visual-css-container" class="css-rules-container"></div>
+                    </aside>
                 </div>
-                <button id="btn-preview" class="btn-secondary">👁️ Preview</button>
-                <button id="btn-export" class="primary-btn">💾 Export Project</button>
             </div>
         </div>
 
-        <div class="main-workspace">
-            <aside class="css-dictionary-panel">
-                <div class="brand-title">CSS Blocks</div>
-            </aside>
-
-            <aside class="toolbox">
-                <div class="brand-title">LayoutCraft</div>
-            </aside>
-
-            <main class="canvas" id="canvas-wrapper">
-                <div class="canvas-container" id="canvas">
-                    <div class="canvas-placeholder">Drag and drop elements here to start building...</div>
-                </div>
-            </main>
-
-            <div class="right-sidebar">
-                <aside class="properties-panel">
-                    <h3>Inspector</h3>
-                    <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
-                    <div id="editor-form" class="hidden">
-                        <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
-                        <label for="input-id">ID</label>
-                        <input type="text" id="input-id" placeholder="e.g., hero-section">
-                        <label for="input-class">Classes</label>
-                        <input type="text" id="input-class" placeholder="e.g., container text-center">
-                        <label for="input-text">Text Content</label>
-                        <textarea id="input-text" rows="2" placeholder="Enter inner text..."></textarea>
-                        <div id="dynamic-properties"></div>
-                        <button id="btn-delete" class="danger-btn">Delete Element</button>
-                    </div>
-                </aside>
-
-                <aside class="css-editor-panel">
-                    <h3>Visual CSS Rules</h3>
-                    <div class="css-editor-hint">Create a selector, then drag CSS blocks inside it.</div>
-
-                    <div class="css-selector-creator">
-                        <input type="text" id="input-new-selector" placeholder="e.g., .my-card or h1:hover">
-                        <button id="btn-add-selector" class="btn-secondary">+ Add Rule</button>
-                    </div>
-
-                    <div id="visual-css-container" class="css-rules-container"></div>
-                </aside>
-            </div>
-        </div>
-    </div>
-
-    <script type="module" src="src/js/app.js"></script>
-</body>
-
+        <script type="module" src="src/js/app.js"></script>
+    </body>
 </html>

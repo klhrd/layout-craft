@@ -27,9 +27,9 @@ export function initExporter() {
 
         function cleanStyles(element) {
             element.classList.remove('selected-element');
-            Array.from(element.children).forEach(child => cleanStyles(child));
+            Array.from(element.children).forEach((child) => cleanStyles(child));
         }
-        Array.from(canvasClone.children).forEach(child => cleanStyles(child));
+        Array.from(canvasClone.children).forEach((child) => cleanStyles(child));
 
         const finalHTML = `<!DOCTYPE html>
 <html lang="en">
@@ -45,7 +45,9 @@ ${canvasClone.innerHTML.trim()}
 </html>`;
 
         // Use the CSS code compiled by the visual block builder for the export.
-        const finalCSS = `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n` + getActiveCssCode();
+        const finalCSS =
+            `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n` +
+            getActiveCssCode();
 
         downloadFile('index.html', finalHTML);
         downloadFile('style.css', finalCSS);

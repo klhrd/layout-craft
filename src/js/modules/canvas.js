@@ -31,9 +31,24 @@ function handleDrop(e) {
     if (placeholder) placeholder.remove();
 
     const newElement = document.createElement(draggedType);
-    
+
     // Only tags that allow text nodes get default text.
-    const textAllowedTags = ['h1', 'h2', 'h3', 'p', 'a', 'span', 'button', 'strong', 'em', 'label', 'option', 'th', 'td', 'li'];
+    const textAllowedTags = [
+        'h1',
+        'h2',
+        'h3',
+        'p',
+        'a',
+        'span',
+        'button',
+        'strong',
+        'em',
+        'label',
+        'option',
+        'th',
+        'td',
+        'li',
+    ];
     if (textAllowedTags.includes(draggedType)) {
         newElement.textContent = t('ui.newElementText', draggedType.toUpperCase());
     }
@@ -51,7 +66,7 @@ function handleDrop(e) {
         newElement.style.height = '200px';
     }
 
-    let target = e.target;
+    const target = e.target;
     if (target === canvas) {
         canvas.appendChild(newElement);
     } else {
@@ -59,7 +74,20 @@ function handleDrop(e) {
     }
 
     // Tags that support nested layout (Sortable).
-    const containerTags = ['div', 'section', 'header', 'footer', 'main', 'aside', 'nav', 'form', 'ul', 'ol', 'table', 'tr'];
+    const containerTags = [
+        'div',
+        'section',
+        'header',
+        'footer',
+        'main',
+        'aside',
+        'nav',
+        'form',
+        'ul',
+        'ol',
+        'table',
+        'tr',
+    ];
     if (containerTags.includes(draggedType)) {
         makeElementSortable(newElement);
     }

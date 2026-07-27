@@ -28,11 +28,15 @@ export function initInspector() {
     });
 
     // Base attribute listeners (removed inputCss listener since global CSS is handled in app.js).
-    inputId.addEventListener('input', () => { if (selectedElement) selectedElement.id = inputId.value; });
-    inputClass.addEventListener('input', () => { if (selectedElement) selectedElement.className = inputClass.value + ' selected-element'; });
+    inputId.addEventListener('input', () => {
+        if (selectedElement) selectedElement.id = inputId.value;
+    });
+    inputClass.addEventListener('input', () => {
+        if (selectedElement) selectedElement.className = inputClass.value + ' selected-element';
+    });
     inputText.addEventListener('input', () => {
         if (selectedElement) {
-            let textNode = Array.from(selectedElement.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+            const textNode = Array.from(selectedElement.childNodes).find((node) => node.nodeType === Node.TEXT_NODE);
             if (textNode) textNode.textContent = inputText.value;
             else selectedElement.prepend(document.createTextNode(inputText.value));
         }
@@ -56,15 +60,15 @@ export function selectElement(el) {
 
     const tagName = el.tagName.toLowerCase();
     selectedTagName.textContent = tagName;
-    
+
     inputId.value = el.id || '';
     inputClass.value = el.className.replace('selected-element', '').trim();
-    
+
     // Fix: removed inputCss.value = el.style.cssText;
-    
+
     inputText.value = Array.from(el.childNodes)
-        .filter(node => node.nodeType === Node.TEXT_NODE)
-        .map(node => node.textContent.trim())
+        .filter((node) => node.nodeType === Node.TEXT_NODE)
+        .map((node) => node.textContent.trim())
         .join('');
 
     renderDynamicAttributes(tagName, el);
@@ -77,17 +81,17 @@ function renderDynamicAttributes(tagName, el) {
     // Look up the tag in elements.js config to see if extra attributes are defined for it.
     let foundItem = null;
     for (const category of Object.values(ELEMENT_CATEGORIES)) {
-        foundItem = category.items.find(item => item.tag === tagName);
+        foundItem = category.items.find((item) => item.tag === tagName);
         if (foundItem) break;
     }
 
     // If extra attributes are defined (e.g., href for <a>, src for <img>).
     if (foundItem && foundItem.attributes) {
-        foundItem.attributes.forEach(attr => {
+        foundItem.attributes.forEach((attr) => {
             // 1. Create a label.
             const label = document.createElement('label');
             label.textContent = attr.toUpperCase(); // e.g., HREF, SRC
-            
+
             // 2. Create an input.
             const input = document.createElement('input');
             input.type = 'text';
@@ -111,7 +115,7 @@ function renderDynamicAttributes(tagName, el) {
 
 export function deselectAll() {
     selectedElement = null;
-    document.querySelectorAll('.canvas *').forEach(el => el.classList.remove('selected-element'));
+    document.querySelectorAll('.canvas *').forEach((el) => el.classList.remove('selected-element'));
     editorForm.classList.add('hidden');
     noSelectionMsg.classList.remove('hidden');
     if (dynamicPropsContainer) dynamicPropsContainer.innerHTML = '';
