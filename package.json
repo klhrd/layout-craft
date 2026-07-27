@@ -1,0 +1,13 @@
+﻿{
+  "name": "layout-craft",
+  "version": "0.1.0",
+  "description": "LayoutCraft Studio - a vanilla JS low-code web editor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  }
+}
