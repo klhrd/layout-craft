@@ -1,5 +1,6 @@
 import { deselectAll } from './inspector.js';
-import { getActiveCssCode } from '../app.js'; // 💡 引入圖形化 CSS 編譯代碼
+import { getActiveCssCode } from '../app.js'; // Import the visual-CSS-compiled code.
+import { t } from '../config/i18n.js';
 
 const canvas = document.getElementById('canvas');
 const btnPreview = document.getElementById('btn-preview');
@@ -11,7 +12,7 @@ export function initExporter() {
         document.body.classList.add('preview-mode');
         const exitBtn = document.createElement('button');
         exitBtn.id = 'btn-exit-preview';
-        exitBtn.innerHTML = '⬅️ Back to Editor';
+        exitBtn.innerHTML = t('ui.backToEditor');
         document.body.appendChild(exitBtn);
         exitBtn.addEventListener('click', () => {
             document.body.classList.remove('preview-mode');
@@ -43,7 +44,7 @@ ${canvasClone.innerHTML.trim()}
 </body>
 </html>`;
 
-        // 💡 使用我們圖形化積木編譯出來的 CSS 程式碼匯出
+        // Use the CSS code compiled by the visual block builder for the export.
         const finalCSS = `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n` + getActiveCssCode();
 
         downloadFile('index.html', finalHTML);

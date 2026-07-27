@@ -1,5 +1,6 @@
 import { ELEMENT_CATEGORIES } from './config/elements.js';
 import { CSS_DICTIONARY } from './config/cssDictionary.js';
+import { t } from './config/i18n.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
 import { initInspector } from './modules/inspector.js';
 import { initExporter } from './modules/exporter.js';
@@ -10,7 +11,7 @@ const visualCssContainer = document.getElementById('visual-css-container');
 const inputNewSelector = document.getElementById('input-new-selector');
 const btnAddSelector = document.getElementById('btn-add-selector');
 
-// 將 activeCssData 提升為全域物件，以便 storage.js 打包
+// Promote activeCssData to the global scope so storage.js can pack it.
 window.activeCssData = {}; 
 let draggedCssBlockData = null;
 
@@ -23,20 +24,20 @@ document.addEventListener('DOMContentLoaded', () => {
     initModeSwitcher();
     initVisualCssActions();
     
-    initStorage(); // 啟動儲存管理器
+    initStorage(); // Boot the storage manager.
     
-    // 設定每 30 秒自動靜默存檔防呆機制
+    // Auto-silently save every 30 seconds as a safety net.
     setInterval(() => {
         const currentProj = document.getElementById('select-project').value;
         if (currentProj) saveProject(currentProj, false);
     }, 30000);
 });
 
-// 1. 渲染元件庫（預設收合）
+// 1. Render the element toolbox (collapsed by default).
 function renderToolbox() {
     const toolboxContainer = document.querySelector('.toolbox');
     if (!toolboxContainer) return;
-    toolboxContainer.innerHTML = '<div class="brand-title">LayoutCraft</div>'; // 清空防重複並加上標題
+    toolboxContainer.innerHTML = `<div class="brand-title">${t('ui.panels.layoutCraft')}</div>`; // clear & re-add brand title
     
     for (const [key, category] of Object.entries(ELEMENT_CATEGORIES)) {
         const wrapper = document.createElement('div');
@@ -66,11 +67,11 @@ function renderToolbox() {
     }
 }
 
-// 2. 將 CSS 字典渲染成可拖拽的「屬性積木」
+// 2. Render the CSS dictionary into draggable "property blocks".
 function renderCssDictionaryBlocks() {
     const dictContainer = document.querySelector('.css-dictionary-panel');
     if (!dictContainer) return;
-    dictContainer.innerHTML = '<div class="brand-title">CSS Blocks</div>'; // 清空防重複並加上標題
+    dictContainer.innerHTML = `<div class="brand-title">${t('ui.panels.cssBlocks')}</div>`; // clear & re-add brand title
     
     for (const [key, category] of Object.entries(CSS_DICTIONARY)) {
         const wrapper = document.createElement('div');
@@ -107,7 +108,7 @@ function renderCssDictionaryBlocks() {
     }
 }
 
-// 3. 圖形化 CSS 規則區與積木拖放核心邏輯
+// 3. Visual CSS rule area & block drag/drop core logic.
 function initVisualCssActions() {
     if (!btnAddSelector) return;
     btnAddSelector.addEventListener('click', () => {
@@ -127,7 +128,8 @@ function initVisualCssActions() {
     });
 }
 
-// 暴露給全域：當舊檔案被載入時，負責在右側 UI 把大盒子與填入格子精準重新組裝出來
+// Exposed globally: when an old project is loaded, accurately rebuild the
+// rule boxes and input fields in the right-side UI from persisted data.
 window.rebuildCssRulesUI = function() {
     visualCssContainer.innerHTML = '';
     for (const [selector, styles] of Object.entries(window.activeCssData)) {
@@ -163,7 +165,7 @@ function createRuleBoxUI(selector) {
                 <span style="color: #94a3b8">{</span>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
-                <button class="btn-hunt-elements">🎯 Detect</button>
+                <button class="btn-hunt-elements">${t('ui.detection.detect')}</button>
                 <button class="btn-delete-rule">❌ Delete</button>
             </div>
         </div>
@@ -181,7 +183,7 @@ function createRuleBoxUI(selector) {
     selectorInput.addEventListener('change', () => {
         const newSelector = selectorInput.value.trim();
         if (!newSelector || newSelector === currentSelector) { selectorInput.value = currentSelector; return; }
-        if (window.activeCssData[newSelector]) { alert('Name exists!'); selectorInput.value = currentSelector; return; }
+        if (window.activeCssData[newSelector]) { alert(t('ui.detection.selectorExistsAlert')); selectorInput.value = currentSelector; return; }
 
         window.activeCssData[newSelector] = window.activeCssData[currentSelector];
         delete window.activeCssData[currentSelector];
@@ -198,8 +200,8 @@ function createRuleBoxUI(selector) {
 
     huntBtn.addEventListener('click', () => {
         const isActive = huntBtn.classList.toggle('active');
-        if (isActive) { huntBtn.textContent = '🎯 Blinking'; toggleCanvasBlinking(currentSelector, true); } 
-        else { huntBtn.textContent = '🎯 Detect'; toggleCanvasBlinking(currentSelector, false); }
+        if (isActive) { huntBtn.textContent = t('ui.detection.blinking'); toggleCanvasBlinking(currentSelector, true); } 
+        else { huntBtn.textContent = t('ui.detection.detect'); toggleCanvasBlinking(currentSelector, false); }
     });
 
     deleteBtn.addEventListener('click', () => {

@@ -20,7 +20,7 @@ export const ELEMENT_CATEGORIES = {
             { tag: "p", label: "📄 Paragraph", defaultText: "Start writing your content here..." },
             { tag: "span", label: "✏️ Span", defaultText: "Inline text" },
             { tag: "strong", label: "🅱️ Bold Text", defaultText: "Important Text" },
-            { tag: "em", label: "斜 Italic Text", defaultText: "Emphasized Text" }
+            { tag: "em", label: "✏️ Italic Text", defaultText: "Emphasized Text" }
         ]
     },
     interactive: {

@@ -1,6 +1,7 @@
 import { ELEMENT_CATEGORIES } from '../config/elements.js';
+import { t } from '../config/i18n.js';
 
-// src/js/modules/inspector.js 頂部變數宣告區
+// src/js/modules/inspector.js top-level variable declarations.
 let selectedElement = null;
 
 const canvas = document.getElementById('canvas');
@@ -11,10 +12,10 @@ const inputId = document.getElementById('input-id');
 const inputClass = document.getElementById('input-class');
 const inputText = document.getElementById('input-text');
 const btnDelete = document.getElementById('btn-delete');
-let dynamicPropsContainer = null; // 保持這個
+let dynamicPropsContainer = null; // Keep this one.
 
 export function initInspector() {
-    // 修正點：直接抓取 HTML 裡預留的容器，不要再用 parentNode.insertBefore
+    // Fix: directly grab the reserved container from HTML instead of using parentNode.insertBefore.
     dynamicPropsContainer = document.getElementById('dynamic-properties');
 
     canvas.addEventListener('click', (e) => {
@@ -26,7 +27,7 @@ export function initInspector() {
         selectElement(e.target);
     });
 
-    // 基礎屬性監聽 (移除了 inputCss 的監聽，因為全域 CSS 改在 app.js 處理)
+    // Base attribute listeners (removed inputCss listener since global CSS is handled in app.js).
     inputId.addEventListener('input', () => { if (selectedElement) selectedElement.id = inputId.value; });
     inputClass.addEventListener('input', () => { if (selectedElement) selectedElement.className = inputClass.value + ' selected-element'; });
     inputText.addEventListener('input', () => {
@@ -59,7 +60,7 @@ export function selectElement(el) {
     inputId.value = el.id || '';
     inputClass.value = el.className.replace('selected-element', '').trim();
     
-    // 修正點：移除 inputCss.value = el.style.cssText;
+    // Fix: removed inputCss.value = el.style.cssText;
     
     inputText.value = Array.from(el.childNodes)
         .filter(node => node.nodeType === Node.TEXT_NODE)
@@ -69,34 +70,34 @@ export function selectElement(el) {
     renderDynamicAttributes(tagName, el);
 }
 
-// 根據元件標籤，動態渲染 href, src 等欄位
+// Dynamically render href, src, etc. fields based on the component's tag.
 function renderDynamicAttributes(tagName, el) {
-    dynamicPropsContainer.innerHTML = ''; // 先清空舊的動態欄位
+    dynamicPropsContainer.innerHTML = ''; // Clear previous dynamic fields first.
 
-    // 從 elements.js 設定檔中尋找該標籤是否有定義額外屬性
+    // Look up the tag in elements.js config to see if extra attributes are defined for it.
     let foundItem = null;
     for (const category of Object.values(ELEMENT_CATEGORIES)) {
         foundItem = category.items.find(item => item.tag === tagName);
         if (foundItem) break;
     }
 
-    // 如果有定義額外屬性（例如 a 有 href，img 有 src）
+    // If extra attributes are defined (e.g., href for <a>, src for <img>).
     if (foundItem && foundItem.attributes) {
         foundItem.attributes.forEach(attr => {
-            // 1. 建立 Label
+            // 1. Create a label.
             const label = document.createElement('label');
-            label.textContent = attr.toUpperCase(); // 例如 HREF, SRC
+            label.textContent = attr.toUpperCase(); // e.g., HREF, SRC
             
-            // 2. 建立 Input
+            // 2. Create an input.
             const input = document.createElement('input');
             input.type = 'text';
-            input.placeholder = `Enter ${attr}...`;
+            input.placeholder = t('ui.inspector.enterAttrPlaceholder', attr);
             input.value = el.getAttribute(attr) || '';
 
-            // 3. 綁定輸入事件，即時同步回畫布上的元件
+            // 3. Bind input event for live sync back to the canvas element.
             input.addEventListener('input', () => {
                 if (input.value.trim() === '') {
-                    el.removeAttribute(attr); // 如果被清空就移除屬性
+                    el.removeAttribute(attr); // Remove the attribute if cleared.
                 } else {
                     el.setAttribute(attr, input.value);
                 }

@@ -1,7 +1,8 @@
 import { selectElement } from './inspector.js';
+import { t } from '../config/i18n.js';
 
 let draggedType = null;
-const canvas = document.getElementById('canvas'); // 這會抓到 .canvas-container
+const canvas = document.getElementById('canvas'); // Grabs .canvas-container.
 
 export function initCanvas() {
     makeElementSortable(canvas);
@@ -31,21 +32,21 @@ function handleDrop(e) {
 
     const newElement = document.createElement(draggedType);
     
-    // 💡 修正點：只有這些允許有文字節點的標籤才給予預設文字
+    // Only tags that allow text nodes get default text.
     const textAllowedTags = ['h1', 'h2', 'h3', 'p', 'a', 'span', 'button', 'strong', 'em', 'label', 'option', 'th', 'td', 'li'];
     if (textAllowedTags.includes(draggedType)) {
-        newElement.textContent = `New ${draggedType.toUpperCase()}`;
+        newElement.textContent = t('ui.newElementText', draggedType.toUpperCase());
     }
 
-    // 💡 為了防範表單中的 input、img 預設沒有長寬會看不見，給予一些初始編輯屬性
+    // Inputs and imgs have no intrinsic size; give them initial editable attributes so they're visible.
     if (draggedType === 'input') {
         newElement.setAttribute('type', 'text');
-        newElement.setAttribute('placeholder', 'Type something...');
+        newElement.setAttribute('placeholder', t('ui.storage.newInnerText'));
     } else if (draggedType === 'img') {
-        newElement.setAttribute('src', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150'); // 給一張預設漂亮的抽象圖
-        newElement.setAttribute('alt', 'Placeholder Image');
+        newElement.setAttribute('src', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150'); // A nice default abstract placeholder.
+        newElement.setAttribute('alt', t('ui.storage.placeholderImageAlt'));
     } else if (draggedType === 'iframe') {
-        newElement.setAttribute('src', 'https://www.youtube.com/embed/dQw4w9WgXcQ'); // 經典彩蛋預覽
+        newElement.setAttribute('src', 'https://www.youtube.com/embed/dQw4w9WgXcQ'); // Classic easter egg preview.
         newElement.style.width = '100%';
         newElement.style.height = '200px';
     }
@@ -57,7 +58,7 @@ function handleDrop(e) {
         target.appendChild(newElement);
     }
 
-    // 💡 允許排版疊套的容器元件種類
+    // Tags that support nested layout (Sortable).
     const containerTags = ['div', 'section', 'header', 'footer', 'main', 'aside', 'nav', 'form', 'ul', 'ol', 'table', 'tr'];
     if (containerTags.includes(draggedType)) {
         makeElementSortable(newElement);

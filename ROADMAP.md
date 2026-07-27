@@ -104,7 +104,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 
 - [x] Create `feature/development-roadmap` branch
 - [x] Draft this roadmap document
-- [ ] Short-term #1: Default English language + i18n dictionary
+- [x] Short-term #1: Default English language + i18n dictionary (`src/js/config/i18n.js`); all UI strings / comments / labels migrated to English (app.js, storage.js, canvas.js, inspector.js, exporter.js, cssDictionary.js, elements.js)
 - [ ] Short-term #2: ESLint + Prettier
 - [ ] Short-term #3: Vitest baseline
 - [ ] Short-term #4: Vite build pipeline

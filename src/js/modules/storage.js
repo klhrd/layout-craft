@@ -1,19 +1,20 @@
 import { compileAndRenderCss } from '../app.js';
 import { makeElementSortable } from './canvas.js';
 import { deselectAll } from './inspector.js';
+import { t } from '../config/i18n.js';
 
 const STORAGE_KEY_PREFIX = 'layoutcraft_proj_';
 const LIST_KEY = 'layoutcraft_project_list';
 
-let currentProjectName = 'Default_Project';
+let currentProjectName = t('ui.storage.defaultProject');
 
 export function initStorage() {
     setupProjectList();
     bindStorageEvents();
-    loadProject(currentProjectName); // 預設載入目前選中的專案
+    loadProject(currentProjectName); // Load the currently selected project by default.
 }
 
-// 1. 初始化專案清單與下拉選單
+// 1. Initialize the project list and the dropdown.
 function setupProjectList() {
     let list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
     if (list.length === 0) {
@@ -30,7 +31,7 @@ function setupProjectList() {
         select.appendChild(opt);
     });
 
-    // 讀取上次使用者關閉網頁前停留的專案
+    // Restore the project the user had open before closing the page.
     const lastActive = localStorage.getItem('layoutcraft_last_active_proj');
     if (lastActive && list.includes(lastActive)) {
         currentProjectName = lastActive;
@@ -43,53 +44,53 @@ function bindStorageEvents() {
     const btnNew = document.getElementById('btn-new-project');
     const btnSave = document.getElementById('btn-save-project');
 
-    // 切換專案下拉選單
+    // Project dropdown switch.
     select.addEventListener('change', () => {
-        // 切換前自動幫舊專案存檔防呆
+        // Auto-save the previous project first as a safety net.
         saveProject(currentProjectName, false); 
         currentProjectName = select.value;
         localStorage.setItem('layoutcraft_last_active_proj', currentProjectName);
         loadProject(currentProjectName);
     });
 
-    // 建立新專案
+    // Create a new project.
     btnNew.addEventListener('click', () => {
-        const name = prompt('Enter new project name:');
+        const name = prompt(t('ui.project.newPrompt'));
         if (!name) return;
         const formattedName = name.trim().replace(/\s+/g, '_');
         
         let list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
         if (list.includes(formattedName)) {
-            alert('Project name already exists!');
+            alert(t('ui.project.existsAlert'));
             return;
         }
 
         list.push(formattedName);
         localStorage.setItem(LIST_KEY, JSON.stringify(list));
         
-        // 切換到新專案並清空畫布
+        // Switch to the new project and clear the canvas.
         saveProject(currentProjectName, false);
         currentProjectName = formattedName;
         localStorage.setItem('layoutcraft_last_active_proj', currentProjectName);
         
-        // 初始化新專案資料
+        // Initialize the new project's data.
         window.activeCssData = {}; 
-        document.getElementById('canvas').innerHTML = '<div class="canvas-placeholder">Drag and drop elements here to start building...</div>';
+        document.getElementById('canvas').innerHTML = `<div class="canvas-placeholder">${t('ui.panels.canvasPlaceholder')}</div>`;
         
         setupProjectList();
         select.value = currentProjectName;
         saveProject(currentProjectName, true);
     });
 
-    // 手動點擊儲存按鈕
+    // Manual save button click.
     btnSave.addEventListener('click', () => {
         saveProject(currentProjectName, true);
     });
 }
 
-// 2. 🖨️ 專案存檔實作
+// 2. Project save implementation.
 export function saveProject(projName, showAlert = false) {
-    deselectAll(); // 存檔前清除選取狀態，避免將外框選取類別寫入存檔
+    deselectAll(); // Clear selection state before saving to avoid persisting the selection outline class.
     
     const canvasHtml = document.getElementById('canvas').innerHTML;
     const projectData = {
@@ -99,28 +100,28 @@ export function saveProject(projName, showAlert = false) {
 
     try {
         localStorage.setItem(STORAGE_KEY_PREFIX + projName, JSON.stringify(projectData));
-        updateStorageMeter(); // 更新記憶體用量計
+        updateStorageMeter(); // Update the storage usage meter.
         if (showAlert) {
             const btn = document.getElementById('btn-save-project');
-            btn.textContent = '✅ Saved';
-            setTimeout(() => { btn.textContent = '💾 Save'; }, 1200);
+            btn.textContent = t('ui.project.saved');
+            setTimeout(() => { btn.textContent = t('ui.project.save'); }, 1200);
         }
     } catch (e) {
-        alert('❌ LocalStorage capacity full! Delete some rules or text data.');
+        alert(t('ui.storage.capacityFull'));
     }
 }
 
-// 3. 📂 專案載入與 HTML 結構重建
+// 3. Project load and HTML structure rehydration.
 export function loadProject(projName) {
     const rawData = localStorage.getItem(STORAGE_KEY_PREFIX + projName);
     const canvas = document.getElementById('canvas');
     const visualCssContainer = document.getElementById('visual-css-container');
     
-    visualCssContainer.innerHTML = ''; // 清空右側圖形化 CSS 介面
+    visualCssContainer.innerHTML = ''; // Clear the right-side visual CSS UI.
 
     if (!rawData) {
         window.activeCssData = {};
-        canvas.innerHTML = '<div class="canvas-placeholder">Drag and drop elements here to start building...</div>';
+        canvas.innerHTML = `<div class="canvas-placeholder">${t('ui.panels.canvasPlaceholder')}</div>`;
         compileAndRenderCss();
         updateStorageMeter();
         return;
@@ -130,15 +131,15 @@ export function loadProject(projName) {
     canvas.innerHTML = projectData.html;
     window.activeCssData = projectData.cssData || {};
 
-    // 💡 關鍵重構：恢復被載入 HTML 的拖拽與排序基因 (Sortable)
+    // Key rehydration: restore the drag/sort behaviors (Sortable) for the loaded HTML.
     const containerTags = ['div', 'section', 'header', 'footer', 'main', 'aside', 'nav', 'form', 'ul', 'ol', 'table', 'tr'];
     containerTags.forEach(tag => {
         canvas.querySelectorAll(tag).forEach(el => makeElementSortable(el));
     });
-    makeElementSortable(canvas); // 畫布本體也要重新綁定
+    makeElementSortable(canvas); // The canvas body itself needs re-binding too.
 
-    // 💡 關鍵重構：從資料庫撈出 CSS 重新在右側渲染出對應的「圖形積木大盒子」
-    // 這個方法是由 app.js 提供的全域還原介面
+    // Key rehydration: pull CSS from the data store and re-render the visual blocks on the right.
+    // This uses the global rehydration interface provided by app.js.
     if (window.rebuildCssRulesUI) {
         window.rebuildCssRulesUI();
     }
@@ -147,33 +148,33 @@ export function loadProject(projName) {
     updateStorageMeter();
 }
 
-// 4. 📊 核心記憶體計量器（精準測量 LocalStorage 總體積，預防炸掉）
+// 4. Core storage meter (accurately measures total LocalStorage volume to prevent overflow).
 export function updateStorageMeter() {
     let totalBytes = 0;
-    // 遍歷所有 LocalStorage 鍵值，計算總體積
+    // Iterate over all LocalStorage keys to compute the total volume.
     for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         const val = localStorage.getItem(key);
-        totalBytes += (key.length + val.length) * 2; // 瀏覽器使用 UTF-16 編碼，每個字元佔 2 Bytes
+        totalBytes += (key.length + val.length) * 2; // Browsers use UTF-16 encoding, 2 bytes per character.
     }
 
     const totalMB = (totalBytes / (1024 * 1024)).toFixed(2);
-    const percentage = Math.min((totalBytes / (5 * 1024 * 1024)) * 100, 100).toFixed(1); // 假設標準上限為 5MB
+    const percentage = Math.min((totalBytes / (5 * 1024 * 1024)) * 100, 100).toFixed(1); // Assume a 5MB upper bound.
 
     const textEl = document.getElementById('storage-text');
     const barEl = document.getElementById('storage-bar');
 
     if (textEl && barEl) {
-        textEl.textContent = `${totalMB} MB / 5.00 MB (${percentage}%)`;
+        textEl.textContent = t('ui.storage.meterLabel', totalMB, '5.00', percentage);
         barEl.style.width = `${percentage}%`;
 
-        // 警示色切換
+        // Warning color thresholds.
         if (percentage > 85) {
-            barEl.style.backgroundColor = '#ef4444'; // 超過 85% 變紅，警告快炸了
+            barEl.style.backgroundColor = '#ef4444'; // Over 85% -> red, near capacity.
         } else if (percentage > 60) {
-            barEl.style.backgroundColor = '#f59e0b'; // 超過 60% 變橘
+            barEl.style.backgroundColor = '#f59e0b'; // Over 60% -> orange.
         } else {
-            barEl.style.backgroundColor = '#2563eb'; // 安全範圍藍色
+            barEl.style.backgroundColor = '#2563eb'; // Safe range -> blue.
         }
     }
 }
