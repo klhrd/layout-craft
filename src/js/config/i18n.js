@@ -45,6 +45,7 @@ const DICTIONARY = {
                 noSelection: 'Select an element on the canvas to edit its properties.',
                 selectedElement: 'Selected Element',
                 deleteElement: 'Delete Element',
+                components: '🧩 Components',
                 visualCssRules: 'Visual CSS Rules',
                 visualCssHint: 'Create a selector, then drag CSS blocks inside it.',
                 addSelectorPlaceholder: 'e.g., .my-card or h1:hover',

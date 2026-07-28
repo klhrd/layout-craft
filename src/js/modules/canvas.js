@@ -247,26 +247,26 @@ function handleDrop(e) {
     if (placeholder) placeholder.remove();
 
     const tag = draggedType;
-    const newElement = buildNewElement(tag);
+    const isComponent = window.draggedComponent && window.draggedComponent.template;
+    const newElement = isComponent ? buildComponentTree(window.draggedComponent.template) : buildNewElement(tag);
 
     const target = e.target;
     const parent = target === canvas ? canvas : target;
     parent.appendChild(newElement);
 
-    const nextSibling = newElement.nextSibling; // null at this point (last child)
+    const nextSibling = newElement.nextSibling;
 
     pushHistory({
-        label: `Drop ${tag}`,
+        label: isComponent ? `Drop component: ${window.draggedComponent.label}` : `Drop ${tag}`,
         perform: () => {
-            // Re-create + re-insert on the same parent (original element
-            // may have been moved or removed already).
-            const replacement = buildNewElement(tag);
+            const replacement = isComponent
+                ? buildComponentTree(window.draggedComponent.template)
+                : buildNewElement(tag);
             if (nextSibling && nextSibling.parentNode === parent) {
                 parent.insertBefore(replacement, nextSibling);
             } else {
                 parent.appendChild(replacement);
             }
-            selectElement(replacement);
         },
         rollback: () => {
             newElement.remove();
@@ -274,5 +274,46 @@ function handleDrop(e) {
     });
 
     draggedType = null;
+    window.draggedComponent = null;
     selectElement(newElement);
+}
+
+function buildComponentTree(template) {
+    const el = document.createElement(template.tag);
+    if (template.text) el.textContent = template.text;
+    if (template.attr) {
+        for (const [k, v] of Object.entries(template.attr)) {
+            el.setAttribute(k, v);
+        }
+    }
+    if (template.style) {
+        for (const [k, v] of Object.entries(template.style)) {
+            el.style[k] = v;
+        }
+    }
+    if (template.children) {
+        for (const child of template.children) {
+            el.appendChild(buildComponentTree(child));
+        }
+    }
+    const CONTAINER_TAGS = [
+        'div',
+        'section',
+        'header',
+        'footer',
+        'main',
+        'aside',
+        'nav',
+        'form',
+        'ul',
+        'ol',
+        'table',
+        'tr',
+    ];
+    if (CONTAINER_TAGS.includes(template.tag) && typeof Sortable !== 'undefined') {
+        setTimeout(() => {
+            if (el.parentNode) Sortable.create(el, { group: 'canvas', animation: 150 });
+        }, 0);
+    }
+    return el;
 }

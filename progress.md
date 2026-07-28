@@ -11,7 +11,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | 3   | Inline text editing         | `feature/ux-inline-text-editing`     | ✅ merged |
 | 4   | Visual property editors     | `feature/ux-visual-property-editors` | ✅ merged |
 | 5   | Layers / outline panel      | `feature/ux-layers-panel`            | ✅ merged |
-| 6   | Context menu                | `feature/ux-context-menu`        | ✅ merged |
+| 6   | Context menu                | `feature/ux-context-menu`            | ✅ merged |
 | 7   | Pre-built component library | —                                    | pending   |
 | 8   | Responsive preview          | —                                    | pending   |
 | 9   | Keyboard shortcuts          | —                                    | pending   |
