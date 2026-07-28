@@ -7,7 +7,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | #   | Item                        | Branch                      | Status    |
 | --- | --------------------------- | --------------------------- | --------- |
 | 1   | WYSIWYG canvas              | `feature/ux-wysiwyg-canvas` | ✅ merged |
-| 2   | Select-to-style             | —                           | pending   |
+| 2 | Select-to-style | `feature/ux-select-to-style` | ✅ merged |
 | 3   | Inline text editing         | —                           | pending   |
 | 4   | Visual property editors     | —                           | pending   |
 | 5   | Layers / outline panel      | —                           | pending   |
@@ -25,3 +25,4 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 _(appended automatically after each branch merge)_
 
 - **2026-07-28** UX #1 WYSIWYG canvas — `feature/ux-wysiwyg-canvas` merged. Removed wireframe dashed borders from default edit mode. Added hover highlight (`.el-hover`) on canvas children. Added "🔲 Outlines" toggle button in control bar to restore wireframe view on demand.
+- **2026-07-28** UX #2 Select-to-style — `feature/ux-select-to-style` merged. Added inline "Styles" section in inspector panel. When user edits a CSS property, system auto-generates a unique class (`._lc-N`), creates the CSS rule in `activeCssData`, and compiles live styles. Undo support included.
