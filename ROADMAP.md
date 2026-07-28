@@ -141,4 +141,4 @@ commits.
 - [x] Short-term #3: Vitest baseline
 - [x] Short-term #4: Vite build pipeline
 - [x] Short-term #5: jsconfig.json
-- [ ] Short-term #6: README + AGENTS.md documentation pass
+- [x] Short-term #6: README + AGENTS.md documentation pass
