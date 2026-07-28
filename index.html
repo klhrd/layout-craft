@@ -41,6 +41,7 @@
 
                     <button id="btn-grid" class="btn-secondary">🔲 Grid</button>
                     <button id="btn-outlines" class="btn-secondary">🔲 Outlines</button>
+                    <button id="btn-import" class="btn-secondary">📥 Import</button>
                     <button id="btn-preview" class="btn-secondary">👁️ Preview</button>
                     <button id="btn-export" class="primary-btn">💾 Export Project</button>
                 </div>
@@ -122,6 +123,74 @@
 
                         <div id="visual-css-container" class="css-rules-container"></div>
                     </aside>
+                </div>
+            </div>
+        </div>
+
+        <div
+            id="import-modal"
+            style="
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 99999;
+                align-items: center;
+                justify-content: center;
+            "
+        >
+            <div
+                style="
+                    background: #1e293b;
+                    border-radius: 12px;
+                    padding: 24px;
+                    max-width: 640px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    color: #e2e8f0;
+                "
+            >
+                <h2 style="margin: 0 0 16px">📥 Import HTML / CSS</h2>
+                <label style="display: block; font-size: 0.85rem; margin-bottom: 4px">HTML</label>
+                <textarea
+                    id="import-html-input"
+                    rows="6"
+                    style="
+                        width: 100%;
+                        background: #0f172a;
+                        color: #e2e8f0;
+                        border: 1px solid #334155;
+                        border-radius: 6px;
+                        padding: 8px;
+                        font-family: monospace;
+                        font-size: 0.8rem;
+                        resize: vertical;
+                    "
+                    placeholder="Paste HTML here..."
+                ></textarea>
+                <label style="display: block; font-size: 0.85rem; margin: 12px 0 4px"
+                    >CSS <span style="color: #94a3b8; font-weight: 400">(optional)</span></label
+                >
+                <textarea
+                    id="import-css-input"
+                    rows="4"
+                    style="
+                        width: 100%;
+                        background: #0f172a;
+                        color: #e2e8f0;
+                        border: 1px solid #334155;
+                        border-radius: 6px;
+                        padding: 8px;
+                        font-family: monospace;
+                        font-size: 0.8rem;
+                        resize: vertical;
+                    "
+                    placeholder="Paste CSS here..."
+                ></textarea>
+                <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end">
+                    <button id="btn-import-cancel" class="btn-secondary">Cancel</button>
+                    <button id="btn-import-submit" class="primary-btn">Import</button>
                 </div>
             </div>
         </div>
