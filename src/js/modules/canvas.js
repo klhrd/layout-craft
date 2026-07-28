@@ -34,7 +34,22 @@ function initCanvasHover() {
 }
 
 /* ── Inline text editing (double-click) ── */
-const TEXT_EDITABLE_TAGS = ['h1', 'h2', 'h3', 'p', 'a', 'span', 'button', 'strong', 'em', 'label', 'li', 'th', 'td'];
+
+export const TEXT_EDITABLE_TAGS = [
+    'h1',
+    'h2',
+    'h3',
+    'p',
+    'a',
+    'span',
+    'button',
+    'strong',
+    'em',
+    'label',
+    'li',
+    'th',
+    'td',
+];
 
 let inlineEditEl = null;
 let inlineEditOrig = '';
@@ -50,7 +65,7 @@ function initInlineEditing() {
     });
 }
 
-function startInlineEdit(el) {
+export function startInlineEdit(el) {
     if (inlineEditEl && inlineEditEl !== el) commitInlineEdit(inlineEditEl);
     inlineEditEl = el;
     inlineEditOrig = el.textContent;

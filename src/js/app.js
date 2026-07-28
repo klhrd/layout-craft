@@ -4,6 +4,7 @@ import { t } from './config/i18n.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
 import { initInspector } from './modules/inspector.js';
 import { initLayers, refreshLayers } from './modules/layers.js';
+import { initContextMenu } from './modules/contextMenu.js';
 import { initExporter } from './modules/exporter.js';
 import { initStorage, saveProject } from './modules/storage.js';
 import * as history from './modules/history.js';
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCanvas();
     initInspector();
     initLayers();
+    initContextMenu();
     initExporter();
     initModeSwitcher();
     initVisualCssActions();

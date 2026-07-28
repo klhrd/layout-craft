@@ -10,7 +10,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | 2   | Select-to-style             | `feature/ux-select-to-style`         | ✅ merged |
 | 3   | Inline text editing         | `feature/ux-inline-text-editing`     | ✅ merged |
 | 4   | Visual property editors     | `feature/ux-visual-property-editors` | ✅ merged |
-| 5   | Layers / outline panel      | `feature/ux-layers-panel`        | ✅ merged |
+| 5   | Layers / outline panel      | `feature/ux-layers-panel`            | ✅ merged |
 | 6   | Context menu                | —                                    | pending   |
 | 7   | Pre-built component library | —                                    | pending   |
 | 8   | Responsive preview          | —                                    | pending   |
