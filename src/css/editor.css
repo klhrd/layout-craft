@@ -400,19 +400,30 @@ label {
     transition: all 0.3s ease;
 }
 
-/* Editing outlines on canvas children */
-body:not(.preview-mode) .canvas-container * {
-    min-height: 40px;
-    padding: 16px;
-    margin: 12px 0;
-    border: 1px dashed #cbd5e1;
-    background-color: rgba(248, 250, 252, 0.4);
-    position: relative;
+/* ── WYSIWYG canvas (no wireframes by default) ── */
+
+/* Hover highlight (added/removed by JS) */
+.canvas-container .el-hover {
+    outline: 2px solid rgba(37, 99, 235, 0.25) !important;
+    outline-offset: -1px;
 }
 
-body:not(.preview-mode) .canvas-container *.selected-element {
+/* Selected element — clean blue outline (like Figma) */
+.canvas-container .selected-element {
     outline: 2px solid #2563eb !important;
-    outline-offset: -2px;
+    outline-offset: -1px;
+    z-index: 1;
+}
+
+/* Outline toggle — when .show-outlines is on body, restore wireframes */
+body.show-outlines:not(.preview-mode) .canvas-container > *,
+body.show-outlines:not(.preview-mode) .canvas-container * > * {
+    min-height: 32px;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px dashed #cbd5e1;
+    background-color: rgba(248, 250, 252, 0.3);
+    position: relative;
 }
 
 .canvas-placeholder {

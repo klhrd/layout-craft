@@ -79,6 +79,10 @@ const DICTIONARY = {
                 undo: '↶ Undo',
                 redo: '↷ Redo',
             },
+            canvas: {
+                showOutlines: '🔲 Outlines',
+                hideOutlines: '🔲 Outlines',
+            },
         },
     },
 

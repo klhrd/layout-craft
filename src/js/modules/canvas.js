@@ -9,6 +9,27 @@ export function initCanvas() {
     makeElementSortable(canvas);
     canvas.addEventListener('dragover', (e) => e.preventDefault());
     canvas.addEventListener('drop', handleDrop);
+    initCanvasHover();
+}
+
+/* ── Subtle hover highlight on canvas children ── */
+let hoverTimer = null;
+
+function initCanvasHover() {
+    canvas.addEventListener('mouseover', (e) => {
+        const el = e.target;
+        if (el === canvas || el.classList.contains('canvas-placeholder')) return;
+        clearTimeout(hoverTimer);
+        el.classList.add('el-hover');
+    });
+    canvas.addEventListener('mouseout', (e) => {
+        const el = e.target;
+        if (el === canvas || el.classList.contains('canvas-placeholder')) return;
+        // Small delay so moving between nested children doesn't flicker.
+        hoverTimer = setTimeout(() => {
+            el.classList.remove('el-hover');
+        }, 80);
+    });
 }
 
 export function makeElementSortable(element) {

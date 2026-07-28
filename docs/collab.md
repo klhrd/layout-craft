@@ -16,7 +16,7 @@ Figma's multiplayer experience.
   Realtime feeds).
 - Per-project session room keyed by project id.
 - Live presence: each peer broadcasts `{ id, displayName, cursor pos,
-  selected selector }` at ~10 Hz.
+selected selector }` at ~10 Hz.
 - Edit merge: every canvas / CSS mutation is a CRDT-friendly delta,
   not a full-snapshot replace, otherwise two simultaneous edits thrash.
 - "Following" mode: a user can pin their viewport to another peer's
@@ -34,6 +34,7 @@ Decision: **Yjs** with `y-webrtc` as a fallback and `y-supabase`
 adapter (community) for the delivery layer.
 
 Rationale:
+
 - Yjs CRDTs are mergeable without a central coordinator → no server
   logic beyond relaying.
 - Yjs supports nested maps + arrays, which map cleanly to the canvas
@@ -55,6 +56,7 @@ Y.Doc
 ```
 
 A thin adapter in `src/js/modules/yjsAdapter.js`:
+
 - applies Yjs changes onto the real DOM (observer-driven)
 - captures local DOM / CSS edits and pushes into the Yjs doc
 
@@ -66,6 +68,7 @@ remove).
 
 Use Supabase Broadcast (or a separate WebSocket) to publish presence
 at 10 Hz:
+
 - cursor `(projectId, opacity, xPct, yPct)`
 - selection `selectorOrId` (resolved against DOM)
 
@@ -75,6 +78,7 @@ canvas overlay.
 ### Convergence guarantees
 
 Yjs CRDTs already guarantee eventual convergence. We additionally:
+
 - Persist Yjs state to the projects table on a debounced 3-second timer
   (replaces the snapshot model in Long-term #1 once Yjs is on).
 - On project load, try to load the Yjs state vector; if absent, seed
@@ -89,19 +93,19 @@ known state.
 
 ## Suggested commit plan for this branch
 
-| #  | Commit title                                                         |
-| -- | ------------------------------------------------------------------ |
-| 1  | `Add collab design document` (this file)                            |
-| 2  | `Install yjs + y-supabase; wire presence channel`                   |
-| 3  | `Create src/js/modules/yjsAdapter.js DOM<->Y.XmlFragment bridge`    |
-| 4  | `Map cssData to Y.Map and observer-driven compile updates`          |
-| 5  | `Render remote cursors and selection labels as a canvas overlay`     |
-| 6  | `Add presence broadcast at 10 Hz; debounce local edits`            |
-| 7  | `Add Follow mode + read-only anonymous join`                       |
-| 8  | `Replace snapshot-based persistence with Yjs state vector`         |
-| 9  | `Add a quasi-e2e test with two virtual peers`                       |
-| 10 | `Document collab flow in README and AGENTS.md`                     |
-| 11 | `Mark Long-term #2 complete in ROADMAP`                            |
+| #   | Commit title                                                     |
+| --- | ---------------------------------------------------------------- |
+| 1   | `Add collab design document` (this file)                         |
+| 2   | `Install yjs + y-supabase; wire presence channel`                |
+| 3   | `Create src/js/modules/yjsAdapter.js DOM<->Y.XmlFragment bridge` |
+| 4   | `Map cssData to Y.Map and observer-driven compile updates`       |
+| 5   | `Render remote cursors and selection labels as a canvas overlay` |
+| 6   | `Add presence broadcast at 10 Hz; debounce local edits`          |
+| 7   | `Add Follow mode + read-only anonymous join`                     |
+| 8   | `Replace snapshot-based persistence with Yjs state vector`       |
+| 9   | `Add a quasi-e2e test with two virtual peers`                    |
+| 10  | `Document collab flow in README and AGENTS.md`                   |
+| 11  | `Mark Long-term #2 complete in ROADMAP`                          |
 
 ## Open questions
 

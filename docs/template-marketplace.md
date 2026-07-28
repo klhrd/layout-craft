@@ -21,9 +21,9 @@ blank canvas editor into a starter-kit aggregator.
 - Built-in starter templates bundled with the app; user-uploaded
   templates deferred to a future "Community" iteration.
 - Insert options:
-  1. **Replace canvas** (current canvas contents discarded)
-  2. **Append to canvas** (insert at the end — useful for sticky
-     footers / navbars added atop custom content)
+    1. **Replace canvas** (current canvas contents discarded)
+    2. **Append to canvas** (insert at the end — useful for sticky
+       footers / navbars added atop custom content)
 - After insertion, the regular Inspector / CSS builder edit every
   element, so templates are not sealed black boxes.
 - LocalStorage-friendly: warn before importing a template larger than
@@ -73,6 +73,7 @@ and search by title/tag. Click → preview popover with thumbnail and
 ### Authoring flow
 
 Tight loop:
+
 1. Build a layout visually in LayoutCraft.
 2. "Save as template" exports the canvas + CSS to the in-browser
    template editor (a stub JSON output dialog).
@@ -81,17 +82,17 @@ Tight loop:
 
 ## Suggested commit plan for this branch
 
-| # | Commit title                                                    |
-| - | ------------------------------------------------------------- |
-| 1 | `Add template-marketplace design document` (this file)        |
-| 2 | `Author 5 MVP templates (navbar, hero, pricing, footer, login)` |
-| 3 | `Add src/js/config/templates.js catalogue module`             |
-| 4 | `Build the gallery modal (filter / search / preview popover)`  |
-| 5 | `Implement Replace / Append insertion via rehydrateCanvas`    |
-| 6 | `Add "Save as template" dialog exporting JSON stub`           |
-| 7 | `Add regression tests for each MVP template`                  |
-| 8 | `Document the templates flow in README`                       |
-| 9 | `Mark Long-term #3 complete in ROADMAP`                       |
+| #   | Commit title                                                    |
+| --- | --------------------------------------------------------------- |
+| 1   | `Add template-marketplace design document` (this file)          |
+| 2   | `Author 5 MVP templates (navbar, hero, pricing, footer, login)` |
+| 3   | `Add src/js/config/templates.js catalogue module`               |
+| 4   | `Build the gallery modal (filter / search / preview popover)`   |
+| 5   | `Implement Replace / Append insertion via rehydrateCanvas`      |
+| 6   | `Add "Save as template" dialog exporting JSON stub`             |
+| 7   | `Add regression tests for each MVP template`                    |
+| 8   | `Document the templates flow in README`                         |
+| 9   | `Mark Long-term #3 complete in ROADMAP`                         |
 
 ## Open questions
 

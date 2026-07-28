@@ -39,6 +39,7 @@ flat `selector → styles` map. Migration: keep the existing flat format
 back-compatible by treating top-level entries as leaf rule blocks.
 
 New block shape:
+
 ```js
 {
   type: 'rule' | 'media' | 'keyframes',
@@ -80,6 +81,7 @@ keyframes wrappers do not blink (they cannot match canvas elements).
 ### Visual dictionary additions
 
 Add to `cssDictionary.js`:
+
 - `Custom properties`: `--name` → `var(--name)` glue, `color`,
   `background-color` respect `var()`.
 - `Animation & transforms`: `animation`, `animation-name`,
@@ -96,18 +98,18 @@ Add to `cssDictionary.js`:
 
 ## Suggested commit plan for this branch
 
-| # | Commit title                                                          |
-| - | -------------------------------------------------------------------- |
-| 1 | `Add advanced-css-blocks design document` (this file)                |
-| 2 | `Refactor activeCssData to a tree of blocks (back-compatible)`       |
-| 3 | `Generalise createRuleBoxUI to media/keyframes/nestable containers`  |
-| 4 | `Add + Add Media and + Add Keyframes UI affordances`                  |
-| 5 | `Recursive compileAndRenderCss emitter`                              |
-| 6 | `Extend CSS dictionary with custom properties, animation, transform` |
-| 7 | `Surface Detect toggle only on leaf rules; fix scope matching`       |
-| 8 | `Migrate storage.js serializer/rehydrator for the block tree`         |
-| 9 | `Add unit tests for compiler (media/keyframes/nested output)`        |
-| 10 | `Mark Mid-term #2 complete in ROADMAP`                                |
+| #   | Commit title                                                         |
+| --- | -------------------------------------------------------------------- |
+| 1   | `Add advanced-css-blocks design document` (this file)                |
+| 2   | `Refactor activeCssData to a tree of blocks (back-compatible)`       |
+| 3   | `Generalise createRuleBoxUI to media/keyframes/nestable containers`  |
+| 4   | `Add + Add Media and + Add Keyframes UI affordances`                 |
+| 5   | `Recursive compileAndRenderCss emitter`                              |
+| 6   | `Extend CSS dictionary with custom properties, animation, transform` |
+| 7   | `Surface Detect toggle only on leaf rules; fix scope matching`       |
+| 8   | `Migrate storage.js serializer/rehydrator for the block tree`        |
+| 9   | `Add unit tests for compiler (media/keyframes/nested output)`        |
+| 10  | `Mark Mid-term #2 complete in ROADMAP`                               |
 
 ## Open questions
 
