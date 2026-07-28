@@ -9,6 +9,7 @@ import { initLayers, refreshLayers } from './modules/layers.js';
 import { initCanvasHelpers } from './modules/canvasHelpers.js';
 import { initContextMenu } from './modules/contextMenu.js';
 import { initExporter } from './modules/exporter.js';
+import { importFromPaste } from './modules/importer.js';
 import { initStorage, saveProject } from './modules/storage.js';
 import * as history from './modules/history.js';
 import { push as pushHistory } from './modules/history.js';
@@ -36,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initVisualCssActions();
     initHistoryUI();
     initOutlinesToggle();
+    initImporter();
 
     initStorage(); // Boot the storage manager.
 
@@ -833,6 +835,47 @@ function initOutlinesToggle() {
 
 // Undo/Redo toolbar buttons + global keyboard shortcuts.
 // Buttons reflect canUndo/canRedo via the history subscribe channel.
+function initImporter() {
+    const btnImport = document.getElementById('btn-import');
+    const modal = document.getElementById('import-modal');
+    const btnCancel = document.getElementById('btn-import-cancel');
+    const btnSubmit = document.getElementById('btn-import-submit');
+    const htmlInput = document.getElementById('import-html-input');
+    const cssInput = document.getElementById('import-css-input');
+
+    if (!btnImport || !modal) return;
+
+    btnImport.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+
+    btnCancel.addEventListener('click', () => {
+        modal.style.display = 'none';
+        htmlInput.value = '';
+        cssInput.value = '';
+    });
+
+    btnSubmit.addEventListener('click', () => {
+        const html = htmlInput.value.trim();
+        if (!html) return;
+        importFromPaste(html, cssInput.value.trim());
+        modal.style.display = 'none';
+        htmlInput.value = '';
+        cssInput.value = '';
+
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.style.display = 'none';
+            htmlInput.value = '';
+            cssInput.value = '';
+        }
+    });
+}
+
 function initHistoryUI() {
     const btnUndo = document.getElementById('btn-undo');
     const btnRedo = document.getElementById('btn-redo');
