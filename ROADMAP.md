@@ -261,7 +261,7 @@ for the full audit performed on 2026-07-28.
 | —                              | Mid-term (UX) #10     | Canvas helpers (grid, resize, rulers)           |
 | —                              | Mid-term (UX) #11     | Empty-state guidance                            |
 | —                              | Mid-term (Feature) #1 | ✅ **Done** — undo/redo history                 |
-| `feature/advanced-css-blocks`  | Mid-term (Feature) #2 | `@media`, `:hover`, custom props, keyframes     |
+| —                              | Mid-term (Feature) #2 | ✅ **Done** — advanced CSS blocks                |
 | `feature/export-jsx-vue`       | Mid-term (Feature) #3 | Export to React JSX / Vue SFB                   |
 | `feature/nested-components`    | Mid-term (Feature) #4 | Parent/child Sortable groups                    |
 | `feature/import-flow`          | Mid-term (Feature) #5 | Reverse-parse pasted HTML/CSS                   |
@@ -284,4 +284,5 @@ for the full audit performed on 2026-07-28.
 - [x] Short-term #5: jsconfig.json
 - [x] Short-term #6: README + AGENTS.md documentation pass
 - [x] Mid-term (Feature) #1: Undo/Redo history stack — merged via `feature/ui-skeleton-cleanup`
+- [x] Mid-term (Feature) #2: Advanced CSS blocks (`@media`, `:hover`, pseudo, custom props, keyframes) — merged via `feature/advanced-css-blocks`
 - [x] Branch cleanup on 2026-07-28: deleted 17 stale/merged branches (see [`docs/branch-audit.md`](docs/branch-audit.md))
