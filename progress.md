@@ -20,6 +20,10 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 
 ---
 
+## Refactoring
+
+- **2026-07-28** Consolidate duplicate `buildComponentTree` — `chore/consolidate-buildComponentTree` merged. Deleted redundant `buildComponentTree()` from `canvas.js`, imports `buildComponentTemplate()` from `components.js`. Removed ~40 lines of duplicate code.
+
 ## Recent work
 
 _(appended automatically after each branch merge)_
