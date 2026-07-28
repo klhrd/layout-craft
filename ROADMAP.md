@@ -140,5 +140,5 @@ commits.
 - [x] Short-term #2: ESLint + Prettier
 - [x] Short-term #3: Vitest baseline
 - [x] Short-term #4: Vite build pipeline
-- [ ] Short-term #5: jsconfig.json
+- [x] Short-term #5: jsconfig.json
 - [ ] Short-term #6: README + AGENTS.md documentation pass
