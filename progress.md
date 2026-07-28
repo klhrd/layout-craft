@@ -13,7 +13,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | 5   | Layers / outline panel      | `feature/ux-layers-panel`            | ✅ merged |
 | 6   | Context menu                | `feature/ux-context-menu`            | ✅ merged |
 | 7   | Pre-built component library | `feature/ux-component-library`   | ✅ merged |
-| 8   | Responsive preview          | —                                    | pending   |
+| 8   | Responsive preview          | `feature/ux-responsive-preview`  | ✅ merged |
 | 9   | Keyboard shortcuts          | —                                    | pending   |
 | 10  | Canvas helpers              | —                                    | pending   |
 | 11  | Empty-state guidance        | —                                    | pending   |
@@ -31,3 +31,4 @@ _(appended automatically after each branch merge)_
 - **2026-07-28** UX #5 Layers / outline panel — `feature/ux-layers-panel` merged. Added a layers tree view in the right sidebar showing all canvas elements with indentation hierarchy. Click to select, eye icon to toggle visibility, lock icon to prevent interaction. Auto-refreshes on DOM changes; rehydrates on project load.
 - **2026-07-28** UX #6 Context menu — `feature/ux-context-menu` merged. Right-click any canvas element opens a context menu with: Edit Text (text elements), Duplicate, Delete, Move Up/Down, Copy/Paste Styles, Wrap in &lt;div&gt;. All actions push undo history.
 - **2026-07-28** UX #7 Pre-built component library — `feature/ux-component-library` merged. Added a "Components" category in the left toolbox with 9 pre-built blocks (Hero Section, Feature Grid, Navbar, Card, Contact Form, Footer, Testimonial, Pricing Table, FAQ). Each expands into a full DOM tree with inline styles and placeholder content when dropped. Undo/redo support.
+- **2026-07-28** UX #8 Responsive preview — `feature/ux-responsive-preview` merged. Preview mode now includes a dark toolbar with device frame buttons: Desktop (full width), Tablet (768px), Mobile (375px). Canvas viewport resizes to match selected device, centered. Live pixel width indicator shown.
