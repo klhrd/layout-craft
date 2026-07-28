@@ -1,7 +1,7 @@
 import { selectElement } from './inspector.js';
 import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
-import { COMPONENTS } from '../config/components.js';
+import { COMPONENTS, buildComponentTemplate } from '../config/components.js';
 
 let draggedType = null;
 const canvas = document.getElementById('canvas'); // Grabs .canvas-container.
@@ -250,7 +250,7 @@ function handleDrop(e) {
 
     const tag = draggedType;
     const isComponent = window.draggedComponent && window.draggedComponent.template;
-    const newElement = isComponent ? buildComponentTree(window.draggedComponent.template) : buildNewElement(tag);
+    const newElement = isComponent ? buildComponentTemplate(window.draggedComponent.template) : buildNewElement(tag);
 
     const target = e.target;
     const parent = target === canvas ? canvas : target;
@@ -262,7 +262,7 @@ function handleDrop(e) {
         label: isComponent ? `Drop component: ${window.draggedComponent.label}` : `Drop ${tag}`,
         perform: () => {
             const replacement = isComponent
-                ? buildComponentTree(window.draggedComponent.template)
+                ? buildComponentTemplate(window.draggedComponent.template)
                 : buildNewElement(tag);
             if (nextSibling && nextSibling.parentNode === parent) {
                 parent.insertBefore(replacement, nextSibling);
@@ -280,46 +280,6 @@ function handleDrop(e) {
     selectElement(newElement);
 }
 
-function buildComponentTree(template) {
-    const el = document.createElement(template.tag);
-    if (template.text) el.textContent = template.text;
-    if (template.attr) {
-        for (const [k, v] of Object.entries(template.attr)) {
-            el.setAttribute(k, v);
-        }
-    }
-    if (template.style) {
-        for (const [k, v] of Object.entries(template.style)) {
-            el.style[k] = v;
-        }
-    }
-    if (template.children) {
-        for (const child of template.children) {
-            el.appendChild(buildComponentTree(child));
-        }
-    }
-    const CONTAINER_TAGS = [
-        'div',
-        'section',
-        'header',
-        'footer',
-        'main',
-        'aside',
-        'nav',
-        'form',
-        'ul',
-        'ol',
-        'table',
-        'tr',
-    ];
-    if (CONTAINER_TAGS.includes(template.tag) && typeof Sortable !== 'undefined') {
-        setTimeout(() => {
-            if (el.parentNode) Sortable.create(el, { group: 'canvas', animation: 150 });
-        }, 0);
-    }
-    return el;
-}
-
 function initEmptyStateActions() {
     const btnQuickStart = document.getElementById('btn-quick-start');
     const btnLoadSample = document.getElementById('btn-load-sample');
@@ -329,9 +289,9 @@ function initEmptyStateActions() {
             const placeholder = canvas.querySelector('.canvas-placeholder');
             if (placeholder) placeholder.remove();
 
-            const navbar = buildComponentTree(COMPONENTS.navbar.template);
+            const navbar = buildComponentTemplate(COMPONENTS.navbar.template);
             canvas.appendChild(navbar);
-            const hero = buildComponentTree(COMPONENTS.hero.template);
+            const hero = buildComponentTemplate(COMPONENTS.hero.template);
             canvas.appendChild(hero);
 
             pushHistory({
@@ -367,7 +327,7 @@ function initEmptyStateActions() {
             templates.forEach((key) => {
                 const comp = COMPONENTS[key];
                 if (comp) {
-                    const el = buildComponentTree(comp.template);
+                    const el = buildComponentTemplate(comp.template);
                     canvas.appendChild(el);
                 }
             });
