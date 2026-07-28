@@ -452,6 +452,16 @@ label {
     z-index: 1;
 }
 
+/* Inline text editing — subtle background + caret */
+.canvas-container .editing {
+    outline: 2px solid #10b981 !important;
+    outline-offset: -1px;
+    background-color: rgba(16, 185, 129, 0.04);
+    cursor: text;
+    user-select: text;
+    -webkit-user-select: text;
+}
+
 /* Outline toggle — when .show-outlines is on body, restore wireframes */
 body.show-outlines:not(.preview-mode) .canvas-container > *,
 body.show-outlines:not(.preview-mode) .canvas-container * > * {

@@ -1,5 +1,6 @@
 import { deselectAll } from './inspector.js';
-import { getActiveCssCode } from '../app.js'; // Import the visual-CSS-compiled code.
+import { getActiveCssCode } from '../app.js';
+import { cancelActiveInlineEdit } from './canvas.js';
 import { t } from '../config/i18n.js';
 
 const canvas = document.getElementById('canvas');
@@ -8,6 +9,7 @@ const btnExport = document.getElementById('btn-export');
 
 export function initExporter() {
     btnPreview.addEventListener('click', () => {
+        cancelActiveInlineEdit();
         deselectAll();
         document.body.classList.add('preview-mode');
         const exitBtn = document.createElement('button');

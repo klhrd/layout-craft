@@ -10,6 +10,7 @@ export function initCanvas() {
     canvas.addEventListener('dragover', (e) => e.preventDefault());
     canvas.addEventListener('drop', handleDrop);
     initCanvasHover();
+    initInlineEditing();
 }
 
 /* ── Subtle hover highlight on canvas children ── */
@@ -31,6 +32,93 @@ function initCanvasHover() {
         }, 80);
     });
 }
+
+/* ── Inline text editing (double-click) ── */
+const TEXT_EDITABLE_TAGS = ['h1', 'h2', 'h3', 'p', 'a', 'span', 'button', 'strong', 'em', 'label', 'li', 'th', 'td'];
+
+let inlineEditEl = null;
+let inlineEditOrig = '';
+
+function initInlineEditing() {
+    canvas.addEventListener('dblclick', (e) => {
+        const el = e.target;
+        if (el === canvas || el.classList.contains('canvas-placeholder')) return;
+        const tag = el.tagName.toLowerCase();
+        if (!TEXT_EDITABLE_TAGS.includes(tag)) return;
+        e.stopPropagation();
+        startInlineEdit(el);
+    });
+}
+
+function startInlineEdit(el) {
+    if (inlineEditEl && inlineEditEl !== el) commitInlineEdit(inlineEditEl);
+    inlineEditEl = el;
+    inlineEditOrig = el.textContent;
+    el.contentEditable = 'true';
+    el.classList.add('editing');
+    el.focus();
+
+    const sel = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    // Commit on blur.
+    el.addEventListener('blur', () => commitInlineEdit(el), { once: true });
+}
+
+function commitInlineEdit(el) {
+    if (!el || el !== inlineEditEl) return;
+    el.contentEditable = 'false';
+    el.classList.remove('editing');
+    const newText = el.textContent;
+    const oldText = inlineEditOrig;
+    inlineEditEl = null;
+    inlineEditOrig = '';
+    if (newText === oldText) return;
+
+    pushHistory({
+        label: 'Edit text',
+        perform: () => {
+            el.textContent = newText;
+        },
+        rollback: () => {
+            el.textContent = oldText;
+        },
+    });
+}
+
+function cancelInlineEdit(el) {
+    if (!el || el !== inlineEditEl) return;
+    el.textContent = inlineEditOrig;
+    el.contentEditable = 'false';
+    el.classList.remove('editing');
+    inlineEditEl = null;
+    inlineEditOrig = '';
+}
+
+// Exposed so app.js can cancel inline editing before preview / project switch.
+export function cancelActiveInlineEdit() {
+    if (inlineEditEl) cancelInlineEdit(inlineEditEl);
+}
+
+// Global keydown for Enter → commit, Escape → cancel.
+document.addEventListener('keydown', (e) => {
+    if (!inlineEditEl) return;
+    if (e.key === 'Escape') {
+        e.preventDefault();
+        cancelInlineEdit(inlineEditEl);
+        return;
+    }
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        commitInlineEdit(inlineEditEl);
+        // Move focus away so blur doesn't re-trigger.
+        inlineEditEl?.blur();
+    }
+});
 
 export function makeElementSortable(element) {
     new Sortable(element, {
