@@ -3,6 +3,25 @@ import { getActiveCssCode } from '../app.js';
 import { cancelActiveInlineEdit } from './canvas.js';
 import { t } from '../config/i18n.js';
 
+export function buildExportHtml(innerHtml) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LayoutCraft Site</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+${innerHtml.trim()}
+</body>
+</html>`;
+}
+
+export function buildExportCss(cssCode) {
+    return `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n${cssCode}`;
+}
+
 const canvas = document.getElementById('canvas');
 const btnPreview = document.getElementById('btn-preview');
 const btnExport = document.getElementById('btn-export');
@@ -85,33 +104,19 @@ export function initExporter() {
         const tempPlaceholder = canvasClone.querySelector('.canvas-placeholder');
         if (tempPlaceholder) tempPlaceholder.remove();
 
-        function cleanStyles(element) {
-            element.classList.remove('selected-element');
-            Array.from(element.children).forEach((child) => cleanStyles(child));
-        }
         Array.from(canvasClone.children).forEach((child) => cleanStyles(child));
 
-        const finalHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LayoutCraft Site</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-${canvasClone.innerHTML.trim()}
-</body>
-</html>`;
-
-        // Use the CSS code compiled by the visual block builder for the export.
-        const finalCSS =
-            `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n` +
-            getActiveCssCode();
+        const finalHTML = buildExportHtml(canvasClone.innerHTML);
+        const finalCSS = buildExportCss(getActiveCssCode());
 
         downloadFile('index.html', finalHTML);
         downloadFile('style.css', finalCSS);
     });
+}
+
+export function cleanStyles(element) {
+    element.classList.remove('selected-element');
+    Array.from(element.children).forEach((child) => cleanStyles(child));
 }
 
 function downloadFile(filename, text) {

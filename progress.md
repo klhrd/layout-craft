@@ -23,7 +23,8 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 ## Refactoring
 
 - **2026-07-28** Consolidate duplicate `buildComponentTree` — `chore/consolidate-buildComponentTree` merged. Deleted redundant `buildComponentTree()` from `canvas.js`, imports `buildComponentTemplate()` from `components.js`. Removed ~40 lines of duplicate code.
-- **2026-07-28** `cssState.js` module + migration — `refactor/css-state-migration` merged. Created `src/js/config/cssState.js` to centralize `activeCssData` state management. Replaced all `window.activeCssData` direct access in `app.js`, `inspector.js`, and `storage.js` with cssState API (`getRule`/`setRule`/`deleteRule`/`getProperty`/`setProperty`/`deleteProperty`/`renameRule`/`serialize`/`deserialize`/`nextClassIndex`). Kept backward-compat reference. Eliminated ~68 global state references.
+- **2026-07-28** `cssState.js` module + migration — `refactor/css-state-migration` merged. Created `src/js/config/cssState.js` to centralize `activeCssData` state management. Replaced all `window.activeCssData` direct access in `app.js`, `inspector.js`, and `storage.js` with cssState API. Kept backward-compat reference. Eliminated ~68 global state references.
+- **2026-07-28** Fix preview mode CSS aggression — `fix/preview-mode-css` merged. Replaced aggressive `* { border/outline/background: none !important }` with targeted selectors that only strip editor chrome. User styles now render faithfully in preview.
 
 ## Recent work
 
