@@ -98,10 +98,18 @@ function getElementLabel(el) {
     return label;
 }
 
+let _nextNodeId = 1;
+
+function getNodeId(el) {
+    if (!el.dataset.nodeId) el.dataset.nodeId = _nextNodeId++;
+    return el.dataset.nodeId;
+}
+
 function buildLayerEntry(el, parentContainer, depth) {
     const entry = document.createElement('div');
     entry.className = 'layer-entry';
     entry.dataset.depth = depth;
+    entry.dataset.nodeId = getNodeId(el);
     entry.style.paddingLeft = `${12 + depth * 16}px`;
 
     if (el.classList.contains('selected-element')) {
@@ -186,13 +194,9 @@ function buildLayerEntry(el, parentContainer, depth) {
 function highlightLayerEntry(el) {
     if (!treeContainer) return;
     treeContainer.querySelectorAll('.layer-selected').forEach((e) => e.classList.remove('layer-selected'));
-    const entries = treeContainer.querySelectorAll('.layer-entry');
-    entries.forEach((entry) => {
-        const label = entry.querySelector('.layer-label');
-        if (label && label.textContent.includes(`<${el.tagName.toLowerCase()}>`)) {
-            entry.classList.add('layer-selected');
-        }
-    });
+    const nodeId = getNodeId(el);
+    const target = treeContainer.querySelector(`.layer-entry[data-node-id="${nodeId}"]`);
+    if (target) target.classList.add('layer-selected');
 }
 
 export function refreshLayers() {
