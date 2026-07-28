@@ -12,8 +12,8 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | 4   | Visual property editors     | `feature/ux-visual-property-editors` | ✅ merged |
 | 5   | Layers / outline panel      | `feature/ux-layers-panel`            | ✅ merged |
 | 6   | Context menu                | `feature/ux-context-menu`            | ✅ merged |
-| 7   | Pre-built component library | `feature/ux-component-library`   | ✅ merged |
-| 8   | Responsive preview          | `feature/ux-responsive-preview`  | ✅ merged |
+| 7   | Pre-built component library | `feature/ux-component-library`       | ✅ merged |
+| 8   | Responsive preview          | `feature/ux-responsive-preview`      | ✅ merged |
 | 9   | Keyboard shortcuts          | —                                    | pending   |
 | 10  | Canvas helpers              | —                                    | pending   |
 | 11  | Empty-state guidance        | —                                    | pending   |
