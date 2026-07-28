@@ -261,7 +261,7 @@ for the full audit performed on 2026-07-28.
 | —                              | Mid-term (UX) #10     | Canvas helpers (grid, resize, rulers)           |
 | —                              | Mid-term (UX) #11     | Empty-state guidance                            |
 | —                              | Mid-term (Feature) #1 | ✅ **Done** — undo/redo history                 |
-| —                              | Mid-term (Feature) #2 | ✅ **Done** — advanced CSS blocks                |
+| —                              | Mid-term (Feature) #2 | ✅ **Done** — advanced CSS blocks               |
 | `feature/export-jsx-vue`       | Mid-term (Feature) #3 | Export to React JSX / Vue SFB                   |
 | `feature/nested-components`    | Mid-term (Feature) #4 | Parent/child Sortable groups                    |
 | `feature/import-flow`          | Mid-term (Feature) #5 | Reverse-parse pasted HTML/CSS                   |
