@@ -69,3 +69,9 @@ export function getCounter() {
 export function setCounter(n) {
     _counter = n;
 }
+
+// Raw reference for backward compatibility during migration.
+// Returns the internal object so window.activeCssData still works.
+export function getRawData() {
+    return _data;
+}
