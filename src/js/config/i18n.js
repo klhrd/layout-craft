@@ -65,6 +65,15 @@ const DICTIONARY = {
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `Enter ${attr}...`,
+                styles: 'Styles',
+                color: 'Color',
+                bgColor: 'Background',
+                fontSize: 'Font Size',
+                fontWeight: 'Font Weight',
+                textAlign: 'Text Align',
+                padding: 'Padding',
+                margin: 'Margin',
+                borderRadius: 'Border Radius',
             },
             storage: {
                 meterLabel: (used, total, pct) => `${used} MB / ${total} MB (${pct}%)`,
