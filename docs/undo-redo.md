@@ -29,6 +29,7 @@ reverted without losing work.
 Decision: **command pattern** (mutable references, applied inverse).
 
 Rationale:
+
 - Snapshots of `canvas.innerHTML` + `window.activeCssData` are simple but
   explode in size quickly (5MB LocalStorage already a concern).
 - A command object `{ kind, forwards(), backwards() }` records only the
@@ -45,15 +46,17 @@ New file: `src/js/modules/history.js`.
 Public API (no DOM access; pure state):
 
 ```js
-push(command);          // record + clear redo stack
-undo();                 // call current.backward() + move pointer back
-redo();                 // move pointer forward + call current.forwards()
-canUndo(); canRedo();   // booleans for UI state
-reset();                // clear on project switch
-subscribe(listener);    // UI refresh hook
+push(command); // record + clear redo stack
+undo(); // call current.backward() + move pointer back
+redo(); // move pointer forward + call current.forwards()
+canUndo();
+canRedo(); // booleans for UI state
+reset(); // clear on project switch
+subscribe(listener); // UI refresh hook
 ```
 
 Each `command` object:
+
 ```js
 {
   label: 'Set padding on .card',
@@ -99,17 +102,17 @@ stack.
 
 ## Suggested commit plan for this branch
 
-| # | Commit title                                              |
-| - | --------------------------------------------------------- |
-| 1 | `Add history.js design document` (this file)              |
-| 2 | `Implement history.js command stack with bounded buffer`  |
-| 3 | `Add undo/redo toolbar UI and subscribe wiring`           |
-| 4 | `Wrap canvas.js drop and Sortable move with commands`     |
-| 5 | `Wrap inspector.js edits and delete with commands`        |
-| 6 | `Wrap app.js CSS rule mutations with commands`           |
-| 7 | `Reset history on project switch in storage.js`          |
-| 8 | `Add unit tests for history.js (push/undo/redo/bound)`   |
-| 9 | `Mark Mid-term #1 complete in ROADMAP`                   |
+| #   | Commit title                                             |
+| --- | -------------------------------------------------------- |
+| 1   | `Add history.js design document` (this file)             |
+| 2   | `Implement history.js command stack with bounded buffer` |
+| 3   | `Add undo/redo toolbar UI and subscribe wiring`          |
+| 4   | `Wrap canvas.js drop and Sortable move with commands`    |
+| 5   | `Wrap inspector.js edits and delete with commands`       |
+| 6   | `Wrap app.js CSS rule mutations with commands`           |
+| 7   | `Reset history on project switch in storage.js`          |
+| 8   | `Add unit tests for history.js (push/undo/redo/bound)`   |
+| 9   | `Mark Mid-term #1 complete in ROADMAP`                   |
 
 ## Open questions
 

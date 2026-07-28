@@ -5,6 +5,7 @@ import { initCanvas, setDraggedType } from './modules/canvas.js';
 import { initInspector } from './modules/inspector.js';
 import { initExporter } from './modules/exporter.js';
 import { initStorage, saveProject } from './modules/storage.js';
+import * as history from './modules/history.js';
 
 const liveStyles = document.getElementById('live-styles');
 const visualCssContainer = document.getElementById('visual-css-container');
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initExporter();
     initModeSwitcher();
     initVisualCssActions();
+    initHistoryUI();
 
     initStorage(); // Boot the storage manager.
 
@@ -324,5 +326,48 @@ function initModeSwitcher() {
         document.body.className = 'mode-css';
         switchCssBtn.classList.add('active');
         switchVisualBtn.classList.remove('active');
+    });
+}
+
+// Undo/Redo toolbar buttons + global keyboard shortcuts.
+// Buttons reflect canUndo/canRedo via the history subscribe channel.
+function initHistoryUI() {
+    const btnUndo = document.getElementById('btn-undo');
+    const btnRedo = document.getElementById('btn-redo');
+    if (!btnUndo || !btnRedo) return;
+
+    // Keep DOM labels wired to i18n (re-applied here every emit cycle).
+    btnUndo.textContent = t('ui.history.undo');
+    btnRedo.textContent = t('ui.history.redo');
+
+    const applyState = ({ canUndo, canRedo }) => {
+        btnUndo.disabled = !canUndo;
+        btnUndo.style.opacity = canUndo ? '1' : '0.45';
+        btnRedo.disabled = !canRedo;
+        btnRedo.style.opacity = canRedo ? '1' : '0.45';
+    };
+    history.subscribe(applyState);
+
+    btnUndo.addEventListener('click', () => history.undo());
+    btnRedo.addEventListener('click', () => history.redo());
+
+    // Global keyboard shortcuts.
+    document.addEventListener('keydown', (e) => {
+        // Ignore when typing into an input/textarea/select (no clobber of
+        // native text editing gestures).
+        const target = e.target;
+        if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+        if (target && target.isContentEditable) return;
+
+        const ctrl = e.ctrlKey || e.metaKey;
+        if (!ctrl || e.key.toLowerCase() !== 'z') return;
+
+        if (e.shiftKey) {
+            e.preventDefault();
+            history.redo();
+        } else {
+            e.preventDefault();
+            history.undo();
+        }
     });
 }

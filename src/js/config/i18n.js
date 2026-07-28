@@ -75,6 +75,10 @@ const DICTIONARY = {
             },
             backToEditor: '⬅️ Back to Editor',
             newElementText: (tag) => `New ${tag}`,
+            history: {
+                undo: '↶ Undo',
+                redo: '↷ Redo',
+            },
         },
     },
 
