@@ -2,7 +2,10 @@ let _data = {};
 let _counter = 1;
 
 export function initCssState() {
-    _data = {};
+    // Clear in-place so existing references (window.activeCssData) stay valid.
+    for (const key of Object.keys(_data)) {
+        delete _data[key];
+    }
     _counter = 1;
 }
 
@@ -68,4 +71,10 @@ export function getCounter() {
 
 export function setCounter(n) {
     _counter = n;
+}
+
+// Raw reference for backward compatibility during migration.
+// Returns the internal object so window.activeCssData still works.
+export function getRawData() {
+    return _data;
 }

@@ -2,6 +2,7 @@ import { compileAndRenderCss } from '../app.js';
 import { makeElementSortable } from './canvas.js';
 import { deselectAll } from './inspector.js';
 import { reset as resetHistory } from './history.js';
+import * as cssState from '../config/cssState.js';
 import { t } from '../config/i18n.js';
 
 const STORAGE_KEY_PREFIX = 'layoutcraft_proj_';
@@ -75,7 +76,7 @@ function bindStorageEvents() {
         localStorage.setItem('layoutcraft_last_active_proj', currentProjectName);
 
         // Initialize the new project's data.
-        window.activeCssData = {};
+        cssState.initCssState();
         document.getElementById('canvas').innerHTML =
             `<div class="canvas-placeholder">${t('ui.panels.canvasPlaceholder')}</div>`;
 
@@ -97,7 +98,7 @@ export function saveProject(projName, showAlert = false) {
     const canvasHtml = document.getElementById('canvas').innerHTML;
     const projectData = {
         html: canvasHtml,
-        cssData: window.activeCssData || {},
+        cssData: cssState.serialize(),
     };
 
     try {
@@ -125,7 +126,7 @@ export function loadProject(projName) {
     resetHistory(); // Switching projects means a new undo/redo context.
 
     if (!rawData) {
-        window.activeCssData = {};
+        cssState.initCssState();
         canvas.innerHTML = `<div class="canvas-placeholder">${t('ui.panels.canvasPlaceholder')}</div>`;
         compileAndRenderCss();
         updateStorageMeter();
@@ -134,7 +135,7 @@ export function loadProject(projName) {
 
     const projectData = JSON.parse(rawData);
     canvas.innerHTML = projectData.html;
-    window.activeCssData = projectData.cssData || {};
+    cssState.deserialize(projectData.cssData || {});
 
     // Key rehydration: restore the drag/sort behaviors (Sortable) for the loaded HTML.
     const containerTags = [
