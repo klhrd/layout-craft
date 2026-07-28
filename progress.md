@@ -16,7 +16,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | 8   | Responsive preview          | `feature/ux-responsive-preview`      | ✅ merged |
 | 9   | Keyboard shortcuts          | `feature/ux-keyboard-shortcuts`      | ✅ merged |
 | 10  | Canvas helpers              | `feature/ux-canvas-helpers`          | ✅ merged |
-| 11  | Empty-state guidance        | `feature/ux-empty-state`         | ✅ merged |
+| 11  | Empty-state guidance        | `feature/ux-empty-state`             | ✅ merged |
 
 ---
 

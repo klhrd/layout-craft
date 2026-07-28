@@ -835,12 +835,21 @@ body.preview-mode .canvas-container {
     max-width: 100%;
 }
 
-body.preview-mode .canvas-container * {
-    border: none !important;
+body.preview-mode .canvas-container .selected-element {
+    outline: none !important;
+}
+
+body.preview-mode .canvas-container .el-hover {
+    outline: none !important;
+}
+
+body.preview-mode .canvas-container .editing {
     outline: none !important;
     background-color: transparent !important;
-    margin: 0;
-    padding: 0;
+}
+
+body.preview-mode .canvas-container .canvas-placeholder {
+    display: none;
 }
 
 /* Exit preview button */
