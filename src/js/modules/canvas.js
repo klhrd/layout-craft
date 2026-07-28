@@ -8,7 +8,18 @@ const canvas = document.getElementById('canvas'); // Grabs .canvas-container.
 
 export function initCanvas() {
     makeElementSortable(canvas);
-    canvas.addEventListener('dragover', (e) => e.preventDefault());
+
+    canvas.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        clearDropHighlight();
+        const target = resolveDropTarget(e.target);
+        if (target !== canvas) target.classList.add('drop-target-active');
+    });
+
+    canvas.addEventListener('dragleave', (e) => {
+        if (!canvas.contains(e.relatedTarget)) clearDropHighlight();
+    });
+
     canvas.addEventListener('drop', handleDrop);
     initCanvasHover();
     initInlineEditing();
@@ -198,7 +209,14 @@ const CONTAINER_TAGS = [
     'ol',
     'table',
     'tr',
+    'tbody',
+    'thead',
+    'dl',
 ];
+
+export function isContainer(el) {
+    return el && CONTAINER_TAGS.includes(el.tagName.toLowerCase());
+}
 const TEXT_ALLOWED_TAGS = [
     'h1',
     'h2',
@@ -241,9 +259,20 @@ function buildNewElement(tag) {
     return el;
 }
 
+function resolveDropTarget(el) {
+    if (el === canvas || isContainer(el)) return el;
+    const ancestor = el.closest(CONTAINER_TAGS.join(','));
+    return ancestor || canvas;
+}
+
+function clearDropHighlight() {
+    canvas.querySelectorAll('.drop-target-active').forEach((el) => el.classList.remove('drop-target-active'));
+}
+
 function handleDrop(e) {
     e.preventDefault();
     if (!draggedType) return;
+    clearDropHighlight();
 
     const placeholder = canvas.querySelector('.canvas-placeholder');
     if (placeholder) placeholder.remove();
@@ -252,8 +281,7 @@ function handleDrop(e) {
     const isComponent = window.draggedComponent && window.draggedComponent.template;
     const newElement = isComponent ? buildComponentTemplate(window.draggedComponent.template) : buildNewElement(tag);
 
-    const target = e.target;
-    const parent = target === canvas ? canvas : target;
+    const parent = resolveDropTarget(e.target);
     parent.appendChild(newElement);
 
     const nextSibling = newElement.nextSibling;
