@@ -65,14 +65,37 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 - **Selected-element affordance.** Draw a clean blue outline + 8 resize handles
   on the selected element (like Figma/Webflow).
 
-### 2. Inline text editing
+### 2. Select-to-style (eliminate manual selector workflow)
+
+- **Problem:** currently you must (1) add a class/ID in the inspector, (2) go
+  to the CSS Rules panel, (3) type a selector by hand, (4) drag property blocks
+  into it. Users should never need to touch a selector.
+- **Solution:** when an element is selected, the inspector shows an inline
+  **Styles** section with editable CSS properties (font, spacing, colour,
+  border, shadow, layout). Changing any value:
+    1. Auto-generates a unique class (e.g. `._lc-1`, `._lc-2`) if the element
+       doesn't already have one.
+    2. Auto-creates a CSS rule for that class in `window.activeCssData`.
+    3. Writes the `<style>` tag (same `compileAndRenderCss` mechanism).
+    4. The undo stack records the property change.
+- **Visual flow:** select → tweak sliders/pickers → see result instantly.
+  The "Visual CSS Rules" panel becomes an advanced view for power users who
+  still want to see/edit raw selectors, but the default path bypasses it
+  entirely.
+- **Edge cases:**
+    - If the element already has a user-assigned class, edit that class's rule.
+    - If multiple elements share the class, editing affects all of them
+      (expected WYSIWYG behaviour — the user sees the cascade).
+    - Removing all custom styles removes the auto-generated class.
+
+### 3. Inline text editing
 
 - Double-click any text node (p, h1-h6, span, a, button, label, li, td, th)
   to enter edit mode directly on the canvas.
 - On Enter or blur, commit the change and push an undo command.
 - Escape cancels the edit and reverts to the previous text.
 
-### 3. Visual property editors (replace raw text inputs)
+### 4. Visual property editors (replace raw text inputs)
 
 | Current              | Target                                           |
 | -------------------- | ------------------------------------------------ |
@@ -87,7 +110,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 - Reusable widget components: `ColorPicker`, `UnitSlider`, `ValueDropdown`,
   `SpacingEditor` (padding/margin with visual 4-direction diagram).
 
-### 4. Layers / outline panel
+### 5. Layers / outline panel
 
 - Replace or supplement the right-sidebar inspector with a **layers tree**
   showing the full DOM hierarchy of the canvas.
@@ -95,7 +118,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 - Drag layers to re-parent/re-order elements (mirrored on canvas).
 - Eye icon to toggle visibility of any element (hides via CSS).
 
-### 5. Context menu (right-click)
+### 6. Context menu (right-click)
 
 - Right-click any canvas element to show:
     - **Edit text** (if text node)
@@ -105,7 +128,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
     - **Move forward / backward** (z-index / sibling order)
     - **Wrap in** div/section/a (nest the selected element)
 
-### 6. Pre-built component library
+### 7. Pre-built component library
 
 - Replace raw HTML tags in the toolbox with styled presets:
     - Hero section (bg image, headline, subtitle, CTA button)
@@ -118,7 +141,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 - Each preset creates multiple nested elements with inline styles that the
   user can then customise in the inspector.
 
-### 7. Responsive preview
+### 8. Responsive preview
 
 - Add viewport breakpoint buttons to the control bar: Desktop (1440 px),
   Tablet (768 px), Mobile (375 px).
@@ -127,7 +150,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 - Add a "Responsive" mode where the user can set per-breakpoint CSS overrides
   (media queries generated automatically).
 
-### 8. Keyboard shortcuts (power-user)
+### 9. Keyboard shortcuts (power-user)
 
 | Shortcut               | Action                               |
 | ---------------------- | ------------------------------------ |
@@ -140,7 +163,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 | `↑` / `↓` / `←` / `→`  | Nudge selected element position (px) |
 | `Shift + arrow`        | Nudge 10 px                          |
 
-### 9. Canvas helpers
+### 10. Canvas helpers
 
 - **Snap-to-grid.** Show alignment guide lines when dragging an element
   aligns with another element's edges or centre.
@@ -148,7 +171,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
   width/height/padding visually on canvas.
 - **Ruler.** Optional rulers along the top and left edges of the canvas.
 
-### 10. Empty-state guidance
+### 11. Empty-state guidance
 
 - Replace the bare "Drag and drop elements here" placeholder with:
     - A **"Start from a template"** button that opens a template picker.
@@ -227,15 +250,16 @@ for the full audit performed on 2026-07-28.
 | ------------------------------ | --------------------- | ----------------------------------------------- |
 | `master`                       | —                     | Stable, deployable builds (GitHub Pages source) |
 | —                              | Mid-term (UX) #1      | WYSIWYG canvas                                  |
-| —                              | Mid-term (UX) #2      | Inline text editing                             |
-| —                              | Mid-term (UX) #3      | Visual property editors                         |
-| —                              | Mid-term (UX) #4      | Layers / outline panel                          |
-| —                              | Mid-term (UX) #5      | Context menu                                    |
-| —                              | Mid-term (UX) #6      | Pre-built component library                     |
-| —                              | Mid-term (UX) #7      | Responsive preview                              |
-| —                              | Mid-term (UX) #8      | Keyboard shortcuts                              |
-| —                              | Mid-term (UX) #9      | Canvas helpers (grid, resize, rulers)           |
-| —                              | Mid-term (UX) #10     | Empty-state guidance                            |
+| —                              | Mid-term (UX) #2      | Select-to-style (auto class + rule generation)  |
+| —                              | Mid-term (UX) #3      | Inline text editing                             |
+| —                              | Mid-term (UX) #4      | Visual property editors                         |
+| —                              | Mid-term (UX) #5      | Layers / outline panel                          |
+| —                              | Mid-term (UX) #6      | Context menu                                    |
+| —                              | Mid-term (UX) #7      | Pre-built component library                     |
+| —                              | Mid-term (UX) #8      | Responsive preview                              |
+| —                              | Mid-term (UX) #9      | Keyboard shortcuts                              |
+| —                              | Mid-term (UX) #10     | Canvas helpers (grid, resize, rulers)           |
+| —                              | Mid-term (UX) #11     | Empty-state guidance                            |
 | —                              | Mid-term (Feature) #1 | ✅ **Done** — undo/redo history                 |
 | `feature/advanced-css-blocks`  | Mid-term (Feature) #2 | `@media`, `:hover`, custom props, keyframes     |
 | `feature/export-jsx-vue`       | Mid-term (Feature) #3 | Export to React JSX / Vue SFB                   |
