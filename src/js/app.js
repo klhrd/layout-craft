@@ -520,14 +520,38 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
     dropzone.appendChild(block);
 }
 
+function emitBlock(block, indent) {
+    const pad = '  '.repeat(indent);
+    if (block.type === 'media' || block.type === 'keyframes') {
+        let out = `${pad}${block.selector} {\n`;
+        if (block.children) {
+            for (const child of block.children) {
+                out += emitBlock(child, indent + 1);
+            }
+        }
+        if (block.styles) {
+            for (const [prop, val] of Object.entries(block.styles)) {
+                out += `${pad}  ${prop}: ${val};\n`;
+            }
+        }
+        out += `${pad}}\n\n`;
+        return out;
+    }
+    // rule
+    let out = `${pad}${block.selector} {\n`;
+    if (block.styles) {
+        for (const [prop, val] of Object.entries(block.styles)) {
+            out += `${pad}  ${prop}: ${val};\n`;
+        }
+    }
+    out += `${pad}}\n\n`;
+    return out;
+}
+
 export function compileAndRenderCss() {
     let cssString = '';
-    for (const [selector, styles] of cssState.getAllRules()) {
-        cssString += `${selector} {\n`;
-        for (const [prop, val] of Object.entries(styles)) {
-            cssString += `  ${prop}: ${val};\n`;
-        }
-        cssString += `}\n\n`;
+    for (const block of cssState.getBlocks()) {
+        cssString += emitBlock(block, 0);
     }
     liveStyles.textContent = cssString;
 }
