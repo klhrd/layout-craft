@@ -10,7 +10,10 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "dev": "vite",
+        "build": "vite build",
+        "preview": "vite preview"
     },
     "devDependencies": {
         "eslint": "^8.57.1",
@@ -19,6 +22,7 @@
         "happy-dom": "^20.11.1",
         "jsdom": "^25.0.1",
         "prettier": "^3.9.6",
+        "vite": "^7.3.6",
         "vitest": "^3.2.7"
     }
 }
