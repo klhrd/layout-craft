@@ -3,7 +3,7 @@ import { CSS_DICTIONARY } from './config/cssDictionary.js';
 import { COMPONENTS } from './config/components.js';
 import { t } from './config/i18n.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
-import { initInspector } from './modules/inspector.js';
+import { initInspector, selectElement, deselectAll } from './modules/inspector.js';
 import { initLayers, refreshLayers } from './modules/layers.js';
 import { initContextMenu } from './modules/contextMenu.js';
 import { initExporter } from './modules/exporter.js';
@@ -589,23 +589,121 @@ function initHistoryUI() {
     btnUndo.addEventListener('click', () => history.undo());
     btnRedo.addEventListener('click', () => history.redo());
 
+    // Clipboard for copy/paste.
+    let clipboardElement = null;
+
     // Global keyboard shortcuts.
     document.addEventListener('keydown', (e) => {
-        // Ignore when typing into an input/textarea/select (no clobber of
-        // native text editing gestures).
         const target = e.target;
         if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
         if (target && target.isContentEditable) return;
 
         const ctrl = e.ctrlKey || e.metaKey;
-        if (!ctrl || e.key.toLowerCase() !== 'z') return;
+        const key = e.key.toLowerCase();
 
-        if (e.shiftKey) {
+        // Undo / Redo
+        if (ctrl && key === 'z') {
             e.preventDefault();
-            history.redo();
-        } else {
+            if (e.shiftKey) history.redo();
+            else history.undo();
+            return;
+        }
+
+        // Copy
+        if (ctrl && key === 'c') {
+            const sel = document.querySelector('.canvas-container .selected-element');
+            if (sel) {
+                clipboardElement = sel.cloneNode(true);
+            }
+            return;
+        }
+
+        // Paste
+        if (ctrl && key === 'v') {
+            if (!clipboardElement) return;
             e.preventDefault();
-            history.undo();
+            const canvas = document.getElementById('canvas');
+            const clone = clipboardElement.cloneNode(true);
+            canvas.appendChild(clone);
+            selectElement(clone);
+            pushHistory({
+                label: 'Paste element',
+                perform: () => {
+                    canvas.appendChild(clone);
+                    selectElement(clone);
+                },
+                rollback: () => {
+                    clone.remove();
+                },
+            });
+            return;
+        }
+
+        // Select all
+        if (ctrl && key === 'a') {
+            e.preventDefault();
+            const canvas = document.getElementById('canvas');
+            const first = canvas.firstElementChild;
+            if (first && !first.classList.contains('canvas-placeholder')) selectElement(first);
+            return;
+        }
+
+        // Delete / Backspace
+        if (key === 'delete' || key === 'backspace') {
+            const sel = document.querySelector('.canvas-container .selected-element');
+            if (!sel) return;
+            e.preventDefault();
+            const parent = sel.parentNode;
+            const next = sel.nextSibling;
+            sel.remove();
+            deselectAll();
+            pushHistory({
+                label: 'Delete element',
+                perform: () => {
+                    if (next && next.parentNode === parent) parent.insertBefore(sel, next);
+                    else parent.appendChild(sel);
+                    selectElement(sel);
+                },
+                rollback: () => {
+                    if (next && next.parentNode === parent) parent.insertBefore(sel, next);
+                    else parent.appendChild(sel);
+                    selectElement(sel);
+                },
+            });
+            return;
+        }
+
+        // Escape
+        if (key === 'escape') {
+            deselectAll();
+            return;
+        }
+
+        // Arrow keys — nudge selected element by 1px
+        if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
+            const sel = document.querySelector('.canvas-container .selected-element');
+            if (!sel) return;
+            e.preventDefault();
+            const delta = key === 'arrowup' ? -1 : key === 'arrowdown' ? 1 : 0;
+            const deltaX = key === 'arrowleft' ? -1 : key === 'arrowright' ? 1 : 0;
+            const oldTop = parseInt(sel.style.top) || 0;
+            const oldLeft = parseInt(sel.style.left) || 0;
+            const newTop = oldTop + delta;
+            const newLeft = oldLeft + deltaX;
+            sel.style.top = `${newTop}px`;
+            sel.style.left = `${newLeft}px`;
+            pushHistory({
+                label: 'Nudge element',
+                perform: () => {
+                    sel.style.top = `${newTop}px`;
+                    sel.style.left = `${newLeft}px`;
+                },
+                rollback: () => {
+                    sel.style.top = `${oldTop}px`;
+                    sel.style.left = `${oldLeft}px`;
+                },
+            });
+            return;
         }
     });
 }
