@@ -1,6 +1,7 @@
 import { selectElement } from './inspector.js';
 import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
+import { COMPONENTS } from '../config/components.js';
 
 let draggedType = null;
 const canvas = document.getElementById('canvas'); // Grabs .canvas-container.
@@ -11,6 +12,7 @@ export function initCanvas() {
     canvas.addEventListener('drop', handleDrop);
     initCanvasHover();
     initInlineEditing();
+    initEmptyStateActions();
 }
 
 /* ── Subtle hover highlight on canvas children ── */
@@ -316,4 +318,67 @@ function buildComponentTree(template) {
         }, 0);
     }
     return el;
+}
+
+function initEmptyStateActions() {
+    const btnQuickStart = document.getElementById('btn-quick-start');
+    const btnLoadSample = document.getElementById('btn-load-sample');
+
+    if (btnQuickStart) {
+        btnQuickStart.addEventListener('click', () => {
+            const placeholder = canvas.querySelector('.canvas-placeholder');
+            if (placeholder) placeholder.remove();
+
+            const navbar = buildComponentTree(COMPONENTS.navbar.template);
+            canvas.appendChild(navbar);
+            const hero = buildComponentTree(COMPONENTS.hero.template);
+            canvas.appendChild(hero);
+
+            pushHistory({
+                label: 'Quick start template',
+                perform: () => {
+                    const pl = canvas.querySelector('.canvas-placeholder');
+                    if (pl) pl.remove();
+                    canvas.appendChild(navbar.cloneNode(true));
+                    canvas.appendChild(hero.cloneNode(true));
+                },
+                rollback: () => {
+                    navbar.remove();
+                    hero.remove();
+                },
+            });
+        });
+    }
+
+    if (btnLoadSample) {
+        btnLoadSample.addEventListener('click', () => {
+            const select = document.getElementById('select-project');
+            const sampleName = '_Sample_Project';
+            const existing = Array.from(select.options).find((o) => o.value === sampleName);
+            if (existing) {
+                select.value = sampleName;
+                select.dispatchEvent(new Event('change'));
+                return;
+            }
+            const placeholder = canvas.querySelector('.canvas-placeholder');
+            if (placeholder) placeholder.remove();
+
+            const templates = ['navbar', 'hero', 'features', 'footer'];
+            templates.forEach((key) => {
+                const comp = COMPONENTS[key];
+                if (comp) {
+                    const el = buildComponentTree(comp.template);
+                    canvas.appendChild(el);
+                }
+            });
+
+            if (select) {
+                const opt = document.createElement('option');
+                opt.value = sampleName;
+                opt.textContent = '📂 Sample Project';
+                select.appendChild(opt);
+                select.value = sampleName;
+            }
+        });
+    }
 }
