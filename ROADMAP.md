@@ -139,6 +139,6 @@ commits.
 - [x] Short-term #1: Default English language + i18n dictionary (`src/js/config/i18n.js`); all UI strings / comments / labels migrated to English (app.js, storage.js, canvas.js, inspector.js, exporter.js, cssDictionary.js, elements.js)
 - [x] Short-term #2: ESLint + Prettier
 - [x] Short-term #3: Vitest baseline
-- [ ] Short-term #4: Vite build pipeline
+- [x] Short-term #4: Vite build pipeline
 - [ ] Short-term #5: jsconfig.json
 - [ ] Short-term #6: README + AGENTS.md documentation pass
