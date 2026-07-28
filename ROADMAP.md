@@ -108,11 +108,27 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 
 ## Branch Strategy
 
-| Branch                        | Purpose                                                                    |
-| ----------------------------- | -------------------------------------------------------------------------- |
-| `master`                      | Stable, deployable builds                                                  |
-| `feature/development-roadmap` | Planning + short-term foundational work (this branch)                      |
-| `feature/*`                   | Individual feature branches cut from `master` after short-term phase lands |
+`master` is the source of GitHub Pages deployment; feature branches are cut
+from the latest `master` and merge back via fast-forward when green. Each
+planned item gets its own `feature/<name>` branch with frequent, focused
+commits.
+
+| Branch                         | Roadmap       | Purpose                                                        |
+| ------------------------------ | ------------- | -------------------------------------------------------------- |
+| `master`                       | —             | Stable, deployable builds (GitHub Pages source)                |
+| `feature/vite-build`           | Short-term #4 | Vite dev/build/preview pipeline + GH Actions deploy of `dist/` |
+| `feature/jsconfig-typing`      | Short-term #5 | `jsconfig.json` + path aliases; evaluate TS migration          |
+| `feature/docs-pass`            | Short-term #6 | README + AGENTS documentation pass for new tooling             |
+| `feature/undo-redo`            | Mid-term #1   | Command-based history stack + Ctrl/Cmd+Z shortcuts             |
+| `feature/advanced-css-blocks`  | Mid-term #2   | `@media`, `:hover`, CSS custom properties, keyframes, nesting  |
+| `feature/export-jsx-vue`       | Mid-term #3   | Export to React JSX / Vue SFB templates                        |
+| `feature/nested-components`    | Mid-term #4   | Parent/child drag-and-drop with Sortable groups                |
+| `feature/import-flow`          | Mid-term #5   | Reverse-parse pasted HTML/CSS back into building blocks        |
+| `feature/backend-sync`         | Long-term #1  | Optional Supabase/Firebase storage to lift the 5MB cap         |
+| `feature/collab`               | Long-term #2  | Realtime multiplayer editing (CRDT/OT)                         |
+| `feature/template-marketplace` | Long-term #3  | Curated common-layout template library                         |
+| `feature/i18n-theming`         | Long-term #4  | Additional locales + light/dark UI theme toggle                |
+| `feature/web-component-export` | Long-term #5  | Export each block as a Custom Element with shadow DOM          |
 
 ---
 
