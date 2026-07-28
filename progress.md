@@ -15,7 +15,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | 7   | Pre-built component library | `feature/ux-component-library`       | ✅ merged |
 | 8   | Responsive preview          | `feature/ux-responsive-preview`      | ✅ merged |
 | 9   | Keyboard shortcuts          | `feature/ux-keyboard-shortcuts`      | ✅ merged |
-| 10  | Canvas helpers              | `feature/ux-canvas-helpers`      | ✅ merged |
+| 10  | Canvas helpers              | `feature/ux-canvas-helpers`          | ✅ merged |
 | 11  | Empty-state guidance        | —                                    | pending   |
 
 ---
