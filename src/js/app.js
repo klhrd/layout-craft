@@ -1,5 +1,6 @@
 import { ELEMENT_CATEGORIES } from './config/elements.js';
 import { CSS_DICTIONARY } from './config/cssDictionary.js';
+import { COMPONENTS } from './config/components.js';
 import { t } from './config/i18n.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
 import { initInspector } from './modules/inspector.js';
@@ -73,6 +74,36 @@ function renderToolbox() {
         wrapper.appendChild(itemsContainer);
         toolboxContainer.appendChild(wrapper);
     }
+
+    // Pre-built components category.
+    const compWrapper = document.createElement('div');
+    compWrapper.className = 'category-wrapper';
+    const compHeader = document.createElement('h3');
+    compHeader.className = 'category-header';
+    compHeader.textContent = t('ui.panels.components');
+    const compContainer = document.createElement('div');
+    compContainer.className = 'category-items collapsed';
+    compContainer.id = 'component-items';
+
+    compHeader.addEventListener('click', () => {
+        compHeader.classList.toggle('active');
+        compContainer.classList.toggle('collapsed');
+    });
+
+    for (const [, component] of Object.entries(COMPONENTS)) {
+        const elBtn = document.createElement('div');
+        elBtn.className = 'draggable-item';
+        elBtn.setAttribute('draggable', 'true');
+        elBtn.textContent = component.label;
+        elBtn.addEventListener('dragstart', () => {
+            setDraggedType('div');
+            window.draggedComponent = { label: component.label, template: component.template };
+        });
+        compContainer.appendChild(elBtn);
+    }
+    compWrapper.appendChild(compHeader);
+    compWrapper.appendChild(compContainer);
+    toolboxContainer.appendChild(compWrapper);
 }
 
 // 2. Render the CSS dictionary into draggable "property blocks".
