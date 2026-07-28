@@ -187,6 +187,223 @@ function initVisualCssActions() {
             },
         });
     });
+
+    const btnAddMedia = document.getElementById('btn-add-media');
+    if (btnAddMedia) {
+        btnAddMedia.addEventListener('click', () => {
+            const selector = '@media (max-width: 768px)';
+            if (cssState.getBlock(selector)) {
+                alert('A media block with this query already exists.');
+                return;
+            }
+            const block = { type: 'media', selector, children: [] };
+            cssState.addBlock(block);
+            createContainerBoxUI(block);
+            compileAndRenderCss();
+            const currentProj = document.getElementById('select-project').value;
+            if (currentProj) saveProject(currentProj, false);
+        });
+    }
+
+    const btnAddKeyframes = document.getElementById('btn-add-keyframes');
+    if (btnAddKeyframes) {
+        btnAddKeyframes.addEventListener('click', () => {
+            const selector = '@keyframes slide-in';
+            if (cssState.getBlock(selector)) {
+                alert('A keyframes block with this name already exists.');
+                return;
+            }
+            const block = { type: 'keyframes', selector, children: [] };
+            cssState.addBlock(block);
+            createContainerBoxUI(block);
+            compileAndRenderCss();
+            const currentProj = document.getElementById('select-project').value;
+            if (currentProj) saveProject(currentProj, false);
+        });
+    }
+}
+
+function createContainerBoxUI(block) {
+    const container = document.createElement('div');
+    container.className = 'css-rule-box css-container-box';
+    container.setAttribute('data-selector', block.selector);
+
+    const isMedia = block.type === 'media';
+    const label = isMedia ? 'Media Query' : 'Keyframes';
+
+    container.innerHTML = `
+        <div class="css-rule-header">
+            <div style="display: flex; align-items: center; gap: 4px; flex:1;">
+                <span style="color:#6366f1;font-size:0.75rem;font-weight:600;text-transform:uppercase">${label}</span>
+                <input type="text" class="editable-selector-input" value="${block.selector}" style="font-family:monospace">
+                <span style="color: #94a3b8">{</span>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <button class="btn-delete-rule" data-type="${block.type}">❌ Delete</button>
+            </div>
+        </div>
+        <div class="css-rule-body-dropzone"></div>
+        <button class="btn-add-nested-rule" style="margin:6px 0 0 auto;display:block;background:none;border:1px dashed #6366f1;color:#6366f1;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:0.8rem">+ Add Nested Rule</button>
+        <div style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
+    `;
+
+    const selectorInput = container.querySelector('.editable-selector-input');
+    const deleteBtn = container.querySelector('.btn-delete-rule');
+    const dropzone = container.querySelector('.css-rule-body-dropzone');
+    const addNestedBtn = container.querySelector('.btn-add-nested-rule');
+
+    let currentSelector = block.selector;
+
+    selectorInput.addEventListener('change', () => {
+        const newSel = selectorInput.value.trim();
+        if (!newSel || newSel === currentSelector) {
+            selectorInput.value = currentSelector;
+            return;
+        }
+        // Update the internal block
+        const existingBlock = cssState.getBlock(currentSelector);
+        if (existingBlock) existingBlock.selector = newSel;
+
+        currentSelector = newSel;
+        container.setAttribute('data-selector', newSel);
+        compileAndRenderCss();
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        cssState.removeBlock(currentSelector);
+        container.remove();
+        compileAndRenderCss();
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+    });
+
+    addNestedBtn.addEventListener('click', () => {
+        const ruleSelector = isMedia
+            ? prompt('Enter selector for nested rule (e.g., .card):')
+            : prompt('Enter keyframe step (e.g., 50% or to):');
+        if (!ruleSelector) return;
+        if (cssState.getBlock(ruleSelector, currentSelector)) {
+            alert('A nested rule with this selector already exists in this container.');
+            return;
+        }
+        const nestedBlock = { type: 'rule', selector: ruleSelector, styles: {} };
+        cssState.addBlock(nestedBlock, currentSelector);
+
+        const nestedUI = createNestedRuleBoxUI(nestedBlock, currentSelector);
+        dropzone.appendChild(nestedUI);
+        compileAndRenderCss();
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+    });
+
+    // Render any existing nested children
+    if (block.children) {
+        for (const child of block.children) {
+            const nestedUI = createNestedRuleBoxUI(child, currentSelector);
+            dropzone.appendChild(nestedUI);
+        }
+    }
+
+    visualCssContainer.appendChild(container);
+}
+
+function createNestedRuleBoxUI(block, parentSelector) {
+    const ruleBox = document.createElement('div');
+    ruleBox.className = 'css-rule-box css-nested-rule';
+    ruleBox.setAttribute('data-selector', block.selector);
+    if (parentSelector) ruleBox.setAttribute('data-parent-selector', parentSelector);
+
+    ruleBox.innerHTML = `
+        <div class="css-rule-header">
+            <div style="display: flex; align-items: center; gap: 4px;">
+                <input type="text" class="editable-selector-input" value="${block.selector}">
+                <span style="color: #94a3b8">{</span>
+            </div>
+            <div style="display: flex; gap: 6px; align-items: center;">
+                <button class="btn-hunt-elements" style="font-size:0.75rem">${t('ui.detection.detect')}</button>
+                <button class="btn-delete-rule">❌</button>
+            </div>
+        </div>
+        <div class="css-rule-body-dropzone"></div>
+        <div style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
+    `;
+
+    const selectorInput = ruleBox.querySelector('.editable-selector-input');
+    const huntBtn = ruleBox.querySelector('.btn-hunt-elements');
+    const deleteBtn = ruleBox.querySelector('.btn-delete-rule');
+    const dropzone = ruleBox.querySelector('.css-rule-body-dropzone');
+
+    let currentSelector = block.selector;
+
+    selectorInput.addEventListener('change', () => {
+        const newSelector = selectorInput.value.trim();
+        if (!newSelector || newSelector === currentSelector) {
+            selectorInput.value = currentSelector;
+            return;
+        }
+        const parentBlock = cssState.getBlock(parentSelector);
+        if (parentBlock) {
+            const existing = parentBlock.children && parentBlock.children.find((b) => b.selector === newSelector);
+            if (existing) {
+                alert('A nested rule with this selector already exists in this container.');
+                selectorInput.value = currentSelector;
+                return;
+            }
+        }
+
+        // Rename in state
+        const blockData = cssState.getBlock(currentSelector, parentSelector);
+        if (blockData) blockData.selector = newSelector;
+
+        if (huntBtn.classList.contains('active')) {
+            toggleCanvasBlinking(currentSelector, false);
+            toggleCanvasBlinking(newSelector, true);
+        }
+        currentSelector = newSelector;
+        ruleBox.setAttribute('data-selector', newSelector);
+        compileAndRenderCss();
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+    });
+
+    huntBtn.addEventListener('click', () => {
+        const isActive = huntBtn.classList.toggle('active');
+        if (isActive) {
+            huntBtn.textContent = t('ui.detection.blinking');
+            toggleCanvasBlinking(currentSelector, true);
+        } else {
+            huntBtn.textContent = t('ui.detection.detect');
+            toggleCanvasBlinking(currentSelector, false);
+        }
+    });
+
+    deleteBtn.addEventListener('click', () => {
+        toggleCanvasBlinking(currentSelector, false);
+        cssState.removeBlock(currentSelector, parentSelector);
+        ruleBox.remove();
+        compileAndRenderCss();
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+    });
+
+    // Render existing style properties
+    if (block.styles) {
+        for (const [prop, val] of Object.entries(block.styles)) {
+            let labelName = prop;
+            for (const cat of Object.values(CSS_DICTIONARY)) {
+                const found = cat.items.find((i) => i.property === prop);
+                if (found) {
+                    labelName = found.label;
+                    break;
+                }
+            }
+            addAppliedBlockUI(dropzone, block.selector, prop, labelName, val);
+        }
+    }
+
+    return ruleBox;
 }
 
 // Exposed globally: when an old project is loaded, accurately rebuild the
@@ -197,29 +414,29 @@ window.refreshLayers = function () {
 
 window.rebuildCssRulesUI = function () {
     visualCssContainer.innerHTML = '';
-    for (const [selector, styles] of cssState.getAllRules()) {
-        createRuleBoxUIFromData(selector, styles);
+    for (const block of cssState.getBlocks()) {
+        if (block.type === 'rule') {
+            createRuleBoxUI(block.selector);
+            const ruleBox = visualCssContainer.querySelector(`.css-rule-box[data-selector="${block.selector}"]`);
+            if (ruleBox && block.styles) {
+                const dropzone = ruleBox.querySelector('.css-rule-body-dropzone');
+                for (const [prop, val] of Object.entries(block.styles)) {
+                    let labelName = prop;
+                    for (const cat of Object.values(CSS_DICTIONARY)) {
+                        const found = cat.items.find((i) => i.property === prop);
+                        if (found) {
+                            labelName = found.label;
+                            break;
+                        }
+                    }
+                    addAppliedBlockUI(dropzone, block.selector, prop, labelName, val);
+                }
+            }
+        } else if (block.type === 'media' || block.type === 'keyframes') {
+            createContainerBoxUI(block);
+        }
     }
 };
-
-function createRuleBoxUIFromData(selector, styles) {
-    createRuleBoxUI(selector);
-    const ruleBox = visualCssContainer.querySelector(`.css-rule-box[data-selector="${selector}"]`);
-    if (!ruleBox) return;
-    const dropzone = ruleBox.querySelector('.css-rule-body-dropzone');
-
-    for (const [prop, val] of Object.entries(styles)) {
-        let labelName = prop;
-        for (const cat of Object.values(CSS_DICTIONARY)) {
-            const found = cat.items.find((i) => i.property === prop);
-            if (found) {
-                labelName = found.label;
-                break;
-            }
-        }
-        addAppliedBlockUI(dropzone, selector, prop, labelName, val);
-    }
-}
 
 function createRuleBoxUI(selector) {
     const ruleBox = document.createElement('div');
@@ -431,16 +648,29 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
     `;
 
     const valueInput = block.querySelector('.block-value-input');
-    // Debounced history record so a whole "padding: 20px -> 40px" edit collapses
-    // into a single undo command. Same 400ms window as the inspector fields.
     let editTimer = null;
     let editOldVal = value;
     valueInput.addEventListener('input', () => {
         const parentBox = dropzone.closest('.css-rule-box');
         const currentSelector = parentBox.getAttribute('data-selector');
-        if (!cssState.hasRule(currentSelector)) return;
-        if (editTimer === null) editOldVal = cssState.getProperty(currentSelector, property) ?? value;
-        cssState.setProperty(currentSelector, property, valueInput.value);
+        const parentSelector = parentBox.getAttribute('data-parent-selector') || null;
+
+        const hasRule = parentSelector
+            ? cssState.hasNestedRule(currentSelector, parentSelector)
+            : cssState.hasRule(currentSelector);
+        if (!hasRule) return;
+
+        if (editTimer === null) {
+            editOldVal = parentSelector
+                ? (cssState.getNestedProperty(parentSelector, currentSelector, property) ?? value)
+                : (cssState.getProperty(currentSelector, property) ?? value);
+        }
+
+        if (parentSelector) {
+            cssState.setNestedProperty(parentSelector, currentSelector, property, valueInput.value);
+        } else {
+            cssState.setProperty(currentSelector, property, valueInput.value);
+        }
         compileAndRenderCss();
         const proj = document.getElementById('select-project').value;
         if (proj) saveProject(proj, false);
@@ -450,12 +680,18 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
             const capturedOld = editOldVal;
             const capturedNew = valueInput.value;
             const capturedSelector = currentSelector;
+            const capturedParent = parentSelector;
             const capturedProj = proj;
             pushHistory({
                 label: `edit ${property} on ${capturedSelector}`,
                 perform: () => {
-                    if (!cssState.hasRule(capturedSelector)) return;
-                    cssState.setProperty(capturedSelector, property, capturedNew);
+                    if (capturedParent) {
+                        if (!cssState.hasNestedRule(capturedSelector, capturedParent)) return;
+                        cssState.setNestedProperty(capturedParent, capturedSelector, property, capturedNew);
+                    } else {
+                        if (!cssState.hasRule(capturedSelector)) return;
+                        cssState.setProperty(capturedSelector, property, capturedNew);
+                    }
                     const box = visualCssContainer.querySelector(
                         `.css-rule-box[data-selector="${CSS.escape(capturedSelector)}"]`,
                     );
@@ -466,8 +702,13 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
                     if (capturedProj) saveProject(capturedProj, false);
                 },
                 rollback: () => {
-                    if (!cssState.hasRule(capturedSelector)) return;
-                    cssState.setProperty(capturedSelector, property, capturedOld);
+                    if (capturedParent) {
+                        if (!cssState.hasNestedRule(capturedSelector, capturedParent)) return;
+                        cssState.setNestedProperty(capturedParent, capturedSelector, property, capturedOld);
+                    } else {
+                        if (!cssState.hasRule(capturedSelector)) return;
+                        cssState.setProperty(capturedSelector, property, capturedOld);
+                    }
                     const box = visualCssContainer.querySelector(
                         `.css-rule-box[data-selector="${CSS.escape(capturedSelector)}"]`,
                     );
@@ -478,7 +719,6 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
                     if (capturedProj) saveProject(capturedProj, false);
                 },
             });
-            editOldVal = capturedNew;
         }, 400);
     });
 
@@ -520,14 +760,38 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
     dropzone.appendChild(block);
 }
 
+function emitBlock(block, indent) {
+    const pad = '  '.repeat(indent);
+    if (block.type === 'media' || block.type === 'keyframes') {
+        let out = `${pad}${block.selector} {\n`;
+        if (block.children) {
+            for (const child of block.children) {
+                out += emitBlock(child, indent + 1);
+            }
+        }
+        if (block.styles) {
+            for (const [prop, val] of Object.entries(block.styles)) {
+                out += `${pad}  ${prop}: ${val};\n`;
+            }
+        }
+        out += `${pad}}\n\n`;
+        return out;
+    }
+    // rule
+    let out = `${pad}${block.selector} {\n`;
+    if (block.styles) {
+        for (const [prop, val] of Object.entries(block.styles)) {
+            out += `${pad}  ${prop}: ${val};\n`;
+        }
+    }
+    out += `${pad}}\n\n`;
+    return out;
+}
+
 export function compileAndRenderCss() {
     let cssString = '';
-    for (const [selector, styles] of cssState.getAllRules()) {
-        cssString += `${selector} {\n`;
-        for (const [prop, val] of Object.entries(styles)) {
-            cssString += `  ${prop}: ${val};\n`;
-        }
-        cssString += `}\n\n`;
+    for (const block of cssState.getBlocks()) {
+        cssString += emitBlock(block, 0);
     }
     liveStyles.textContent = cssString;
 }

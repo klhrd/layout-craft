@@ -28,6 +28,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 - **2026-07-28** Add exporter unit tests — extracted `buildExportHtml`, `buildExportCss`, `cleanStyles` from DOM closure into exported pure functions. 5 tests cover HTML template, CSS concatenation, and recursive style cleanup.
 - **2026-07-28** Fix layer highlighting uniqueness — replaced fragile `textContent.includes()` match in `highlightLayerEntry` with `data-node-id` attribute (auto-assigned by `getNodeId()`). Selection now pinpoints exactly one entry instead of all matching tag names.
 - **2026-07-28** All 6 short-term refactoring items complete. ActiveCssData migrated to cssState.js, preview CSS fixed, tests added, auto-save interval reviewed, layer highlighting uniqueness fixed.
+- **2026-07-28** Mid-term (Feature) #2: Advanced CSS blocks — `feature/advanced-css-blocks` merged. cssState.js changed to tree data model (blocks array with type/selector/styles/children). Recursive compileAndRenderCss emits `@media`/`@keyframes` wrappers. New +Add Media / +Add Keyframes buttons create container boxes in the CSS editor with +Add Nested Rule support. CSS dictionary extended (Animation & Transforms, Custom Properties). Property edits on nested rules use tree-aware API. 11 new tests for tree API, nested properties, and old-format upgrade.
 
 ## Recent work
 

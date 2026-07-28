@@ -37,4 +37,29 @@ export const CSS_DICTIONARY = {
             { property: 'box-shadow', label: '🌫️ Box Shadow', defaultValue: '0 4px 6px rgba(0,0,0,0.1)' },
         ],
     },
+    animation: {
+        title: 'Animation & Transforms',
+        items: [
+            { property: 'animation', label: '▶️ Animation', defaultValue: 'slide-in 0.3s ease' },
+            { property: 'animation-name', label: '🏷️ Animation Name', defaultValue: 'slide-in' },
+            { property: 'animation-duration', label: '⏱️ Duration', defaultValue: '0.3s' },
+            { property: 'animation-timing-function', label: '📈 Timing', defaultValue: 'ease' },
+            { property: 'animation-delay', label: '⏰ Delay', defaultValue: '0s' },
+            { property: 'animation-iteration-count', label: '🔁 Iterations', defaultValue: '1' },
+            { property: 'transform', label: '🔄 Transform', defaultValue: 'rotate(0deg)' },
+            { property: 'transition', label: '✨ Transition', defaultValue: 'all 0.2s ease' },
+        ],
+    },
+    customProps: {
+        title: 'Custom Properties',
+        items: [
+            { property: '--color-primary', label: '🎨 Primary Color', defaultValue: '#2563eb' },
+            { property: '--color-secondary', label: '🎨 Secondary Color', defaultValue: '#64748b' },
+            { property: '--color-accent', label: '🎨 Accent Color', defaultValue: '#f59e0b' },
+            { property: '--font-heading', label: '🔤 Heading Font', defaultValue: 'sans-serif' },
+            { property: '--font-body', label: '🔤 Body Font', defaultValue: 'sans-serif' },
+            { property: '--spacing-unit', label: '📏 Spacing Unit', defaultValue: '8px' },
+            { property: '--radius', label: '⭕ Border Radius', defaultValue: '8px' },
+        ],
+    },
 };

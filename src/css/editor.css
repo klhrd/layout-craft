@@ -966,6 +966,21 @@ body.mode-css .right-sidebar {
     gap: 6px;
 }
 
+.css-container-box {
+    border-left: 3px solid #6366f1;
+}
+
+.css-nested-rule {
+    background: #f1f5f9;
+    border-color: #a5b4fc;
+    margin-left: 8px;
+    padding: 8px;
+}
+
+.css-nested-rule .css-rule-body-dropzone {
+    min-height: 30px;
+}
+
 /* ── Applied CSS block in dropzone ── */
 .applied-css-block {
     background: #f1f5f9;
