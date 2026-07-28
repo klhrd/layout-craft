@@ -638,6 +638,34 @@ label {
     transition: all 0.3s ease;
 }
 
+/* ── Grid overlay (16px snap grid) ── */
+body.show-grid .canvas-container {
+    background-image:
+        linear-gradient(rgba(37, 99, 235, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(37, 99, 235, 0.06) 1px, transparent 1px);
+    background-size: 16px 16px;
+}
+
+/* ── Ruler guides ── */
+.canvas-guide {
+    position: fixed;
+    z-index: 99999;
+    background: #ef4444;
+    cursor: grab;
+    pointer-events: auto;
+    opacity: 0.5;
+    transition: opacity 0.15s;
+}
+
+.canvas-guide:hover,
+.canvas-guide.dragging {
+    opacity: 1;
+}
+
+.canvas-guide.dragging {
+    cursor: grabbing;
+}
+
 /* ── WYSIWYG canvas (no wireframes by default) ── */
 
 /* Hover highlight (added/removed by JS) */
