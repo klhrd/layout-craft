@@ -1,103 +1,108 @@
 # 🛠️ LayoutCraft Studio
 
-一個基於原生 JavaScript 打造的低代碼（No-code / Low-code）網頁圖形化編輯器。支援元件拖拽排版、視覺化 CSS 積木堆疊、即時作用域偵測（閃爍提示），以及多專案 LocalStorage 儲存空間管理。
+A low-code (no-code / low-code) visual web editor built with vanilla JavaScript. Features drag-and-drop component layout, visual CSS block stacking, real-time selector detection (blink highlight), and multi-project LocalStorage management.
 
 ---
 
-## 📂 專案資料夾樹結構 (Directory Tree)
+## 📂 Directory Tree
 
 ```text
-layoutcraft-studio/
-├── index.html                  # 應用程式主入口 (工作區基礎 HTML 結構)
-├── README.md                   # 專案說明文件
+layout-craft/
+├── index.html                  # App entry (workspace HTML scaffold)
+├── package.json                # npm scripts and dev dependencies
+├── vite.config.js             # Vite dev/build/preview config
+├── vitest.config.js           # Vitest config (jsdom env)
+├── jsconfig.json              # Editor type-awareness + path aliases
+├── ROADMAP.md                 # Development roadmap
+├── AGENTS.md                  # Instructions for AI agents and humans
 └── src/
     ├── css/
-    │   ├── canvas-preview.css  # 畫布元件渲染與預覽模式樣式
-    │   └── editor.css          # 編輯器介面、CSS 積木、閃爍動畫等 UI 樣式
+    │   ├── canvas-preview.css # Canvas element rendering and preview mode styles
+    │   └── editor.css         # Editor UI, CSS blocks, blink animation styles
     └── js/
-        ├── app.js              # 主程式進入點 (負責初始化、全域編譯與事件分配)
+        ├── app.js             # Main entry (init, global compile, event dispatch)
         ├── config/
-        │   ├── cssDictionary.js# CSS 屬性積木字典配置 (定義屬性名與預設值)
-        │   └── elements.js     # 畫布元件庫配置 (Layout, Typography, Forms 等)
+        │   ├── cssDictionary.js # CSS property block dictionary (names + defaults)
+        │   ├── elements.js     # Component library (Layout, Typography, Forms, ...)
+        │   └── i18n.js         # t() lookup dictionary; English is the default locale
         └── modules/
-            ├── canvas.js       # 畫布核心模組 (處理 HTML 元件拖放、Sortable 排序)
-            ├── exporter.js     # 匯出與預覽模組 (打包 HTML/CSS 並下載 zip/檔案)
-            ├── inspector.js    # 屬性檢察官 (點擊元件編輯 ID、Class、文字與動態屬性)
-            └── storage.js      # 儲存管理器 (多專案快照、自動存檔、LocalStorage 容量監測)
-
+            ├── canvas.js       # Canvas core (drag/drop, Sortable wiring)
+            ├── exporter.js     # Export/preview module (bundles HTML/CSS, downloads)
+            ├── inspector.js    # Property inspector (edit ID/Class/text + dynamic attrs)
+            └── storage.js      # Storage manager (multi-project snapshots, auto-save, quota meter)
 ```
 
 ---
 
-## 🚀 核心功能特點
+## 🚀 Core Features
 
-### 1. 🧱 雙重編輯模式
+### 1. 🧱 Dual editing modes
 
-- **🎨 Visual Mode (視覺模式)**：專注於網頁骨架排版。可從左側拉入 Layout、Typography、Forms 等元件，並透過右側 `Inspector` 直接修改文字或 ID/Class。
-- **💻 CSS Expert Mode (CSS 專家模式)**：點擊建立 CSS 選擇器大盒子（如 `.card`），即可從左側將 CSS 屬性像積木一樣拖入盒子中，完全不需手寫代碼。
+- **🎨 Visual Mode**: Focus on page skeleton layout. Drag Layout / Typography / Forms components in from the left, and use the right-hand `Inspector` to edit text, ID, or Class directly.
+- **💻 CSS Expert Mode**: Click to create a CSS selector box (e.g. `.card`), then drag CSS property blocks into the box from the left like LEGO bricks — no hand-written CSS required.
 
-### 2. 填入數值的格子 (Visual Property Inputs)
+### 2. Visual property inputs
 
-- CSS 積木拖入指定選擇器後，會自動長出專屬的**輸入欄位**。
-- 支援毫秒級的 `input` 即時監聽，修改數值（如 `padding: 20px`）時，畫布上的元件會立刻同步變形、變色。
+- After a CSS block is dropped into a selector, a dedicated **input field** appears for it.
+- Each input subscribes to `input` events so that changes (e.g. `padding: 20px`) are reflected on the canvas instantly.
 
-### 3. 🎯 作用域雷達偵測 (Blinking / Detector)
+### 3. 🎯 Selector detector (blinking)
 
-- 每個 CSS 規則盒子右上角皆有 `🎯 Detect` 開關。
-- 開啟後，畫布上所有**符合該 CSS 選擇器條件的元件會立刻進入高亮並啟動呼吸閃爍動畫**，讓操作者明確知道該樣式正在影響誰。
+- Every CSS rule box has a `🎯 Detect` toggle in the top-right corner.
+- Toggling it ON highlights all matching canvas elements and starts a breathing blink animation, so you always see exactly which elements the rule affects.
 
-### 4. 📊 多專案管理與記憶體防炸機制 (Storage Manager)
+### 4. 📊 Multi-project storage with quota guard
 
-- 支援 **+ New** 建立多個獨立專案，並可透過下拉選單隨時切換。
-- 內建每 30 秒自動靜默存檔防呆。
-- 右上角配備 **Storage Use 監測進度條**，精確計算 UTF-16 位元組大小，超過 85% 自動變紅警告，防止瀏覽器 LocalStorage（5MB）配額爆滿。
+- Create multiple independent projects with **+ New** and switch between them via the dropdown.
+- Silent auto-save every 30 seconds as a safety net.
+- The top-right **Storage Use** meter precisely computes UTF-16 byte sizes and turns red above 85% to prevent blowing the browser's 5MB LocalStorage quota.
 
 ---
 
-## 🛠️ 開發與安裝
+## 🛠️ Development and Setup
 
-本專案採用 **原生 ES Module (JavaScript)**，並透過 **Vite** 提供開發伺服器與生產打包。SortableJS 仍由 CDN 引入，其餘原始碼由 Vite 直接打包。
+The project uses **native ES Modules** and is served and bundled by **Vite**. SortableJS is still pulled from a CDN via a `<script>` tag; the rest of the source is bundled by Vite directly.
 
-### 前置需求
+### Prerequisites
 
-- Node.js 20+（含 npm）
+- Node.js 20+ (with npm)
 
-### 快速開始
+### Quick Start
 
-1. 安裝相依套件：
+1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. 啟動開發伺服器（熱重載）：
+2. Start the dev server (hot reload):
 
 ```bash
 npm run dev
 ```
 
-3. 瀏覽器開啟 Vite 提示的網址（預設 `http://localhost:5173`）即可開始創作。
+3. Open the URL Vite prints (defaults to `http://localhost:5173`) and start building.
 
-### 其他常用指令
+### Other common commands
 
 ```bash
-# 打包生產版本到 dist/
+# Package a production bundle into dist/
 npm run build
 
-# 本機預覽打包結果
+# Preview the built bundle locally
 npm run preview
 
-# 執行 ESLint
+# Run ESLint
 npm run lint
 
-# 執行 Prettier 格式檢查
+# Check formatting with Prettier
 npm run format:check
 
-# 執行單元測試
+# Run unit tests
 npm test
 ```
 
-### 部署
+### Deployment
 
-`master` 分支推送後，GitHub Actions 會自動執行 `npm ci && npm run build`
-並將 `dist/` 部署到 GitHub Pages。
+Pushing to `master` triggers GitHub Actions, which runs `npm ci && npm run build`
+and deploys the `dist/` folder to GitHub Pages.
