@@ -2,6 +2,8 @@ import { deselectAll } from './inspector.js';
 import { getActiveCssCode } from '../app.js';
 import { cancelActiveInlineEdit } from './canvas.js';
 import { t } from '../config/i18n.js';
+import { buildJsxExport } from './codegen/jsxExport.js';
+import { buildVueExport } from './codegen/vueExport.js';
 
 export function buildExportHtml(innerHtml) {
     return `<!DOCTYPE html>
@@ -34,6 +36,14 @@ const DEVICES = [
 
 let activeDeviceIdx = 0;
 
+function getCanvasContent() {
+    const canvasClone = canvas.cloneNode(true);
+    const tempPlaceholder = canvasClone.querySelector('.canvas-placeholder');
+    if (tempPlaceholder) tempPlaceholder.remove();
+    Array.from(canvasClone.children).forEach((child) => cleanStyles(child));
+    return canvasClone;
+}
+
 export function initExporter() {
     btnPreview.addEventListener('click', () => {
         cancelActiveInlineEdit();
@@ -41,7 +51,6 @@ export function initExporter() {
         document.body.classList.add('preview-mode');
         activeDeviceIdx = 0;
 
-        // Device toolbar at the top of the canvas area
         const toolbar = document.createElement('div');
         toolbar.id = 'preview-toolbar';
         DEVICES.forEach((d, i) => {
@@ -58,7 +67,6 @@ export function initExporter() {
             toolbar.appendChild(btn);
         });
 
-        // Width indicator
         const widthLabel = document.createElement('span');
         widthLabel.id = 'preview-width-label';
         toolbar.appendChild(widthLabel);
@@ -78,7 +86,6 @@ export function initExporter() {
             canvas.style.margin = '';
         });
 
-        // Update width label on resize
         const ro = new ResizeObserver(() => {
             if (document.body.classList.contains('preview-mode')) applyDeviceFrame();
         });
@@ -99,19 +106,83 @@ export function initExporter() {
         }
     }
 
-    btnExport.addEventListener('click', () => {
-        const canvasClone = canvas.cloneNode(true);
-        const tempPlaceholder = canvasClone.querySelector('.canvas-placeholder');
-        if (tempPlaceholder) tempPlaceholder.remove();
+    // Export dropdown
+    btnExport.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const existing = document.getElementById('export-dropdown');
+        if (existing) {
+            existing.remove();
+            return;
+        }
 
-        Array.from(canvasClone.children).forEach((child) => cleanStyles(child));
+        const dropdown = document.createElement('div');
+        dropdown.id = 'export-dropdown';
+        dropdown.style.cssText = `
+            position: fixed; background: #1e293b; border: 1px solid #334155;
+            border-radius: 8px; padding: 8px; z-index: 99999;
+            display: flex; flex-direction: column; gap: 4px; min-width: 180px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        `;
 
-        const finalHTML = buildExportHtml(canvasClone.innerHTML);
-        const finalCSS = buildExportCss(getActiveCssCode());
+        const items = [
+            { label: '🌐 HTML + CSS', format: 'html' },
+            { label: '⚛️ React JSX + CSS', format: 'react' },
+            { label: '💚 Vue SFB (scoped)', format: 'vue' },
+        ];
 
-        downloadFile('index.html', finalHTML);
-        downloadFile('style.css', finalCSS);
+        items.forEach((item) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.textContent = item.label;
+            btn.style.cssText = `
+                background: transparent; border: none; color: #e2e8f0;
+                padding: 8px 12px; text-align: left; border-radius: 4px;
+                cursor: pointer; font-size: 0.85rem;
+            `;
+            btn.addEventListener('mouseenter', () => {
+                btn.style.background = '#334155';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.background = 'transparent';
+            });
+            btn.addEventListener('click', () => {
+                doExport(item.format);
+                dropdown.remove();
+            });
+            dropdown.appendChild(btn);
+        });
+
+        const rect = btnExport.getBoundingClientRect();
+        dropdown.style.top = `${rect.bottom + 4}px`;
+        dropdown.style.right = `${window.innerWidth - rect.right}px`;
+        document.body.appendChild(dropdown);
+
+        const close = (ev) => {
+            if (!dropdown.contains(ev.target) && ev.target !== btnExport) {
+                dropdown.remove();
+                document.removeEventListener('click', close);
+            }
+        };
+        setTimeout(() => document.addEventListener('click', close), 0);
     });
+}
+
+function doExport(format) {
+    const canvasClone = getCanvasContent();
+    const cssCode = buildExportCss(getActiveCssCode());
+
+    if (format === 'html') {
+        const html = buildExportHtml(canvasClone.innerHTML);
+        downloadFile('index.html', html);
+        downloadFile('style.css', cssCode);
+    } else if (format === 'react') {
+        const jsx = buildJsxExport(canvasClone);
+        downloadFile('App.jsx', jsx);
+        downloadFile('style.css', cssCode);
+    } else if (format === 'vue') {
+        const vue = buildVueExport(canvasClone, cssCode);
+        downloadFile('App.vue', vue);
+    }
 }
 
 export function cleanStyles(element) {
