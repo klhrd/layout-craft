@@ -8,7 +8,7 @@ See `ROADMAP.md` → _Mid-term (UX Overhaul)_ for the full spec of each item.
 | --- | --------------------------- | ---------------------------- | --------- |
 | 1   | WYSIWYG canvas              | `feature/ux-wysiwyg-canvas`  | ✅ merged |
 | 2   | Select-to-style             | `feature/ux-select-to-style` | ✅ merged |
-| 3   | Inline text editing         | —                            | pending   |
+| 3 | Inline text editing | `feature/ux-inline-text-editing` | ✅ merged |
 | 4   | Visual property editors     | —                            | pending   |
 | 5   | Layers / outline panel      | —                            | pending   |
 | 6   | Context menu                | —                            | pending   |
@@ -26,3 +26,4 @@ _(appended automatically after each branch merge)_
 
 - **2026-07-28** UX #1 WYSIWYG canvas — `feature/ux-wysiwyg-canvas` merged. Removed wireframe dashed borders from default edit mode. Added hover highlight (`.el-hover`) on canvas children. Added "🔲 Outlines" toggle button in control bar to restore wireframe view on demand.
 - **2026-07-28** UX #2 Select-to-style — `feature/ux-select-to-style` merged. Added inline "Styles" section in inspector panel. When user edits a CSS property, system auto-generates a unique class (`._lc-N`), creates the CSS rule in `activeCssData`, and compiles live styles. Undo support included.
+- **2026-07-28** UX #3 Inline text editing — `feature/ux-inline-text-editing` merged. Double-click any text element (p, h1-h6, span, a, button, label, li, th, td) on canvas to edit directly. Enter commits, Escape cancels, blur commits. Green outline indicates editing state. Undo support included.
