@@ -152,3 +152,29 @@ export function getAllFlatRules() {
     walk(_blocks);
     return result;
 }
+
+// Tree-aware property access for nested rules inside media/keyframes containers.
+export function hasNestedRule(selector, parentSelector) {
+    const parent = _blocks.find((b) => b.selector === parentSelector && (b.type === 'media' || b.type === 'keyframes'));
+    if (!parent || !parent.children) return false;
+    return parent.children.some((b) => b.selector === selector && b.type === 'rule');
+}
+
+export function setNestedProperty(parentSelector, selector, prop, value) {
+    const parent = _blocks.find((b) => b.selector === parentSelector && (b.type === 'media' || b.type === 'keyframes'));
+    if (!parent) return;
+    if (!parent.children) parent.children = [];
+    let rule = parent.children.find((b) => b.selector === selector && b.type === 'rule');
+    if (!rule) {
+        rule = { type: 'rule', selector, styles: {} };
+        parent.children.push(rule);
+    }
+    rule.styles[prop] = value;
+}
+
+export function getNestedProperty(parentSelector, selector, prop) {
+    const parent = _blocks.find((b) => b.selector === parentSelector && (b.type === 'media' || b.type === 'keyframes'));
+    if (!parent || !parent.children) return undefined;
+    const rule = parent.children.find((b) => b.selector === selector && b.type === 'rule');
+    return rule && rule.styles ? rule.styles[prop] : undefined;
+}
