@@ -1,6 +1,7 @@
 import { compileAndRenderCss } from '../app.js';
 import { makeElementSortable } from './canvas.js';
 import { deselectAll } from './inspector.js';
+import { reset as resetHistory } from './history.js';
 import { t } from '../config/i18n.js';
 
 const STORAGE_KEY_PREFIX = 'layoutcraft_proj_';
@@ -121,6 +122,7 @@ export function loadProject(projName) {
     const visualCssContainer = document.getElementById('visual-css-container');
 
     visualCssContainer.innerHTML = ''; // Clear the right-side visual CSS UI.
+    resetHistory(); // Switching projects means a new undo/redo context.
 
     if (!rawData) {
         window.activeCssData = {};
