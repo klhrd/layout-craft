@@ -56,22 +56,48 @@ layoutcraft-studio/
 
 ## 🛠️ 開發與安裝
 
-本專案採用 **原生 ES Module (JavaScript)** 架構，無須經過 Webpack 或 Vite 打包即可運行，但因安全限制（CORS），**必須在 Local Server 環境下開啟**。
+本專案採用 **原生 ES Module (JavaScript)**，並透過 **Vite** 提供開發伺服器與生產打包。SortableJS 仍由 CDN 引入，其餘原始碼由 Vite 直接打包。
 
-1. 將專案複製或下載至本機。
-2. 使用 VS Code 的 **Live Server** 套件，或是透過終端機啟動本機伺服器：
+### 前置需求
+
+- Node.js 20+（含 npm）
+
+### 快速開始
+
+1. 安裝相依套件：
 
 ```bash
-# 使用 Python 啟動
-python -m http.server 8000
-
-# 或使用 Node.js 的 npx
-npx serve .
-
+npm install
 ```
 
-3. 瀏覽器開啟 `http://localhost:8000` 即可開始創作！
+2. 啟動開發伺服器（熱重載）：
 
+```bash
+npm run dev
 ```
 
+3. 瀏覽器開啟 Vite 提示的網址（預設 `http://localhost:5173`）即可開始創作。
+
+### 其他常用指令
+
+```bash
+# 打包生產版本到 dist/
+npm run build
+
+# 本機預覽打包結果
+npm run preview
+
+# 執行 ESLint
+npm run lint
+
+# 執行 Prettier 格式檢查
+npm run format:check
+
+# 執行單元測試
+npm test
 ```
+
+### 部署
+
+`master` 分支推送後，GitHub Actions 會自動執行 `npm ci && npm run build`
+並將 `dist/` 部署到 GitHub Pages。

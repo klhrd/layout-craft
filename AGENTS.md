@@ -11,6 +11,15 @@ linting, formatting, and future testing.
 # Install dev dependencies (ESLint, Prettier, plugins)
 npm install
 
+# Start the Vite dev server (hot reload)
+npm run dev
+
+# Build the production bundle into dist/
+npm run build
+
+# Preview the built bundle locally
+npm run preview
+
 # Lint all files (ESLint)
 npm run lint
 
@@ -22,11 +31,18 @@ npm run format
 
 # Check formatting without writing (useful in CI / pre-commit)
 npm run format:check
+
+# Run unit tests once
+npm test
+
+# Run unit tests in watch mode
+npm run test:watch
 ```
 
-Always run `npm run lint` and `npm run format:check` before committing.
-They must exit cleanly. If a change introduces new lint or format issues,
-fix them within the same commit so the tree stays green.
+Always run `npm run lint` and `npm run format:check` (and `npm test` when
+touching tested code) before committing. They must exit cleanly. If a change
+introduces new lint, format, or test failures, fix them within the same
+commit so the tree stays green.
 
 ## Module boundaries
 
@@ -43,7 +59,10 @@ fix them within the same commit so the tree stays green.
 
 ## Conventions
 
-- Vanilla ES Modules. No bundler yet (planned in a later phase).
+- Vanilla ES Modules bundled by Vite for production (dev runs unbundled).
+- SortableJS is loaded from the jsdelivr CDN via a `<script>` tag in
+  `index.html`; patch with care when changing the CDN URL or migrating to
+  an npm `import`.
 - Default language is English; new strings go through `t()`.
 - Comments may be added only when they explain non-obvious intent; we do
   not duplicate what the code already says.
