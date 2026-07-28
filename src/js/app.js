@@ -6,6 +6,7 @@ import { initInspector } from './modules/inspector.js';
 import { initExporter } from './modules/exporter.js';
 import { initStorage, saveProject } from './modules/storage.js';
 import * as history from './modules/history.js';
+import { push as pushHistory } from './modules/history.js';
 
 const liveStyles = document.getElementById('live-styles');
 const visualCssContainer = document.getElementById('visual-css-container');
@@ -127,6 +128,24 @@ function initVisualCssActions() {
         compileAndRenderCss();
         const currentProj = document.getElementById('select-project').value;
         if (currentProj) saveProject(currentProj, false);
+
+        pushHistory({
+            label: `add rule ${selectorText}`,
+            perform: () => {
+                if (window.activeCssData[selectorText]) return;
+                window.activeCssData[selectorText] = {};
+                createRuleBoxUI(selectorText);
+                compileAndRenderCss();
+                if (currentProj) saveProject(currentProj, false);
+            },
+            rollback: () => {
+                const box = visualCssContainer.querySelector(`.css-rule-box[data-selector="${selectorText}"]`);
+                if (box) box.remove();
+                delete window.activeCssData[selectorText];
+                compileAndRenderCss();
+                if (currentProj) saveProject(currentProj, false);
+            },
+        });
     });
 }
 
@@ -197,8 +216,10 @@ function createRuleBoxUI(selector) {
             return;
         }
 
-        window.activeCssData[newSelector] = window.activeCssData[currentSelector];
-        delete window.activeCssData[currentSelector];
+        const oldSelector = currentSelector;
+
+        window.activeCssData[newSelector] = window.activeCssData[oldSelector];
+        delete window.activeCssData[oldSelector];
 
         if (huntBtn.classList.contains('active')) {
             toggleCanvasBlinking(currentSelector, false);
@@ -207,7 +228,34 @@ function createRuleBoxUI(selector) {
         currentSelector = newSelector;
         ruleBox.setAttribute('data-selector', newSelector);
         compileAndRenderCss();
-        saveProject(document.getElementById('select-project').value, false);
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+
+        pushHistory({
+            label: `rename rule ${oldSelector} -> ${newSelector}`,
+            perform: () => {
+                if (!window.activeCssData[oldSelector]) return;
+                window.activeCssData[newSelector] = window.activeCssData[oldSelector];
+                delete window.activeCssData[oldSelector];
+                const box = visualCssContainer.querySelector(`.css-rule-box[data-selector="${oldSelector}"]`);
+                if (box) box.setAttribute('data-selector', newSelector);
+                const inputEl = box && box.querySelector('.editable-selector-input');
+                if (inputEl) inputEl.value = newSelector;
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+            rollback: () => {
+                if (!window.activeCssData[newSelector]) return;
+                window.activeCssData[oldSelector] = window.activeCssData[newSelector];
+                delete window.activeCssData[newSelector];
+                const box = visualCssContainer.querySelector(`.css-rule-box[data-selector="${newSelector}"]`);
+                if (box) box.setAttribute('data-selector', oldSelector);
+                const inputEl = box && box.querySelector('.editable-selector-input');
+                if (inputEl) inputEl.value = oldSelector;
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+        });
     });
 
     huntBtn.addEventListener('click', () => {
@@ -223,10 +271,46 @@ function createRuleBoxUI(selector) {
 
     deleteBtn.addEventListener('click', () => {
         toggleCanvasBlinking(currentSelector, false);
-        delete window.activeCssData[currentSelector];
+        const oldSelector = currentSelector;
+        const oldStyles = { ...window.activeCssData[oldSelector] };
+        delete window.activeCssData[oldSelector];
         ruleBox.remove();
         compileAndRenderCss();
-        saveProject(document.getElementById('select-project').value, false);
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+
+        pushHistory({
+            label: `delete rule ${oldSelector}`,
+            perform: () => {
+                if (window.activeCssData[oldSelector]) return;
+                delete window.activeCssData[oldSelector];
+                const existing = visualCssContainer.querySelector(`.css-rule-box[data-selector="${oldSelector}"]`);
+                if (existing) existing.remove();
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+            rollback: () => {
+                window.activeCssData[oldSelector] = oldStyles;
+                createRuleBoxUI(oldSelector);
+                const freshBox = visualCssContainer.querySelector(`.css-rule-box[data-selector="${oldSelector}"]`);
+                if (freshBox) {
+                    const zone = freshBox.querySelector('.css-rule-body-dropzone');
+                    for (const [prop, val] of Object.entries(oldStyles)) {
+                        let labelName = prop;
+                        for (const cat of Object.values(CSS_DICTIONARY)) {
+                            const found = cat.items.find((i) => i.property === prop);
+                            if (found) {
+                                labelName = found.label;
+                                break;
+                            }
+                        }
+                        addAppliedBlockUI(zone, oldSelector, prop, labelName, val);
+                    }
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+        });
     });
 
     dropzone.addEventListener('dragover', (e) => e.preventDefault());
@@ -236,13 +320,45 @@ function createRuleBoxUI(selector) {
         if (!draggedCssBlockData) return;
 
         const { property, defaultValue, label } = draggedCssBlockData;
-        if (!window.activeCssData[currentSelector][property]) {
-            window.activeCssData[currentSelector][property] = defaultValue;
-            addAppliedBlockUI(dropzone, currentSelector, property, label, defaultValue);
-            compileAndRenderCss();
-            saveProject(document.getElementById('select-project').value, false);
+        if (window.activeCssData[currentSelector][property]) {
+            draggedCssBlockData = null;
+            return;
         }
+
+        const selector = currentSelector;
+        window.activeCssData[selector][property] = defaultValue;
+        addAppliedBlockUI(dropzone, selector, property, label, defaultValue);
+        compileAndRenderCss();
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
         draggedCssBlockData = null;
+
+        pushHistory({
+            label: `add block ${property} on ${selector}`,
+            perform: () => {
+                if (window.activeCssData[selector][property]) return;
+                window.activeCssData[selector][property] = defaultValue;
+                // Avoid double-appending: re-find existing block before add.
+                const box = visualCssContainer.querySelector(`.css-rule-box[data-selector="${selector}"]`);
+                if (box) {
+                    const zone = box.querySelector('.css-rule-body-dropzone');
+                    const existing = zone && zone.querySelector(`.applied-css-block[data-prop="${property}"]`);
+                    if (!existing) addAppliedBlockUI(zone, selector, property, label, defaultValue);
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+            rollback: () => {
+                delete window.activeCssData[selector][property];
+                const box = visualCssContainer.querySelector(`.css-rule-box[data-selector="${selector}"]`);
+                if (box) {
+                    const blocks = box.querySelectorAll(`.applied-css-block[data-prop="${property}"]`);
+                    blocks.forEach((b) => b.remove());
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+        });
     });
 
     visualCssContainer.appendChild(ruleBox);
@@ -265,6 +381,7 @@ function toggleCanvasBlinking(selector, shouldBlink) {
 function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
     const block = document.createElement('div');
     block.className = 'applied-css-block';
+    block.setAttribute('data-prop', property);
     block.innerHTML = `
         <span class="block-label">${property}:</span>
         <div style="display: flex; align-items: center;">
@@ -274,23 +391,90 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
     `;
 
     const valueInput = block.querySelector('.block-value-input');
+    // Debounced history record so a whole "padding: 20px -> 40px" edit collapses
+    // into a single undo command. Same 400ms window as the inspector fields.
+    let editTimer = null;
+    let editOldVal = value;
     valueInput.addEventListener('input', () => {
         const parentBox = dropzone.closest('.css-rule-box');
         const currentSelector = parentBox.getAttribute('data-selector');
-        if (window.activeCssData[currentSelector]) {
-            window.activeCssData[currentSelector][property] = valueInput.value;
-            compileAndRenderCss();
-            saveProject(document.getElementById('select-project').value, false);
-        }
+        if (!window.activeCssData[currentSelector]) return;
+        if (editTimer === null) editOldVal = window.activeCssData[currentSelector][property] ?? value;
+        window.activeCssData[currentSelector][property] = valueInput.value;
+        compileAndRenderCss();
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+        if (editTimer) clearTimeout(editTimer);
+        editTimer = setTimeout(() => {
+            editTimer = null;
+            const capturedOld = editOldVal;
+            const capturedNew = valueInput.value;
+            const capturedSelector = currentSelector;
+            const capturedProj = proj;
+            pushHistory({
+                label: `edit ${property} on ${capturedSelector}`,
+                perform: () => {
+                    if (!window.activeCssData[capturedSelector]) return;
+                    window.activeCssData[capturedSelector][property] = capturedNew;
+                    const box = visualCssContainer.querySelector(
+                        `.css-rule-box[data-selector="${CSS.escape(capturedSelector)}"]`,
+                    );
+                    const inp =
+                        box && box.querySelector(`.applied-css-block[data-prop="${property}"] .block-value-input`);
+                    if (inp) inp.value = capturedNew;
+                    compileAndRenderCss();
+                    if (capturedProj) saveProject(capturedProj, false);
+                },
+                rollback: () => {
+                    if (!window.activeCssData[capturedSelector]) return;
+                    window.activeCssData[capturedSelector][property] = capturedOld;
+                    const box = visualCssContainer.querySelector(
+                        `.css-rule-box[data-selector="${CSS.escape(capturedSelector)}"]`,
+                    );
+                    const inp =
+                        box && box.querySelector(`.applied-css-block[data-prop="${property}"] .block-value-input`);
+                    if (inp) inp.value = capturedOld;
+                    compileAndRenderCss();
+                    if (capturedProj) saveProject(capturedProj, false);
+                },
+            });
+            editOldVal = capturedNew;
+        }, 400);
     });
 
     block.querySelector('.btn-remove-block').addEventListener('click', () => {
         const parentBox = dropzone.closest('.css-rule-box');
         const currentSelector = parentBox.getAttribute('data-selector');
-        if (window.activeCssData[currentSelector]) delete window.activeCssData[currentSelector][property];
+        if (!window.activeCssData[currentSelector]) return;
+        const oldVal = window.activeCssData[currentSelector][property];
+        delete window.activeCssData[currentSelector][property];
+        const removedBlock = block;
         block.remove();
         compileAndRenderCss();
-        saveProject(document.getElementById('select-project').value, false);
+        const proj = document.getElementById('select-project').value;
+        if (proj) saveProject(proj, false);
+
+        pushHistory({
+            label: `delete block ${property} on ${currentSelector}`,
+            perform: () => {
+                if (window.activeCssData[currentSelector][property]) return;
+                delete window.activeCssData[currentSelector][property];
+                const existing = dropzone.querySelector(`.applied-css-block[data-prop="${property}"]`);
+                if (!existing && removedBlock.parentNode !== dropzone) {
+                    dropzone.appendChild(removedBlock);
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+            rollback: () => {
+                window.activeCssData[currentSelector][property] = oldVal;
+                if (removedBlock.parentNode !== dropzone) dropzone.appendChild(removedBlock);
+                const inp = removedBlock.querySelector('.block-value-input');
+                if (inp) inp.value = oldVal;
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+        });
     });
 
     dropzone.appendChild(block);
