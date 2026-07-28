@@ -15,6 +15,7 @@ const inputId = document.getElementById('input-id');
 const inputClass = document.getElementById('input-class');
 const inputText = document.getElementById('input-text');
 const btnDelete = document.getElementById('btn-delete');
+const btnLiftOut = document.getElementById('btn-lift-out');
 let dynamicPropsContainer = null;
 let styleEditorContainer = null;
 
@@ -188,6 +189,34 @@ export function initInspector() {
         });
         deselectAll();
     });
+
+    if (btnLiftOut) {
+        btnLiftOut.addEventListener('click', () => {
+            if (!selectedElement) return;
+            const el = selectedElement;
+            const parent = el.parentNode;
+            const grandparent = parent && parent.parentNode;
+            if (!grandparent || parent === canvas) return;
+
+            const next = el.nextSibling;
+            const oldParent = parent;
+
+            grandparent.insertBefore(el, parent);
+            selectElement(el);
+
+            pushHistory({
+                label: 'Lift out element',
+                perform: () => {
+                    grandparent.insertBefore(el, oldParent);
+                    selectElement(el);
+                },
+                rollback: () => {
+                    oldParent.insertBefore(el, next);
+                    selectElement(el);
+                },
+            });
+        });
+    }
 }
 
 export function selectElement(el) {

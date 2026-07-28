@@ -674,6 +674,12 @@ body.show-grid .canvas-container {
     outline-offset: -1px;
 }
 
+.canvas-container .drop-target-active {
+    outline: 2px solid #6366f1 !important;
+    outline-offset: -1px;
+    background-color: rgba(99, 102, 241, 0.05);
+}
+
 /* Selected element — clean blue outline (like Figma) */
 .canvas-container .selected-element {
     outline: 2px solid #2563eb !important;

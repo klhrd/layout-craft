@@ -262,7 +262,7 @@ for the full audit performed on 2026-07-28.
 | —                              | Mid-term (UX) #11     | Empty-state guidance                            |
 | —                              | Mid-term (Feature) #1 | ✅ **Done** — undo/redo history                 |
 | —                              | Mid-term (Feature) #2 | ✅ **Done** — advanced CSS blocks               |
-| `feature/export-jsx-vue`       | Mid-term (Feature) #3 | Export to React JSX / Vue SFB                   |
+| —                              | Mid-term (Feature) #3 | ✅ **Done** — React JSX / Vue SFB export        |
 | `feature/nested-components`    | Mid-term (Feature) #4 | Parent/child Sortable groups                    |
 | `feature/import-flow`          | Mid-term (Feature) #5 | Reverse-parse pasted HTML/CSS                   |
 | `feature/backend-sync`         | Long-term #1          | Cloud storage (Supabase/Firebase)               |
@@ -285,4 +285,5 @@ for the full audit performed on 2026-07-28.
 - [x] Short-term #6: README + AGENTS.md documentation pass
 - [x] Mid-term (Feature) #1: Undo/Redo history stack — merged via `feature/ui-skeleton-cleanup`
 - [x] Mid-term (Feature) #2: Advanced CSS blocks (`@media`, `:hover`, pseudo, custom props, keyframes) — merged via `feature/advanced-css-blocks`
+- [x] Mid-term (Feature) #3: Export to React JSX / Vue SFB — merged via `feature/export-jsx-vue`
 - [x] Branch cleanup on 2026-07-28: deleted 17 stale/merged branches (see [`docs/branch-audit.md`](docs/branch-audit.md))
