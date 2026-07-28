@@ -23,11 +23,11 @@ body {
 
 .app-container {
     display: flex;
-    flex-direction: column; /* 改為上下結構，讓頂部控制列有專屬空間 */
+    flex-direction: column;
     height: 100vh;
 }
 
-/* 📥 頂部導覽控制列優化 */
+/* ── Control bar ── */
 .control-bar {
     height: 60px;
     background: var(--bg-panel);
@@ -47,6 +47,80 @@ body {
     gap: 12px;
 }
 
+/* ── Project storage control ── */
+.project-storage-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 15px;
+    border-left: 1px solid var(--border-color);
+    padding-left: 15px;
+}
+
+#select-project {
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    border: 1px solid #cbd5e1;
+    width: 130px;
+}
+
+#btn-new-project {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+}
+
+#btn-save-project {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    background-color: #10b981;
+}
+
+/* ── History controls ── */
+.history-controls {
+    display: flex;
+    gap: 4px;
+    margin-right: 8px;
+}
+
+#btn-undo,
+#btn-redo {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    opacity: 0.45;
+}
+
+/* ── Storage meter badge ── */
+.storage-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    margin-right: 10px;
+}
+
+.storage-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.storage-bar-track {
+    width: 100px;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#storage-bar {
+    width: 0%;
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s;
+}
+
+/* ── Mode switcher ── */
 .mode-switcher {
     display: flex;
     background: #f1f5f9;
@@ -72,7 +146,7 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* 按鈕層級優化 */
+/* ── General buttons ── */
 button.btn-secondary {
     padding: 8px 16px;
     background: #f1f5f9;
@@ -103,7 +177,22 @@ button.primary-btn:hover {
     background-color: var(--primary-hover);
 }
 
-/* 🗂️ 主要工作區域 */
+.danger-btn {
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.danger-btn:hover {
+    background-color: #dc2626;
+}
+
+/* ── Main workspace ── */
 .main-workspace {
     display: flex;
     flex: 1;
@@ -111,27 +200,34 @@ button.primary-btn:hover {
     overflow: hidden;
 }
 
-/* 側邊欄優化 */
+/* ── Side panels ── */
 .toolbox,
 .css-dictionary-panel,
 .right-sidebar {
-    width: 280px;
     background: var(--bg-panel);
     display: flex;
     flex-direction: column;
     gap: 16px;
     overflow-y: auto;
     padding: 20px;
+    transition: width 0.3s ease;
 }
+
+.toolbox,
+.css-dictionary-panel {
+    width: 280px;
+}
+
 .toolbox {
     border-right: 1px solid var(--border-color);
 }
+
 .css-dictionary-panel {
     border-right: 1px solid var(--border-color);
 }
+
 .right-sidebar {
     border-left: 1px solid var(--border-color);
-    width: 300px;
 }
 
 .brand-title {
@@ -141,6 +237,7 @@ button.primary-btn:hover {
     letter-spacing: -0.5px;
 }
 
+/* ── Category accordion ── */
 h3.category-header {
     color: var(--text-muted);
     font-size: 0.8rem;
@@ -176,7 +273,7 @@ h3.category-header.active::after {
     display: none;
 }
 
-/* 拖拽元件樣式優化 */
+/* ── Draggable element items (toolbox) ── */
 .draggable-item {
     padding: 12px;
     background: #f8fafc;
@@ -194,7 +291,7 @@ h3.category-header.active::after {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-/* CSS 字典項目優化 */
+/* ── CSS dictionary panel items ── */
 .dict-item {
     padding: 8px 12px;
     background: #f8fafc;
@@ -212,34 +309,47 @@ h3.category-header.active::after {
     color: var(--primary);
 }
 
-/* 屬性面板與編輯器 */
+/* ── Properties / inspector panel ── */
 .properties-panel {
-    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 14px;
 }
+
+#no-selection-msg {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* ── CSS editor panel (right sidebar) ── */
 .css-editor-panel {
-    padding: 16px 0 0 0;
-    border-top: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
-
-#global-css-textarea {
-    width: 100%;
-    font-family: 'Fira Code', Consolas, monospace;
-    font-size: 0.8rem;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background: #fafafa;
-    resize: none;
     flex: 1;
-    min-height: 200px;
 }
 
+.css-editor-hint {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.css-selector-creator {
+    display: flex;
+    gap: 6px;
+    margin-top: 5px;
+}
+
+.css-selector-creator input {
+    margin-top: 0;
+    flex: 1;
+}
+
+/* ── Inputs & textareas ── */
 input[type='text'],
 textarea {
     width: 100%;
@@ -266,22 +376,59 @@ label {
     text-transform: uppercase;
 }
 
-.danger-btn {
-    margin-top: 12px;
-    width: 100%;
-    padding: 10px;
-    background-color: #ef4444;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-}
-.danger-btn:hover {
-    background-color: #dc2626;
+/* ── Canvas outer wrapper ── */
+.canvas {
+    flex: 1;
+    background: #f1f5f9;
+    padding: 30px;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
 }
 
-/* ================= 🛑 預覽模式與退出按鈕最高優先級 ================= */
+/* ── Canvas inner container (the "paper") ── */
+.canvas-container {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100%;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    padding: 24px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Editing outlines on canvas children */
+body:not(.preview-mode) .canvas-container * {
+    min-height: 40px;
+    padding: 16px;
+    margin: 12px 0;
+    border: 1px dashed #cbd5e1;
+    background-color: rgba(248, 250, 252, 0.4);
+    position: relative;
+}
+
+body:not(.preview-mode) .canvas-container *.selected-element {
+    outline: 2px solid #2563eb !important;
+    outline-offset: -2px;
+}
+
+.canvas-placeholder {
+    pointer-events: none;
+    color: #94a3b8;
+    text-align: center;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.95rem;
+    border: none !important;
+    background: transparent !important;
+}
+
+/* ── Preview mode ── */
 body.preview-mode .control-bar,
 body.preview-mode .toolbox,
 body.preview-mode .css-dictionary-panel,
@@ -293,7 +440,28 @@ body.preview-mode .main-workspace {
     height: 100vh;
 }
 
-/* 確保退出按鈕絕對置頂，不受畫布元件阻擋 */
+body.preview-mode .canvas {
+    padding: 0;
+    background: #fff;
+}
+
+body.preview-mode .canvas-container {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0;
+    max-width: 100%;
+}
+
+body.preview-mode .canvas-container * {
+    border: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    margin: 0;
+    padding: 0;
+}
+
+/* Exit preview button */
 #btn-exit-preview {
     position: fixed;
     bottom: 30px;
@@ -304,7 +472,7 @@ body.preview-mode .main-workspace {
     border: none;
     border-radius: 50px;
     cursor: pointer;
-    z-index: 9999999 !important; /* 超高層級 */
+    z-index: 9999999 !important;
     font-weight: 600;
     font-size: 0.9rem;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
@@ -320,17 +488,24 @@ body.preview-mode .main-workspace {
     transform: scale(1.05);
 }
 
-/* ================= 🌓 工作模式顯示公理 ================= */
+/* ── Mode toggles ── */
 body.mode-visual .css-dictionary-panel,
 body.mode-visual .css-editor-panel {
     display: none !important;
 }
-
-body.mode-css .toolbox {
-    display: none !important;
+body.mode-visual .right-sidebar {
+    width: 320px;
 }
 
-/* --- 🧱 可拖拽 CSS 積木樣式 (左側字典) --- */
+body.mode-css .toolbox,
+body.mode-css .properties-panel {
+    display: none !important;
+}
+body.mode-css .right-sidebar {
+    width: 420px;
+}
+
+/* ── CSS dictionary draggable blocks ── */
 .css-dict-block {
     padding: 10px 12px;
     background: #f8fafc;
@@ -349,7 +524,7 @@ body.mode-css .toolbox {
     background: #eff6ff;
 }
 
-/* --- 📦 右側 Visual CSS 規則區塊 --- */
+/* ── Visual CSS rule container ── */
 .css-rules-container {
     display: flex;
     flex-direction: column;
@@ -376,7 +551,8 @@ body.mode-css .toolbox {
     font-size: 0.85rem;
     color: #334155;
     border-bottom: 1px dashed #cbd5e1;
-    padding-bottom: 6px;
+    padding-bottom: 8px;
+    gap: 8px;
 }
 
 .btn-delete-rule {
@@ -387,7 +563,6 @@ body.mode-css .toolbox {
     font-size: 0.8rem;
 }
 
-/* 屬性積木的落腳放置區 */
 .css-rule-body-dropzone {
     min-height: 50px;
     background: #ffffff;
@@ -399,146 +574,7 @@ body.mode-css .toolbox {
     gap: 6px;
 }
 
-/* --- 🎛️ 積木被拖入放置區後的樣式（帶有填入格子） --- */
-.applied-css-block {
-    background: #f1f5f9;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    padding: 6px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 0.8rem;
-}
-
-.applied-css-block .block-label {
-    font-family: monospace;
-    font-weight: 600;
-    color: #475569;
-}
-
-/* 填入數值的格子樣式 */
-.applied-css-block .block-value-input {
-    width: 100px;
-    padding: 4px 8px;
-    font-size: 0.8rem;
-    border: 1px solid #cbd5e1;
-    border-radius: 4px;
-    margin-left: 8px;
-    font-family: monospace;
-}
-
-.btn-remove-block {
-    background: transparent;
-    border: none;
-    color: #94a3b8;
-    cursor: pointer;
-    margin-left: 6px;
-}
-.btn-remove-block:hover {
-    color: #ef4444;
-}
-
-/* 結構微調 */
-.css-selector-creator {
-    display: flex;
-    gap: 6px;
-    margin-top: 5px;
-}
-.css-selector-creator input {
-    margin-top: 0;
-    flex: 1;
-}
-
-.css-editor-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-/* --- 🗂️ 主要工作區域結構調整 --- */
-.main-workspace {
-    display: flex;
-    flex: 1;
-    height: calc(100vh - 60px);
-    overflow: hidden;
-}
-
-/* 側邊欄通用基礎樣式 */
-.toolbox,
-.css-dictionary-panel,
-.right-sidebar {
-    background: var(--bg-panel);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    overflow-y: auto;
-    padding: 20px;
-    transition: width 0.3s ease; /* 讓寬度切換時有平滑的過渡動畫 */
-}
-
-/* 左側面板寬度固定 */
-.toolbox {
-    width: 280px;
-    border-right: 1px solid var(--border-color);
-}
-.css-dictionary-panel {
-    width: 280px;
-    border-right: 1px solid var(--border-color);
-}
-
-/* 右側邊欄基礎樣式 */
-.right-sidebar {
-    border-left: 1px solid var(--border-color);
-}
-
-/* 內部的 Inspector 和 CSS 面板各自撐滿 */
-.properties-panel,
-.css-editor-panel {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-}
-
-/* 將 CSS 編輯面板的頂部邊框拿掉，因為它們現在不會同時出現了 */
-.css-editor-panel {
-    padding: 0;
-    border-top: none;
-    flex: 1;
-}
-
-/* --- 🌓 終極 UI/UX 顯示與寬度配置公理 --- */
-
-/* 1. 🎨 視覺模式 (Visual Mode) */
-body.mode-visual .css-dictionary-panel,
-body.mode-visual .css-editor-panel {
-    display: none !important; /* 隱藏 CSS 相關面板 */
-}
-body.mode-visual .right-sidebar {
-    width: 320px; /* 視覺模式下，Inspector 保持標準寬度 */
-}
-
-/* 2. 💻 CSS 編輯模式 (CSS Expert Mode) */
-body.mode-css .toolbox,
-body.mode-css .properties-panel {
-    display: none !important; /* 💡 修正點：隱藏元件庫與 Inspector，兩者不共存！ */
-}
-body.mode-css .right-sidebar {
-    width: 420px; /* 💡 修正點：拓寬到 420px！給予數值填入格子超寬敞空間 */
-}
-
-/* 畫布外圍緩衝帶 */
-.canvas {
-    flex: 1;
-    background: #f1f5f9;
-    padding: 30px;
-    overflow-y: auto;
-    display: flex;
-    justify-content: center;
-}
-
-/* --- 🎛️ 積木被拖入放置區後的樣式優化 --- */
+/* ── Applied CSS block in dropzone ── */
 .applied-css-block {
     background: #f1f5f9;
     border: 1px solid #cbd5e1;
@@ -555,12 +591,11 @@ body.mode-css .right-sidebar {
     font-family: monospace;
     font-weight: 600;
     color: #475569;
-    min-width: 120px; /* 給予屬性名稱（如 flex-direction）足夠的寬度不換行 */
+    min-width: 120px;
 }
 
-/* 讓填入數值的格子擁有更大的操作空間 */
 .applied-css-block .block-value-input {
-    flex: 1; /* 💡 自動拉伸，撐滿可用空間 */
+    flex: 1;
     min-width: 120px;
     padding: 6px 10px;
     font-size: 0.85rem;
@@ -589,41 +624,7 @@ body.mode-css .right-sidebar {
     color: #ef4444;
 }
 
-/* --- 🎯 畫布元件偵測閃爍與高亮效果 --- */
-.css-hunting-active {
-    outline: 3px solid #f59e0b !important; /* 橘黃色高亮外框 */
-    outline-offset: 2px;
-    animation: cssSelectorPulse 1.5s infinite ease-in-out;
-    position: relative;
-}
-
-/* 閃爍動畫：外框由實變虛，提示作用域 */
-@keyframes cssSelectorPulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
-    }
-}
-
-/* --- 📦 升級後的 CSS 規則大盒子控制列 --- */
-.css-rule-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    font-size: 0.85rem;
-    color: #334155;
-    border-bottom: 1px dashed #cbd5e1;
-    padding-bottom: 8px;
-    gap: 8px;
-}
-
-/* 可編輯的選擇器輸入框樣式 */
+/* ── Editable selector input ── */
 .editable-selector-input {
     background: transparent;
     border: 1px solid transparent;
@@ -647,7 +648,7 @@ body.mode-css .right-sidebar {
     cursor: text;
 }
 
-/* 偵測開關按鈕樣式 */
+/* ── Hunt / detect button ── */
 .btn-hunt-elements {
     background: #f1f5f9;
     border: 1px solid #cbd5e1;
@@ -665,10 +666,29 @@ body.mode-css .right-sidebar {
     border-color: #f59e0b;
     color: #d97706;
 }
-/* 開關被打開時的激活狀態 */
 .btn-hunt-elements.active {
     background: #d97706;
     border-color: #d97706;
     color: #ffffff;
     font-weight: bold;
+}
+
+/* ── CSS hunting highlight ── */
+.css-hunting-active {
+    outline: 3px solid #f59e0b !important;
+    outline-offset: 2px;
+    animation: cssSelectorPulse 1.5s infinite ease-in-out;
+    position: relative;
+}
+
+@keyframes cssSelectorPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    }
 }
