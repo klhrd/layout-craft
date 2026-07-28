@@ -7,11 +7,46 @@ const canvas = document.getElementById('canvas');
 const btnPreview = document.getElementById('btn-preview');
 const btnExport = document.getElementById('btn-export');
 
+const DEVICES = [
+    { label: 'Desktop', width: null, icon: '🖥️' },
+    { label: 'Tablet', width: 768, icon: '📱' },
+    { label: 'Mobile', width: 375, icon: '📲' },
+];
+
+let activeDeviceIdx = 0;
+
 export function initExporter() {
     btnPreview.addEventListener('click', () => {
         cancelActiveInlineEdit();
         deselectAll();
         document.body.classList.add('preview-mode');
+        activeDeviceIdx = 0;
+
+        // Device toolbar at the top of the canvas area
+        const toolbar = document.createElement('div');
+        toolbar.id = 'preview-toolbar';
+        DEVICES.forEach((d, i) => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'preview-device-btn' + (i === 0 ? ' active' : '');
+            btn.textContent = `${d.icon} ${d.label}`;
+            btn.addEventListener('click', () => {
+                toolbar.querySelectorAll('.preview-device-btn').forEach((b) => b.classList.remove('active'));
+                btn.classList.add('active');
+                activeDeviceIdx = i;
+                applyDeviceFrame();
+            });
+            toolbar.appendChild(btn);
+        });
+
+        // Width indicator
+        const widthLabel = document.createElement('span');
+        widthLabel.id = 'preview-width-label';
+        toolbar.appendChild(widthLabel);
+
+        document.body.appendChild(toolbar);
+        applyDeviceFrame();
+
         const exitBtn = document.createElement('button');
         exitBtn.id = 'btn-exit-preview';
         exitBtn.innerHTML = t('ui.backToEditor');
@@ -19,8 +54,31 @@ export function initExporter() {
         exitBtn.addEventListener('click', () => {
             document.body.classList.remove('preview-mode');
             exitBtn.remove();
+            toolbar.remove();
+            canvas.style.maxWidth = '';
+            canvas.style.margin = '';
         });
+
+        // Update width label on resize
+        const ro = new ResizeObserver(() => {
+            if (document.body.classList.contains('preview-mode')) applyDeviceFrame();
+        });
+        ro.observe(canvas);
     });
+
+    function applyDeviceFrame() {
+        const device = DEVICES[activeDeviceIdx];
+        const label = document.getElementById('preview-width-label');
+        if (device.width) {
+            canvas.style.maxWidth = `${device.width}px`;
+            canvas.style.margin = '0 auto';
+            if (label) label.textContent = `${canvas.offsetWidth}px`;
+        } else {
+            canvas.style.maxWidth = '';
+            canvas.style.margin = '';
+            if (label) label.textContent = `${canvas.offsetWidth}px`;
+        }
+    }
 
     btnExport.addEventListener('click', () => {
         const canvasClone = canvas.cloneNode(true);
