@@ -161,6 +161,9 @@ export function loadProject(projName) {
     if (window.rebuildCssRulesUI) {
         window.rebuildCssRulesUI();
     }
+    if (window.refreshLayers) {
+        window.refreshLayers();
+    }
 
     compileAndRenderCss();
     updateStorageMeter();

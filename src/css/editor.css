@@ -475,6 +475,94 @@ h3.category-header.active::after {
     border-color: var(--primary);
 }
 
+/* ── Layers panel ── */
+.layers-panel {
+    border-top: 1px solid var(--border-color);
+    margin-top: 8px;
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.layers-panel h3 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+#layers-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.layers-empty {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    padding: 8px;
+    font-style: italic;
+}
+
+.layer-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s;
+    font-size: 0.75rem;
+    gap: 4px;
+}
+
+.layer-entry:hover {
+    background: #f1f5f9;
+}
+
+.layer-entry.layer-selected {
+    background: #eff6ff;
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.layer-entry.layer-locked {
+    opacity: 0.55;
+}
+
+.layer-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.layer-actions {
+    display: flex;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.layer-vis-btn,
+.layer-lock-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.7rem;
+    padding: 2px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+.layer-vis-btn:hover,
+.layer-lock-btn:hover {
+    background: #e2e8f0;
+}
+
 /* ── CSS editor panel (right sidebar) ── */
 .css-editor-panel {
     display: flex;
@@ -669,7 +757,8 @@ body.mode-visual .right-sidebar {
 }
 
 body.mode-css .toolbox,
-body.mode-css .properties-panel {
+body.mode-css .properties-panel,
+body.mode-css .layers-panel {
     display: none !important;
 }
 body.mode-css .right-sidebar {

@@ -3,6 +3,7 @@ import { CSS_DICTIONARY } from './config/cssDictionary.js';
 import { t } from './config/i18n.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
 import { initInspector } from './modules/inspector.js';
+import { initLayers, refreshLayers } from './modules/layers.js';
 import { initExporter } from './modules/exporter.js';
 import { initStorage, saveProject } from './modules/storage.js';
 import * as history from './modules/history.js';
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCssDictionaryBlocks();
     initCanvas();
     initInspector();
+    initLayers();
     initExporter();
     initModeSwitcher();
     initVisualCssActions();
@@ -152,6 +154,10 @@ function initVisualCssActions() {
 
 // Exposed globally: when an old project is loaded, accurately rebuild the
 // rule boxes and input fields in the right-side UI from persisted data.
+window.refreshLayers = function () {
+    refreshLayers();
+};
+
 window.rebuildCssRulesUI = function () {
     visualCssContainer.innerHTML = '';
     for (const [selector, styles] of Object.entries(window.activeCssData)) {
