@@ -49,8 +49,8 @@ New file: `src/js/modules/codegen/`:
 `codegen/domWalker.js` exposes:
 
 ```js
-walk(node, visitors, depth)   // depth-first
-attrMap(node)                 // { class, id, ...sanitised }
+walk(node, visitors, depth); // depth-first
+attrMap(node); // { class, id, ...sanitised }
 ```
 
 The HTML exporter keeps the original attrs; the JSX exporter rewrites
@@ -58,16 +58,16 @@ the keys (per the table below); the Vue exporter passes attrs through.
 
 ### Attribute rewrite table (JSX)
 
-| DOM         | JSX          |
-| ----------- | ------------ |
-| `class`     | `className`  |
-| `for`       | `htmlFor`    |
-| `tabindex`  | `tabIndex`   |
-| `readonly`  | `readOnly`   |
-| `maxlength` | `maxLength`  |
-| `colspan`   | `colSpan`    |
-| `rowspan`   | `rowSpan`    |
-| others      | unchanged    |
+| DOM         | JSX         |
+| ----------- | ----------- |
+| `class`     | `className` |
+| `for`       | `htmlFor`   |
+| `tabindex`  | `tabIndex`  |
+| `readonly`  | `readOnly`  |
+| `maxlength` | `maxLength` |
+| `colspan`   | `colSpan`   |
+| `rowspan`   | `rowSpan`   |
+| others      | unchanged   |
 
 Boolean attrs (`disabled`, `required`, `checked`) →
 `{true}` / `{false}` based on presence.
@@ -86,16 +86,16 @@ Vue bundle is one file (`App.vue`).
 
 ## Suggested commit plan for this branch
 
-| # | Commit title                                                       |
-| - | ------------------------------------------------------------------ |
-| 1 | `Add export-jsx-vue design document` (this file)                  |
-| 2 | `Extract HTML exporter into codegen/htmlExport.js (pure function)`|
-| 3 | `Add codegen/domWalker.js with attr rewrite table for JSX`        |
-| 4 | `Implement codegen/jsxExport.js producing App.jsx + style.css`     |
-| 5 | `Implement codegen/vueExport.js producing App.vue (scoped style)` |
-| 6 | `Replace export button with a dropdown popover in exporter.js`     |
-| 7 | `Add unit tests for each codegen (snapshot the output)`            |
-| 8 | `Mark Mid-term #3 complete in ROADMAP`                            |
+| #   | Commit title                                                       |
+| --- | ------------------------------------------------------------------ |
+| 1   | `Add export-jsx-vue design document` (this file)                   |
+| 2   | `Extract HTML exporter into codegen/htmlExport.js (pure function)` |
+| 3   | `Add codegen/domWalker.js with attr rewrite table for JSX`         |
+| 4   | `Implement codegen/jsxExport.js producing App.jsx + style.css`     |
+| 5   | `Implement codegen/vueExport.js producing App.vue (scoped style)`  |
+| 6   | `Replace export button with a dropdown popover in exporter.js`     |
+| 7   | `Add unit tests for each codegen (snapshot the output)`            |
+| 8   | `Mark Mid-term #3 complete in ROADMAP`                             |
 
 ## Open questions
 

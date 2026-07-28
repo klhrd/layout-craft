@@ -56,7 +56,7 @@ for each top-level child of canvas:
   subtree; include matches verbatim in the shadow style. Promises
   no cascade leakage.
 - Selectors that span across component boundaries (e.g. `.parent .child`
-  where both live in different components) are *not* supported in v1
+  where both live in different components) are _not_ supported in v1
   — emit a console warn + a comment in the emitted CSS so the user is
   aware. Future iteration could hoist such rules to a shared base
   stylesheet.
@@ -78,6 +78,7 @@ slugFrom(tag, id, cls) {
 
 The export dropdown from Mid-term #3 grows a "Web Components" option.
 Two file outputs:
+
 - **Single bundle**: `components.js` registering everything
 - **Folder zip**: `components/<name>.js` one per component + `index.js`
   barrel; downloadable via the same pattern as the existing exporter
@@ -86,23 +87,23 @@ Two file outputs:
 
 ## Suggested commit plan for this branch
 
-| # | Commit title                                                          |
-| - | ------------------------------------------------------------------- |
-| 1 | `Add web-component-export design document` (this file)              |
-| 2 | `Extract shared domWalker helpers (if Mid-term #3 hasn't yet)`      |
-| 3 | `Implement codegen/wcExport.js with single-bundle emitter`         |
-| 4 | `Add filter-and-scope CSS for each component subtree`               |
-| 5 | `Add naming algorithm with collision dedup`                        |
-| 6 | `Add Web Components entry to export dropdown in exporter.js`         |
-| 7 | `Add optional jszip folder-zip export`                              |
-| 8 | `Add unit tests for name dedup + CSS scoping edge cases`            |
-| 9 | `Document Web Component export in README`                           |
-| 10 | `Mark Long-term #5 complete in ROADMAP`                            |
+| #   | Commit title                                                   |
+| --- | -------------------------------------------------------------- |
+| 1   | `Add web-component-export design document` (this file)         |
+| 2   | `Extract shared domWalker helpers (if Mid-term #3 hasn't yet)` |
+| 3   | `Implement codegen/wcExport.js with single-bundle emitter`     |
+| 4   | `Add filter-and-scope CSS for each component subtree`          |
+| 5   | `Add naming algorithm with collision dedup`                    |
+| 6   | `Add Web Components entry to export dropdown in exporter.js`   |
+| 7   | `Add optional jszip folder-zip export`                         |
+| 8   | `Add unit tests for name dedup + CSS scoping edge cases`       |
+| 9   | `Document Web Component export in README`                      |
+| 10  | `Mark Long-term #5 complete in ROADMAP`                        |
 
 ## Open questions
 
 1. Should attributes be reflected as setters / getters (so `<layout-
-   craft-hero title="...">` updates the inner DOM)? Current plan:
+craft-hero title="...">` updates the inner DOM)? Current plan:
    **yes** for `boolean`-style attrs (no); **no** for text content —
    users can rewrite the subtree via `shadowRoot`.
 2. Are slot children (nested slots) in scope? Current plan: **one slot

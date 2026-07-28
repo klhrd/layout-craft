@@ -18,6 +18,7 @@ and accessibility-conscious users:
 ## Requirements
 
 ### Localization
+
 - All user-visible strings flow through `t(path, ...args)` from
   `src/js/config/i18n.js` — already enforced since Short-term #1.
 - Locale persisted in `localStorage` keyed `layoutcraft_locale`.
@@ -32,13 +33,14 @@ and accessibility-conscious users:
   active locale.
 
 ### Theming
+
 - CSS custom properties drive theme colors. A `data-theme="light|dark"`
   attribute on `<html>` switches the variables.
 - Default is `light`, respecting `prefers-color-scheme` only on first
   run; thereafter the user's choice is stored in
   `localStorage` (`layoutcraft_theme`).
 - The toggle lives next to the lang selector in the control bar.
-- The canvas preview area is *not* themed: it must show the user's
+- The canvas preview area is _not_ themed: it must show the user's
   chosen colors; only the editor chrome (control bar, sidebars,
   Inspector panel, dialog backgrounds) is themed.
 
@@ -48,6 +50,7 @@ and accessibility-conscious users:
 
 The current dictionary (`src/js/config/i18n.js`) has English populated
 fully and `zh-TW` partially. Plan:
+
 1. Run a sweep commit that fills every missing key in `zh-TW`, marking
    anything contentious with a code comment.
 2. Add `zh-CN` directly translated from `zh-TW`, with a conversion
@@ -57,7 +60,7 @@ fully and `zh-TW` partially. Plan:
    only the toast message strings translated so users see feedback
    in the right language at minimum.
 4. Add a `localeApplied` event from `setLocale()` that panels
-  subscribe to so their dynamic re-render uses the new strings.
+   subscribe to so their dynamic re-render uses the new strings.
 
 ### Theming implementation
 
@@ -70,23 +73,23 @@ fully and `zh-TW` partially. Plan:
   `toggleTheme()`; persists to `localStorage`; toggles the
   `data-theme` attr on `document.documentElement`.
 - Canvas preview clone (used by exporter.js) must inject the user's CSS
-  *only*, never the theme variables — done today already because
+  _only_, never the theme variables — done today already because
   `compileAndRenderCss` writes to `#live-styles`.
 
 ## Suggested commit plan for this branch
 
-| # | Commit title                                                          |
-| - | ------------------------------------------------------------------- |
-| 1 | `Add i18n-theming design document` (this file)                       |
-| 2 | `Extract color tokens into src/css/theme.css (light/dark)`           |
-| 3 | `Refactor editor.css to consume theme variables`                    |
-| 4 | `Add theme.js module + data-theme attr + localStorage persistence`  |
-| 5 | `Add light/dark toggle UI in the control bar`                         |
-| 6 | `Add lang selector dropdown wired to setLocale + persist`            |
-| 7 | `Fire localeApplied event; subscribe dynamic panels`                |
-| 8 | `Complete zh-TW dictionary + add zh-CN / ja / es scaffolds`         |
-| 9 | `Switch project list to Intl formatting; localize storage meter`    |
-| 10 | `Mark Long-term #4 complete in ROADMAP`                             |
+| #   | Commit title                                                       |
+| --- | ------------------------------------------------------------------ |
+| 1   | `Add i18n-theming design document` (this file)                     |
+| 2   | `Extract color tokens into src/css/theme.css (light/dark)`         |
+| 3   | `Refactor editor.css to consume theme variables`                   |
+| 4   | `Add theme.js module + data-theme attr + localStorage persistence` |
+| 5   | `Add light/dark toggle UI in the control bar`                      |
+| 6   | `Add lang selector dropdown wired to setLocale + persist`          |
+| 7   | `Fire localeApplied event; subscribe dynamic panels`               |
+| 8   | `Complete zh-TW dictionary + add zh-CN / ja / es scaffolds`        |
+| 9   | `Switch project list to Intl formatting; localize storage meter`   |
+| 10  | `Mark Long-term #4 complete in ROADMAP`                            |
 
 ## Open questions
 

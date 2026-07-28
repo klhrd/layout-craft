@@ -18,15 +18,15 @@ starting from scratch.
 - A new `📥 Import` button in the control bar opens a modal with two
   textareas: HTML and CSS.
 - Submits:
-  1. Parse HTML with `DOMParser` into a detached document.
-  2. Move the parsed body's children into the live canvas, re-binding
-     Sortable on every container (reusing the loadProject rehydrate
-     path in `storage.js`).
-  3. Parse CSS with a lightweight tokenizer / or `document.styleSheets`
-     injection + read-back, splitting the result into one
-     `window.activeCssData` entry per selector.
-  4. Re-render the visual CSS rule boxes via the existing
-     `window.rebuildCssRulesUI()` path.
+    1. Parse HTML with `DOMParser` into a detached document.
+    2. Move the parsed body's children into the live canvas, re-binding
+       Sortable on every container (reusing the loadProject rehydrate
+       path in `storage.js`).
+    3. Parse CSS with a lightweight tokenizer / or `document.styleSheets`
+       injection + read-back, splitting the result into one
+       `window.activeCssData` entry per selector.
+    4. Re-render the visual CSS rule boxes via the existing
+       `window.rebuildCssRulesUI()` path.
 - Strips `<script>`, `<style>`, `<link>`, `on*=` attributes from the
   imported markup to avoid XSS / accidental execution inside the
   editor.
@@ -44,6 +44,7 @@ jsdom environment. It returns a real DOM tree that we can manipulate
 with the same APIs the canvas uses, so no tokenizer library is needed.
 
 For CSS:
+
 - Inject the user's CSS string into a `<style>` on a detached
   document, then iterate `document.styleSheets[...].cssRules`.
 - Each `CSSStyleRule` → one `activeCssData` entry keyed by
@@ -56,8 +57,9 @@ For CSS:
 ### Sanitization
 
 `sanitizeImportedNode(node)`:
+
 - Remove: `script`, `iframe`¹, `link`, `style`, `meta`, `base`
-  (¹ iframe is a *LayoutCraft component*, but user pastes should
+  (¹ iframe is a _LayoutCraft component_, but user pastes should
   not bring in arbitrary sources — strip its `src` and re-export as
   a LayoutCraft iframe via `elements.js` instead.)
 - Remove attributes named `on*` (`onclick`, `oninput`, ...).
@@ -81,16 +83,16 @@ parsed data.
 
 ## Suggested commit plan for this branch
 
-| # | Commit title                                                     |
-| - | ---------------------------------------------------------------- |
-| 1 | `Add import-flow design document` (this file)                   |
-| 2 | `Factor rehydrateCanvas helper out of storage.js`              |
-| 3 | `Create src/js/modules/importer.js with DOMParser + cssRules`  |
-| 4 | `Add sanitizeImportedNode (strip scripts / on* attrs)`         |
-| 5 | `Surface Import button + modal in index.html and app.js`       |
-| 6 | `Wire modal submit to importer.importFromPaste`                |
-| 7 | `Add unit tests for importer: parse + sanitize roundtrip`      |
-| 8 | `Mark Mid-term #5 complete in ROADMAP`                         |
+| #   | Commit title                                                  |
+| --- | ------------------------------------------------------------- |
+| 1   | `Add import-flow design document` (this file)                 |
+| 2   | `Factor rehydrateCanvas helper out of storage.js`             |
+| 3   | `Create src/js/modules/importer.js with DOMParser + cssRules` |
+| 4   | `Add sanitizeImportedNode (strip scripts / on* attrs)`        |
+| 5   | `Surface Import button + modal in index.html and app.js`      |
+| 6   | `Wire modal submit to importer.importFromPaste`               |
+| 7   | `Add unit tests for importer: parse + sanitize roundtrip`     |
+| 8   | `Mark Mid-term #5 complete in ROADMAP`                        |
 
 ## Open questions
 

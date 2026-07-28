@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initModeSwitcher();
     initVisualCssActions();
     initHistoryUI();
+    initOutlinesToggle();
 
     initStorage(); // Boot the storage manager.
 
@@ -510,6 +511,20 @@ function initModeSwitcher() {
         document.body.className = 'mode-css';
         switchCssBtn.classList.add('active');
         switchVisualBtn.classList.remove('active');
+    });
+}
+
+// Outlines toggle — switch between WYSIWYG and wireframe view.
+function initOutlinesToggle() {
+    const btn = document.getElementById('btn-outlines');
+    if (!btn) return;
+    btn.textContent = t('ui.canvas.showOutlines');
+    let outlinesOn = false;
+
+    btn.addEventListener('click', () => {
+        outlinesOn = !outlinesOn;
+        document.body.classList.toggle('show-outlines', outlinesOn);
+        btn.textContent = outlinesOn ? t('ui.canvas.hideOutlines') : t('ui.canvas.showOutlines');
     });
 }
 

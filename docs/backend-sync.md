@@ -29,6 +29,7 @@ across devices is the explicit target.
 ### Provider: Supabase (preferred) vs Firebase
 
 Decision: **Supabase**.
+
 - Postgres + row-level security → simpler security model than Firestore
   rules for a per-user project table.
 - JS SDK is ~50 kB and works with Vite easily.
@@ -37,6 +38,7 @@ Decision: **Supabase**.
   the box.
 
 Schema:
+
 ```sql
 -- supabase migration
 create table projects (
@@ -54,28 +56,31 @@ create table projects (
 ### Client architecture
 
 New module `src/js/modules/sync.js` exposing:
+
 ```js
-signInWithEmail(email);       // sends magic link
+signInWithEmail(email); // sends magic link
 signInWithGitHub();
 signOut();
 isAuthenticated();
-pullProjects();               // list + latest snapshot per name
-pushProject(projectName);     // upsert by (user_id, name)
-pullProject(projectName);     // fetch single snapshot
+pullProjects(); // list + latest snapshot per name
+pushProject(projectName); // upsert by (user_id, name)
+pullProject(projectName); // fetch single snapshot
 onAuthChange(listener);
 ```
 
 `storage.js` keeps its local-first API. `sync.js` wraps it:
+
 - After every `saveProject(name, false)`, debounce-push to the cloud.
 - On app start, if authenticated, pull the project list and refresh the
   dropdown; if remote update timestamp is newer than local, trigger a
   "Cloud is newer — Pull / Keep local" UI.
 - Manual "💾 Save now" button gets a ⃂ cloud variant: "☁ Save to cloud"
-  + "☁ Pull from cloud".
+    - "☁ Pull from cloud".
 
 ### Auth UX
 
 Add a sign-in affordance to `.right-actions`:
+
 - When anonymous: `Sign in` (opacity 60%).
 - When signed-in: avatar / handle as tooltip; click reveals `Sign out`.
 - Local state lives in `localStorage`, so sign-out does not wipe data.
@@ -95,18 +100,18 @@ manual cloud-save.
 
 ## Suggested commit plan for this branch
 
-| #  | Commit title                                                       |
-| -- | ------------------------------------------------------------------ |
-| 1  | `Add backend-sync design document` (this file)                     |
-| 2  | `Install @supabase/supabase-js; wire env vars + .env.example`     |
-| 3  | `Add supabase migration SQL (projects table + RLS)`              |
-| 4  | `Create src/js/modules/sync.js with auth + pull/push primitives`  |
-| 5  | `Add sign-in / sign-out affordance in the control bar`            |
-| 6  | `Wire storage.js to debounced cloud pushes after every save`      |
-| 7  | `Add cloud-aware Refresh button + conflict prompt UI`              |
-| 8  | `Add e2e-style test (mocked supabase client) covering push/pull` |
-| 9  | `Document the cloud flow in README and AGENTS.md`                 |
-| 10 | `Mark Long-term #1 complete in ROADMAP`                           |
+| #   | Commit title                                                     |
+| --- | ---------------------------------------------------------------- |
+| 1   | `Add backend-sync design document` (this file)                   |
+| 2   | `Install @supabase/supabase-js; wire env vars + .env.example`    |
+| 3   | `Add supabase migration SQL (projects table + RLS)`              |
+| 4   | `Create src/js/modules/sync.js with auth + pull/push primitives` |
+| 5   | `Add sign-in / sign-out affordance in the control bar`           |
+| 6   | `Wire storage.js to debounced cloud pushes after every save`     |
+| 7   | `Add cloud-aware Refresh button + conflict prompt UI`            |
+| 8   | `Add e2e-style test (mocked supabase client) covering push/pull` |
+| 9   | `Document the cloud flow in README and AGENTS.md`                |
+| 10  | `Mark Long-term #1 complete in ROADMAP`                          |
 
 ## Open questions
 
