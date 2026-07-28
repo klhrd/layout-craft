@@ -325,6 +325,43 @@ h3.category-header.active::after {
     display: none !important;
 }
 
+/* ── Style editor (select-to-style) ── */
+#style-editor {
+    border-top: 1px solid var(--border-color);
+    margin-top: 8px;
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#style-editor .style-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+#style-editor .style-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#style-editor .style-row label {
+    margin: 0;
+    min-width: 80px;
+    font-size: 0.72rem;
+}
+
+#style-editor .style-row input {
+    margin: 0;
+    flex: 1;
+    padding: 5px 8px;
+    font-size: 0.8rem;
+}
+
 /* ── CSS editor panel (right sidebar) ── */
 .css-editor-panel {
     display: flex;
