@@ -2,7 +2,10 @@ let _data = {};
 let _counter = 1;
 
 export function initCssState() {
-    _data = {};
+    // Clear in-place so existing references (window.activeCssData) stay valid.
+    for (const key of Object.keys(_data)) {
+        delete _data[key];
+    }
     _counter = 1;
 }
 
