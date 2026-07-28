@@ -215,7 +215,8 @@ const CONTAINER_TAGS = [
 ];
 
 export function isContainer(el) {
-    return el && CONTAINER_TAGS.includes(el.tagName.toLowerCase());
+    if (!el) return false;
+    return CONTAINER_TAGS.includes(el.tagName.toLowerCase());
 }
 const TEXT_ALLOWED_TAGS = [
     'h1',
