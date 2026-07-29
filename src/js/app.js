@@ -42,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMenus();
     initZoom();
+    initBreakpoints();
 
     initStorage(); // Boot the storage manager.
 
@@ -1020,6 +1021,22 @@ function initZoom() {
     zoomOut.addEventListener('click', () => {
         zoom = Math.max(MIN, Math.round((zoom - 0.1) * 100) / 100);
         applyZoom();
+    });
+}
+
+function initBreakpoints() {
+    const buttons = document.querySelectorAll('.bp-toggle .btn-secondary[data-bp]');
+    buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const bp = btn.dataset.bp;
+            buttons.forEach((b) => b.classList.remove('active'));
+            if (bp === 'none') {
+                document.body.removeAttribute('data-bp');
+            } else {
+                document.body.setAttribute('data-bp', bp);
+                btn.classList.add('active');
+            }
+        });
     });
 }
 

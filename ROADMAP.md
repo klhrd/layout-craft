@@ -24,19 +24,19 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 
 **Partially completed Mid-term UX items:**
 
-| #   | Item                          | Status |
-| --- | ----------------------------- | ------ |
-| 1   | WYSIWYG canvas                | ✅ Hover highlight + click-to-select + outline toggle done. Missing: edit-mode toggle, resize handles |
-| 2   | Select-to-style               | ✅ Fully done — auto-class generation + inline style editor |
-| 3   | Inline text editing           | ✅ Fully done — double-click, Enter commit, Escape cancel |
-| 4   | Visual property editors       | 🟡 Color picker, font-size presets, align buttons done. Missing: sliders, unit selector, spacing diagram |
-| 5   | Layers / outline panel        | ✅ Fully done — tree with visibility/lock toggle |
-| 6   | Context menu                  | ✅ Fully done — edit text, duplicate, copy/paste, delete, move, wrap |
-| 7   | Pre-built component library   | ✅ Fully done — 8 components with auto-CSS extraction |
-| 8   | Responsive preview            | ❌ Not started |
-| 9   | Keyboard shortcuts            | 🟡 Ctrl+Z/C/V, Del, Escape, arrows done. Missing: Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow |
-| 10  | Canvas helpers                | ❌ Not started |
-| 11  | Empty-state guidance          | ✅ Fully done — Quick Start + Load Sample buttons |
+| #   | Item                        | Status                                                                                                   |
+| --- | --------------------------- | -------------------------------------------------------------------------------------------------------- |
+| 1   | WYSIWYG canvas              | ✅ Hover highlight + click-to-select + outline toggle done. Missing: edit-mode toggle, resize handles    |
+| 2   | Select-to-style             | ✅ Fully done — auto-class generation + inline style editor                                              |
+| 3   | Inline text editing         | ✅ Fully done — double-click, Enter commit, Escape cancel                                                |
+| 4   | Visual property editors     | 🟡 Color picker, font-size presets, align buttons done. Missing: sliders, unit selector, spacing diagram |
+| 5   | Layers / outline panel      | ✅ Fully done — tree with visibility/lock toggle                                                         |
+| 6   | Context menu                | ✅ Fully done — edit text, duplicate, copy/paste, delete, move, wrap                                     |
+| 7   | Pre-built component library | ✅ Fully done — 8 components with auto-CSS extraction                                                    |
+| 8   | Responsive preview          | ❌ Not started                                                                                           |
+| 9   | Keyboard shortcuts          | 🟡 Ctrl+Z/C/V, Del, Escape, arrows done. Missing: Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow      |
+| 10  | Canvas helpers              | ❌ Not started                                                                                           |
+| 11  | Empty-state guidance        | ✅ Fully done — Quick Start + Load Sample buttons                                                        |
 
 ---
 
@@ -56,27 +56,27 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 
 Replace the remaining raw text inputs in the inspector style editor with interactive widgets:
 
-| Property              | Widget                                  |
-| --------------------- | --------------------------------------- |
-| `padding` / `margin`  | Visual 4-direction diagram with inputs  |
-| `width` / `height`    | Slider + unit selector (px/rem/em/%)    |
-| `font-size`           | Slider + preset buttons (already have presets, add slider) |
-| `gap`                 | Slider + unit selector                  |
-| `border-radius`       | Slider + unit selector                  |
-| `opacity`             | Slider (0–1, step 0.05)                 |
-| `box-shadow`          | Color + offset-x/y + blur + spread      |
-| `font-family`         | System font dropdown                    |
+| Property             | Widget                                                     |
+| -------------------- | ---------------------------------------------------------- |
+| `padding` / `margin` | Visual 4-direction diagram with inputs                     |
+| `width` / `height`   | Slider + unit selector (px/rem/em/%)                       |
+| `font-size`          | Slider + preset buttons (already have presets, add slider) |
+| `gap`                | Slider + unit selector                                     |
+| `border-radius`      | Slider + unit selector                                     |
+| `opacity`            | Slider (0–1, step 0.05)                                    |
+| `box-shadow`         | Color + offset-x/y + blur + spread                         |
+| `font-family`        | System font dropdown                                       |
 
 - Reusable widget components: `UnitSlider`, `ValueDropdown`, `SpacingEditor`.
 - Each widget pushes to the undo stack the same way the current inline editor does.
 
 ### 3. Keyboard shortcuts (complete)
 
-| Shortcut               | Action                               |
-| ---------------------- | ------------------------------------ |
-| `Ctrl+D`               | Duplicate selected element           |
-| `Ctrl+/`               | Toggle Visual / CSS Expert mode      |
-| `Shift + ↑/↓/←/→`     | Nudge selected element 10px          |
+| Shortcut          | Action                          |
+| ----------------- | ------------------------------- |
+| `Ctrl+D`          | Duplicate selected element      |
+| `Ctrl+/`          | Toggle Visual / CSS Expert mode |
+| `Shift + ↑/↓/←/→` | Nudge selected element 10px     |
 
 ### 4. Canvas helpers
 
@@ -90,13 +90,13 @@ Replace the remaining raw text inputs in the inspector style editor with interac
 
 > All five feature-expansion items are merged into `master`.
 
-| #   | Feature                        | Branch                                  |
-| --- | ------------------------------ | --------------------------------------- |
-| 1   | Undo / Redo history stack      | `feature/ui-skeleton-cleanup`           |
-| 2   | Advanced CSS blocks            | `feature/advanced-css-blocks`           |
-| 3   | React JSX / Vue SFB export     | `feature/export-jsx-vue`                |
-| 4   | Nested sortable containers     | `feature/nested-components`             |
-| 5   | HTML/CSS import flow           | `feature/import-flow`                   |
+| #   | Feature                    | Branch                        |
+| --- | -------------------------- | ----------------------------- |
+| 1   | Undo / Redo history stack  | `feature/ui-skeleton-cleanup` |
+| 2   | Advanced CSS blocks        | `feature/advanced-css-blocks` |
+| 3   | React JSX / Vue SFB export | `feature/export-jsx-vue`      |
+| 4   | Nested sortable containers | `feature/nested-components`   |
+| 5   | HTML/CSS import flow       | `feature/import-flow`         |
 
 ---
 
@@ -151,18 +151,18 @@ own `feature/<name>` branch with frequent, focused commits.
 Stale branches (already merged into `master` via rebase or sequential merges)
 are cleaned up periodically. See [`docs/branch-audit.md`](docs/branch-audit.md).
 
-| Branch                         | Roadmap                   | Purpose                                          |
-| ------------------------------ | ------------------------- | ------------------------------------------------ |
-| `master`                       | —                         | Stable, deployable builds (GitHub Pages source)  |
-| —                              | Next-up #1                | Responsive preview + breakpoints                 |
-| —                              | Next-up #2                | Visual property editors (sliders, spacers, etc.) |
-| —                              | Next-up #3                | Keyboard shortcuts (Ctrl+D, Ctrl+/, Shift+arrow) |
-| —                              | Next-up #4                | Canvas helpers (snap-to-grid, resize, rulers)    |
-| `feature/backend-sync`         | Long-term #1              | Cloud storage (Supabase/Firebase)                |
-| `feature/i18n-theming`         | Long-term #2              | Light/dark theme + i18n expansion                |
-| `feature/web-component-export` | Long-term #3              | Export as Custom Elements                        |
-| `feature/collab`               | Long-term #4              | Realtime multiplayer editing                     |
-| `feature/template-marketplace` | Long-term #5              | Curated layout template library                  |
+| Branch                         | Roadmap      | Purpose                                          |
+| ------------------------------ | ------------ | ------------------------------------------------ |
+| `master`                       | —            | Stable, deployable builds (GitHub Pages source)  |
+| —                              | Next-up #1   | Responsive preview + breakpoints                 |
+| —                              | Next-up #2   | Visual property editors (sliders, spacers, etc.) |
+| —                              | Next-up #3   | Keyboard shortcuts (Ctrl+D, Ctrl+/, Shift+arrow) |
+| —                              | Next-up #4   | Canvas helpers (snap-to-grid, resize, rulers)    |
+| `feature/backend-sync`         | Long-term #1 | Cloud storage (Supabase/Firebase)                |
+| `feature/i18n-theming`         | Long-term #2 | Light/dark theme + i18n expansion                |
+| `feature/web-component-export` | Long-term #3 | Export as Custom Elements                        |
+| `feature/collab`               | Long-term #4 | Realtime multiplayer editing                     |
+| `feature/template-marketplace` | Long-term #5 | Curated layout template library                  |
 
 ---
 
