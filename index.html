@@ -170,6 +170,33 @@
                             <textarea id="input-text" rows="2" placeholder="Enter inner text..."></textarea>
                             <div id="dynamic-properties"></div>
                             <div id="style-editor"></div>
+
+                            <div id="hierarchy-controls" class="hierarchy-controls hidden">
+                                <div class="hierarchy-section-title">Hierarchy</div>
+                                <div class="hierarchy-parent">Parent: <span id="hierarchy-parent-name">-</span></div>
+                                <div class="hierarchy-actions">
+                                    <button id="btn-move-up" class="btn-secondary" title="Move Up">
+                                        <span class="mat-icon">keyboard_arrow_up</span>
+                                    </button>
+                                    <button id="btn-move-down" class="btn-secondary" title="Move Down">
+                                        <span class="mat-icon">keyboard_arrow_down</span>
+                                    </button>
+                                </div>
+                                <div class="hierarchy-wrap">
+                                    <button id="btn-wrap-div" class="btn-secondary" style="width: 100%">
+                                        <span class="mat-icon">wrap_text</span> Wrap in div
+                                    </button>
+                                    <div style="display: flex; gap: 4px">
+                                        <button id="btn-wrap-section" class="btn-secondary" style="flex: 1">
+                                            <span class="mat-icon">wrap_text</span> section
+                                        </button>
+                                        <button id="btn-unwrap" class="btn-secondary" style="flex: 1">
+                                            <span class="mat-icon">unfold_more</span> Unwrap
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button id="btn-lift-out" class="btn-secondary" style="margin-top: 6px; width: 100%">
                                 <span class="mat-icon">unfold_more</span> Lift Out
                             </button>

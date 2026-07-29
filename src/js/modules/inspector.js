@@ -18,6 +18,8 @@ const btnDelete = document.getElementById('btn-delete');
 const btnLiftOut = document.getElementById('btn-lift-out');
 let dynamicPropsContainer = null;
 let styleEditorContainer = null;
+let hierarchyContainer = null;
+let hierarchyParentName = null;
 
 // Counter for auto-generated classes (e.g. ._lc-1, ._lc-2).
 
@@ -128,6 +130,8 @@ const recordTextChange = makeDebouncedField(
 export function initInspector() {
     dynamicPropsContainer = document.getElementById('dynamic-properties');
     styleEditorContainer = document.getElementById('style-editor');
+    hierarchyContainer = document.getElementById('hierarchy-controls');
+    hierarchyParentName = document.getElementById('hierarchy-parent-name');
 
     canvas.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -190,6 +194,50 @@ export function initInspector() {
         deselectAll();
     });
 
+    // Hierarchy controls
+    const btnMoveUp = document.getElementById('btn-move-up');
+    const btnMoveDown = document.getElementById('btn-move-down');
+    const btnWrapDiv = document.getElementById('btn-wrap-div');
+    const btnWrapSection = document.getElementById('btn-wrap-section');
+    const btnUnwrap = document.getElementById('btn-unwrap');
+
+    function siblingMove(direction) {
+        return () => {
+            if (!selectedElement || !selectedElement.parentNode) return;
+            const el = selectedElement;
+            const parent = el.parentNode;
+            if (direction === 'up' && el.previousElementSibling) {
+                parent.insertBefore(el, el.previousElementSibling);
+            } else if (direction === 'down' && el.nextElementSibling) {
+                parent.insertBefore(el.nextElementSibling, el);
+            } else return;
+            selectElement(el);
+        };
+    }
+    if (btnMoveUp) btnMoveUp.addEventListener('click', siblingMove('up'));
+    if (btnMoveDown) btnMoveDown.addEventListener('click', siblingMove('down'));
+
+    if (btnWrapDiv) {
+        btnWrapDiv.addEventListener('click', () => wrapSelected('div'));
+    }
+    if (btnWrapSection) {
+        btnWrapSection.addEventListener('click', () => wrapSelected('section'));
+    }
+
+    if (btnUnwrap) {
+        btnUnwrap.addEventListener('click', () => {
+            if (!selectedElement || !selectedElement.parentNode) return;
+            const el = selectedElement;
+            const parent = el.parentNode;
+            const grandparent = parent.parentNode;
+            if (!grandparent || parent === canvas) return;
+            const children = Array.from(el.childNodes);
+            children.forEach((child) => grandparent.insertBefore(child, parent));
+            el.remove();
+            deselectAll();
+        });
+    }
+
     if (btnLiftOut) {
         btnLiftOut.addEventListener('click', () => {
             if (!selectedElement) return;
@@ -219,6 +267,33 @@ export function initInspector() {
     }
 }
 
+function wrapSelected(tag) {
+    if (!selectedElement) return;
+    const el = selectedElement;
+    const parent = el.parentNode;
+    if (!parent) return;
+    const wrapper = document.createElement(tag);
+    parent.insertBefore(wrapper, el);
+    wrapper.appendChild(el);
+    selectElement(el);
+    pushHistory({
+        label: `Wrap in ${tag}`,
+        perform: () => {
+            parent.insertBefore(wrapper, el);
+            wrapper.appendChild(el);
+            selectElement(el);
+        },
+        rollback: () => {
+            const wp = wrapper.parentNode;
+            if (wp) {
+                wp.insertBefore(el, wrapper);
+                wrapper.remove();
+            }
+            selectElement(el);
+        },
+    });
+}
+
 export function selectElement(el) {
     deselectAll();
     selectedElement = el;
@@ -240,6 +315,7 @@ export function selectElement(el) {
 
     renderDynamicAttributes(tagName, el);
     renderStyleEditor(el);
+    renderHierarchy(el);
 }
 
 // Dynamically render href, src, etc. fields based on the component's tag.
@@ -514,6 +590,17 @@ function renderStyleEditor(el) {
     });
 }
 
+function renderHierarchy(el) {
+    if (!hierarchyContainer || !hierarchyParentName) return;
+    hierarchyContainer.classList.remove('hidden');
+    const parent = el.parentNode;
+    if (parent && parent !== canvas) {
+        hierarchyParentName.textContent = `<${parent.tagName.toLowerCase()}>`;
+    } else {
+        hierarchyParentName.textContent = 'canvas (root)';
+    }
+}
+
 export function deselectAll() {
     selectedElement = null;
     document.querySelectorAll('.canvas *').forEach((el) => el.classList.remove('selected-element'));
@@ -521,4 +608,5 @@ export function deselectAll() {
     noSelectionMsg.classList.remove('hidden');
     if (dynamicPropsContainer) dynamicPropsContainer.innerHTML = '';
     if (styleEditorContainer) styleEditorContainer.innerHTML = '';
+    if (hierarchyContainer) hierarchyContainer.classList.add('hidden');
 }

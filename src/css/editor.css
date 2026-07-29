@@ -398,6 +398,55 @@ h3.category-header.active::after {
     color: var(--primary);
 }
 
+/* ── Hierarchy controls in inspector ── */
+.hierarchy-controls {
+    border-top: 1px solid var(--border-color);
+    margin-top: 8px;
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.hierarchy-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+}
+
+.hierarchy-parent {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+#hierarchy-parent-name {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.hierarchy-actions {
+    display: flex;
+    gap: 4px;
+}
+
+.hierarchy-actions .btn-secondary {
+    flex: 1;
+    padding: 5px;
+    font-size: 0.75rem;
+}
+
+.hierarchy-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.hierarchy-wrap .btn-secondary {
+    padding: 5px 8px;
+    font-size: 0.75rem;
+}
+
 /* ── Properties / inspector panel ── */
 .properties-panel {
     display: flex;

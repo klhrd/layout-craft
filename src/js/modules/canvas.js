@@ -3,6 +3,8 @@ import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
 import { CONTAINER_TAGS } from '../config/elements.js';
 import { COMPONENTS, buildComponentTemplate } from '../config/components.js';
+import * as cssState from '../config/cssState.js';
+import { compileAndRenderCss } from '../app.js';
 
 let draggedType = null;
 const canvas = document.getElementById('canvas'); // Grabs .canvas-container.
@@ -290,6 +292,35 @@ function handleDrop(e) {
     draggedType = null;
     window.draggedComponent = null;
     selectElement(newElement);
+
+    // Extract inline styles from component elements and register as CSS rules
+    if (isComponent) {
+        extractComponentStyles(newElement);
+    }
+}
+
+function extractComponentStyles(root) {
+    const elements = root.querySelectorAll('*');
+    const all = [root, ...elements];
+    let changed = false;
+    all.forEach((el) => {
+        if (!el.style || el.style.length === 0) return;
+        const styles = {};
+        for (let i = 0; i < el.style.length; i++) {
+            const prop = el.style[i];
+            styles[prop] = el.style.getPropertyValue(prop);
+        }
+        const newClass = `_lc-${cssState.nextClassIndex()}`;
+        el.classList.add(newClass);
+        const sel = `.${CSS.escape(newClass)}`;
+        cssState.setRule(sel, styles);
+        el.removeAttribute('style');
+        changed = true;
+    });
+    if (changed) {
+        compileAndRenderCss();
+        if (window.rebuildCssRulesUI) window.rebuildCssRulesUI();
+    }
 }
 
 function initEmptyStateActions() {
@@ -305,6 +336,8 @@ function initEmptyStateActions() {
             canvas.appendChild(navbar);
             const hero = buildComponentTemplate(COMPONENTS.hero.template);
             canvas.appendChild(hero);
+
+            [navbar, hero].forEach((el) => extractComponentStyles(el));
 
             pushHistory({
                 label: 'Quick start template',
@@ -336,13 +369,16 @@ function initEmptyStateActions() {
             if (placeholder) placeholder.remove();
 
             const templates = ['navbar', 'hero', 'features', 'footer'];
+            const created = [];
             templates.forEach((key) => {
                 const comp = COMPONENTS[key];
                 if (comp) {
                     const el = buildComponentTemplate(comp.template);
                     canvas.appendChild(el);
+                    created.push(el);
                 }
             });
+            created.forEach((el) => extractComponentStyles(el));
 
             if (select) {
                 const opt = document.createElement('option');
