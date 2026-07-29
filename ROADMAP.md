@@ -264,7 +264,7 @@ for the full audit performed on 2026-07-28.
 | —                              | Mid-term (Feature) #2 | ✅ **Done** — advanced CSS blocks               |
 | —                              | Mid-term (Feature) #3 | ✅ **Done** — React JSX / Vue SFB export        |
 | —                              | Mid-term (Feature) #4 | ✅ **Done** — nested sortable containers        |
-| `feature/import-flow`          | Mid-term (Feature) #5 | Reverse-parse pasted HTML/CSS                   |
+| —                              | Mid-term (Feature) #5 | ✅ **Done** — HTML/CSS import flow              |
 | `feature/backend-sync`         | Long-term #1          | Cloud storage (Supabase/Firebase)               |
 | `feature/collab`               | Long-term #2          | Realtime multiplayer editing                    |
 | `feature/template-marketplace` | Long-term #3          | Curated layout template library                 |
@@ -287,4 +287,5 @@ for the full audit performed on 2026-07-28.
 - [x] Mid-term (Feature) #2: Advanced CSS blocks (`@media`, `:hover`, pseudo, custom props, keyframes) — merged via `feature/advanced-css-blocks`
 - [x] Mid-term (Feature) #3: Export to React JSX / Vue SFB — merged via `feature/export-jsx-vue`
 - [x] Mid-term (Feature) #4: Nested sortable containers — merged via `feature/nested-components`
+- [x] Mid-term (Feature) #5: HTML/CSS import flow — merged via `feature/import-flow`
 - [x] Branch cleanup on 2026-07-28: deleted 17 stale/merged branches (see [`docs/branch-audit.md`](docs/branch-audit.md))

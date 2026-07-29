@@ -121,14 +121,24 @@ Run: `npm test` (Vitest, happy-dom environment).
 
 ---
 
-## Next steps (from ROADMAP)
+## What's done (all Mid-term features complete)
 
-| Priority    | Feature                                                           | Branch to create              |
-| ----------- | ----------------------------------------------------------------- | ----------------------------- |
-| Mid-term #2 | Advanced CSS blocks (`@media`, `:hover`, custom props, keyframes) | `feature/advanced-css-blocks` |
-| Mid-term #3 | Export to React JSX / Vue SFB                                     | `feature/export-jsx-vue`      |
-| Mid-term #4 | Nested sortable containers (cards → buttons, grids → cards)       | `feature/nested-components`   |
-| Mid-term #5 | Import/parse pasted HTML/CSS back into blocks                     | `feature/import-flow`         |
+| Priority                    | Feature                                                   | Status         |
+| --------------------------- | --------------------------------------------------------- | -------------- |
+| Mid-term (Feature) #1       | Undo/Redo history stack                                   | ✅ Done        |
+| Mid-term (Feature) #2       | Advanced CSS blocks (`@media`, `:hover`, custom props)    | ✅ Done        |
+| Mid-term (Feature) #3       | Export to React JSX / Vue SFB                             | ✅ Done        |
+| Mid-term (Feature) #4       | Nested sortable containers                                | ✅ Done        |
+| Mid-term (Feature) #5       | Import/parse pasted HTML/CSS                              | ✅ Done        |
 
-Design docs for each exist in `docs/` (e.g. `docs/advanced-css-blocks.md`).
-Cut a new branch from `master` and start implementing.
+## Next steps (Long-term roadmap)
+
+| Priority    | Feature                                               |
+| ----------- | ----------------------------------------------------- |
+| Long-term #1| Backend sync (Supabase/Firebase) — lift 5MB cap       |
+| Long-term #2| Multi-user collaboration (realtime multiplayer)       |
+| Long-term #3| Template marketplace (curated layout library)         |
+| Long-term #4| i18n & theming (additional locales, dark mode toggle)  |
+| Long-term #5| Web Component export (Custom Elements with shadow DOM)|
+
+Design docs for each exist in `docs/`. Cut a new branch from `master` and start implementing.
