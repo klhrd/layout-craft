@@ -4,6 +4,7 @@ import { cancelActiveInlineEdit } from './canvas.js';
 import { t } from '../config/i18n.js';
 import { buildJsxExport } from './codegen/jsxExport.js';
 import { buildVueExport } from './codegen/vueExport.js';
+import { exportAsWebComponent } from './codegen/wcExport.js';
 
 export function buildExportHtml(innerHtml) {
     return `<!DOCTYPE html>
@@ -128,6 +129,7 @@ export function initExporter() {
             { label: '🌐 HTML + CSS', format: 'html' },
             { label: '⚛️ React JSX + CSS', format: 'react' },
             { label: '💚 Vue SFB (scoped)', format: 'vue' },
+            { label: '🧩 Web Component (.js)', format: 'wc' },
         ];
 
         items.forEach((item) => {
@@ -182,6 +184,9 @@ function doExport(format) {
     } else if (format === 'vue') {
         const vue = buildVueExport(canvasClone, cssCode);
         downloadFile('App.vue', vue);
+    } else if (format === 'wc') {
+        const wc = exportAsWebComponent(canvasClone, getActiveCssCode());
+        downloadFile('layout-craft-block.js', wc);
     }
 }
 
