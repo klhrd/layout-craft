@@ -270,8 +270,9 @@ function handleDrop(e) {
     if (placeholder) placeholder.remove();
 
     const tag = draggedType;
-    const isComponent = window.draggedComponent && window.draggedComponent.template;
-    const newElement = isComponent ? buildComponentTemplate(window.draggedComponent.template) : buildNewElement(tag);
+    const compTemplate = window.draggedComponent && window.draggedComponent.template;
+    const isComponent = !!compTemplate;
+    const newElement = isComponent ? buildComponentTemplate(compTemplate) : buildNewElement(tag);
 
     const parent = resolveDropTarget(e.target);
     parent.appendChild(newElement);
@@ -281,14 +282,13 @@ function handleDrop(e) {
     pushHistory({
         label: isComponent ? `Drop component: ${window.draggedComponent.label}` : `Drop ${tag}`,
         perform: () => {
-            const replacement = isComponent
-                ? buildComponentTemplate(window.draggedComponent.template)
-                : buildNewElement(tag);
+            const replacement = isComponent ? buildComponentTemplate(compTemplate) : buildNewElement(tag);
             if (nextSibling && nextSibling.parentNode === parent) {
                 parent.insertBefore(replacement, nextSibling);
             } else {
                 parent.appendChild(replacement);
             }
+            if (isComponent) extractComponentStyles(replacement);
         },
         rollback: () => {
             newElement.remove();
@@ -299,7 +299,6 @@ function handleDrop(e) {
     window.draggedComponent = null;
     selectElement(newElement);
 
-    // Extract inline styles from component elements and register as CSS rules
     if (isComponent) {
         extractComponentStyles(newElement);
     }
