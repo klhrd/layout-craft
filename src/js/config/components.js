@@ -225,6 +225,8 @@ const CARD = {
     ],
 };
 
+import { CONTAINER_TAGS } from './elements.js';
+
 const CONTACT_FORM = {
     tag: 'section',
     style: { padding: '60px 24px', background: '#f8fafc' },
@@ -568,20 +570,6 @@ export function buildComponentTemplate(template) {
         }
     }
     // Make container elements sortable
-    const CONTAINER_TAGS = [
-        'div',
-        'section',
-        'header',
-        'footer',
-        'main',
-        'aside',
-        'nav',
-        'form',
-        'ul',
-        'ol',
-        'table',
-        'tr',
-    ];
     if (CONTAINER_TAGS.includes(template.tag) && typeof Sortable !== 'undefined') {
         // Delay to let DOM attach
         setTimeout(() => {

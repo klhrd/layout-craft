@@ -1,6 +1,7 @@
 import { selectElement } from './inspector.js';
 import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
+import { CONTAINER_TAGS } from '../config/elements.js';
 import { COMPONENTS, buildComponentTemplate } from '../config/components.js';
 
 let draggedType = null;
@@ -194,25 +195,7 @@ export function setDraggedType(type) {
     draggedType = type;
 }
 
-// Container tags that get Sortable wired when dropped; reused so the
-// redo path can re-attach the same behaviour.
-const CONTAINER_TAGS = [
-    'div',
-    'section',
-    'header',
-    'footer',
-    'main',
-    'aside',
-    'nav',
-    'form',
-    'ul',
-    'ol',
-    'table',
-    'tr',
-    'tbody',
-    'thead',
-    'dl',
-];
+// CONTAINER_TAGS imported from config/elements.js
 
 export function isContainer(el) {
     if (!el) return false;

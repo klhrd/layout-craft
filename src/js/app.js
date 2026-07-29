@@ -265,23 +265,53 @@ function createContainerBoxUI(block) {
             selectorInput.value = currentSelector;
             return;
         }
-        // Update the internal block
-        const existingBlock = cssState.getBlock(currentSelector);
+        const oldSel = currentSelector;
+        const existingBlock = cssState.getBlock(oldSel);
         if (existingBlock) existingBlock.selector = newSel;
 
         currentSelector = newSel;
         container.setAttribute('data-selector', newSel);
+        // Sync nested children's parent reference
+        container.querySelectorAll('.css-nested-rule').forEach((child) => {
+            child.setAttribute('data-parent-selector', newSel);
+        });
         compileAndRenderCss();
         const proj = document.getElementById('select-project').value;
         if (proj) saveProject(proj, false);
     });
 
     deleteBtn.addEventListener('click', () => {
-        cssState.removeBlock(currentSelector);
+        const oldSelector = currentSelector;
+        const oldBlockData = cssState.getBlock(oldSelector)
+            ? JSON.parse(JSON.stringify(cssState.getBlock(oldSelector)))
+            : null;
+        cssState.removeBlock(oldSelector);
         container.remove();
         compileAndRenderCss();
         const proj = document.getElementById('select-project').value;
         if (proj) saveProject(proj, false);
+
+        pushHistory({
+            label: isMedia ? `delete media ${oldSelector}` : `delete keyframes ${oldSelector}`,
+            perform: () => {
+                if (cssState.getBlock(oldSelector)) return;
+                cssState.removeBlock(oldSelector);
+                const existing = visualCssContainer.querySelector(
+                    `.css-rule-box[data-selector="${CSS.escape(oldSelector)}"]`,
+                );
+                if (existing) existing.remove();
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+            rollback: () => {
+                if (oldBlockData) {
+                    cssState.addBlock(oldBlockData);
+                    createContainerBoxUI(oldBlockData);
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+        });
     });
 
     addNestedBtn.addEventListener('click', () => {
@@ -301,6 +331,38 @@ function createContainerBoxUI(block) {
         compileAndRenderCss();
         const proj = document.getElementById('select-project').value;
         if (proj) saveProject(proj, false);
+
+        pushHistory({
+            label: `add nested rule ${ruleSelector} in ${currentSelector}`,
+            perform: () => {
+                if (cssState.getBlock(ruleSelector, currentSelector)) return;
+                cssState.addBlock(nestedBlock, currentSelector);
+                const containerUi = visualCssContainer.querySelector(
+                    `.css-rule-box[data-selector="${CSS.escape(currentSelector)}"]`,
+                );
+                if (containerUi) {
+                    const zone = containerUi.querySelector('.css-rule-body-dropzone');
+                    const ui = createNestedRuleBoxUI(nestedBlock, currentSelector);
+                    zone.appendChild(ui);
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+            rollback: () => {
+                cssState.removeBlock(ruleSelector, currentSelector);
+                const containerUi = visualCssContainer.querySelector(
+                    `.css-rule-box[data-selector="${CSS.escape(currentSelector)}"]`,
+                );
+                if (containerUi) {
+                    const nested = containerUi.querySelector(
+                        `.css-nested-rule[data-selector="${CSS.escape(ruleSelector)}"]`,
+                    );
+                    if (nested) nested.remove();
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+        });
     });
 
     // Render any existing nested children
@@ -386,11 +448,49 @@ function createNestedRuleBoxUI(block, parentSelector) {
 
     deleteBtn.addEventListener('click', () => {
         toggleCanvasBlinking(currentSelector, false);
-        cssState.removeBlock(currentSelector, parentSelector);
+        const oldSelector = currentSelector;
+        const oldParentSelector = parentSelector;
+        const oldStyles = cssState.getBlock(oldSelector, oldParentSelector)
+            ? { ...cssState.getBlock(oldSelector, oldParentSelector).styles }
+            : {};
+        cssState.removeBlock(oldSelector, oldParentSelector);
         ruleBox.remove();
         compileAndRenderCss();
         const proj = document.getElementById('select-project').value;
         if (proj) saveProject(proj, false);
+
+        pushHistory({
+            label: `delete nested rule ${oldSelector}`,
+            perform: () => {
+                if (cssState.getBlock(oldSelector, oldParentSelector)) return;
+                cssState.removeBlock(oldSelector, oldParentSelector);
+                const parentUi = visualCssContainer.querySelector(
+                    `.css-rule-box[data-selector="${CSS.escape(oldParentSelector)}"]`,
+                );
+                if (parentUi) {
+                    const nested = parentUi.querySelector(
+                        `.css-nested-rule[data-selector="${CSS.escape(oldSelector)}"]`,
+                    );
+                    if (nested) nested.remove();
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+            rollback: () => {
+                const nestedBlock = { type: 'rule', selector: oldSelector, styles: oldStyles };
+                cssState.addBlock(nestedBlock, oldParentSelector);
+                const parentUi = visualCssContainer.querySelector(
+                    `.css-rule-box[data-selector="${CSS.escape(oldParentSelector)}"]`,
+                );
+                if (parentUi) {
+                    const zone = parentUi.querySelector('.css-rule-body-dropzone');
+                    const ui = createNestedRuleBoxUI(nestedBlock, oldParentSelector);
+                    zone.appendChild(ui);
+                }
+                compileAndRenderCss();
+                if (proj) saveProject(proj, false);
+            },
+        });
     });
 
     // Render existing style properties

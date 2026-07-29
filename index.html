@@ -182,16 +182,16 @@
 
         <div id="import-modal" class="modal-overlay">
             <div class="modal-dialog">
-                <h2 style="margin: 0 0 16px"><span class="mat-icon">upload</span> Import HTML / CSS</h2>
-                <label style="display: block; font-size: 0.85rem; margin-bottom: 4px">HTML</label>
+                <h2 class="modal-title"><span class="mat-icon">upload</span> Import HTML / CSS</h2>
+                <label class="modal-field-label">HTML</label>
                 <textarea
                     id="import-html-input"
                     rows="6"
                     class="modal-textarea"
                     placeholder="Paste HTML here..."
                 ></textarea>
-                <label style="display: block; font-size: 0.85rem; margin: 12px 0 4px"
-                    >CSS <span style="color: #94a3b8; font-weight: 400">(optional)</span></label
+                <label class="modal-field-label modal-field-label-secondary"
+                    >CSS <span class="modal-optional-tag">(optional)</span></label
                 >
                 <textarea
                     id="import-css-input"
@@ -199,7 +199,7 @@
                     class="modal-textarea"
                     placeholder="Paste CSS here..."
                 ></textarea>
-                <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end">
+                <div class="modal-actions">
                     <button id="btn-import-cancel" class="btn-secondary">Cancel</button>
                     <button id="btn-import-submit" class="primary-btn">Import</button>
                 </div>

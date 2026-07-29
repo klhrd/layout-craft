@@ -1,4 +1,5 @@
 import { makeElementSortable } from './canvas.js';
+import { CONTAINER_TAGS } from '../config/elements.js';
 import * as cssState from '../config/cssState.js';
 import { compileAndRenderCss } from '../app.js';
 
@@ -54,24 +55,7 @@ function rehydrateAfterImport(html, blocks) {
 
     cssState.deserialize(blocks);
 
-    const containerTags = [
-        'div',
-        'section',
-        'header',
-        'footer',
-        'main',
-        'aside',
-        'nav',
-        'form',
-        'ul',
-        'ol',
-        'table',
-        'tr',
-        'tbody',
-        'thead',
-        'dl',
-    ];
-    containerTags.forEach((tag) => {
+    CONTAINER_TAGS.forEach((tag) => {
         canvas.querySelectorAll(tag).forEach((el) => makeElementSortable(el));
     });
     makeElementSortable(canvas);

@@ -1,14 +1,11 @@
-import { describe, it, expect, beforeAll, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { importFromPaste } from '../src/js/modules/importer.js';
 
-let importFromPaste;
-
-beforeAll(async () => {
+beforeEach(() => {
     globalThis.Sortable = class {
         constructor() {}
         destroy() {}
     };
-    const mod = await import('../src/js/modules/importer.js');
-    importFromPaste = mod.importFromPaste;
 });
 
 beforeEach(() => {

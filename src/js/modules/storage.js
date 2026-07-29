@@ -1,5 +1,6 @@
 import { compileAndRenderCss } from '../app.js';
 import { makeElementSortable } from './canvas.js';
+import { CONTAINER_TAGS } from '../config/elements.js';
 import { deselectAll } from './inspector.js';
 import { reset as resetHistory } from './history.js';
 import * as cssState from '../config/cssState.js';
@@ -138,21 +139,7 @@ export function loadProject(projName) {
     cssState.deserialize(projectData.cssData || {});
 
     // Key rehydration: restore the drag/sort behaviors (Sortable) for the loaded HTML.
-    const containerTags = [
-        'div',
-        'section',
-        'header',
-        'footer',
-        'main',
-        'aside',
-        'nav',
-        'form',
-        'ul',
-        'ol',
-        'table',
-        'tr',
-    ];
-    containerTags.forEach((tag) => {
+    CONTAINER_TAGS.forEach((tag) => {
         canvas.querySelectorAll(tag).forEach((el) => makeElementSortable(el));
     });
     makeElementSortable(canvas); // The canvas body itself needs re-binding too.

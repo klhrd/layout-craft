@@ -1,3 +1,21 @@
+export const CONTAINER_TAGS = [
+    'div',
+    'section',
+    'header',
+    'footer',
+    'main',
+    'aside',
+    'nav',
+    'form',
+    'ul',
+    'ol',
+    'table',
+    'tr',
+    'tbody',
+    'thead',
+    'dl',
+];
+
 export const ELEMENT_CATEGORIES = {
     layout: {
         title: 'Layout Blocks',

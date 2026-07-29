@@ -1,3 +1,10 @@
+/*
+CSS Dictionary: the draggable property blocks available in the visual CSS editor.
+
+Custom Properties (the `--*` entries in the "Custom Properties" section) define
+CSS variables. To use them in other property values, reference them with the
+`var()` function, e.g. `var(--color-primary)` for the primary color value.
+*/
 export const CSS_DICTIONARY = {
     layout: {
         title: 'Flexbox & Grid Layout',
