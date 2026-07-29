@@ -2,7 +2,7 @@ import { ELEMENT_CATEGORIES } from '../config/elements.js';
 import * as cssState from './cssState.js';
 import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
-import { compileAndRenderCss } from '../app.js';
+import { compileAndRenderCss } from './cssEditor.js';
 import { showResizeHandles, hideResizeHandles } from './canvasHelpers.js';
 
 // src/js/modules/inspector.js: top-level variable declarations.

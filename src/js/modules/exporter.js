@@ -1,5 +1,5 @@
 import { deselectAll } from './inspector.js';
-import { getActiveCssCode } from '../app.js';
+import { getActiveCssCode } from './cssEditor.js';
 import { cancelActiveInlineEdit } from './canvas.js';
 import { t } from '../config/i18n.js';
 import { buildJsxExport } from './codegen/jsxExport.js';

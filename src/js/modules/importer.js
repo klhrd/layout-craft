@@ -1,7 +1,7 @@
 import { makeElementSortable } from './canvas.js';
 import { CONTAINER_TAGS } from '../config/elements.js';
 import * as cssState from './cssState.js';
-import { compileAndRenderCss } from '../app.js';
+import { compileAndRenderCss } from './cssEditor.js';
 
 function sanitizeImportedNode(node) {
     const REMOVE_TAGS = new Set(['script', 'iframe', 'link', 'style', 'meta', 'base']);

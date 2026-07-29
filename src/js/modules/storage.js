@@ -1,4 +1,4 @@
-import { compileAndRenderCss } from '../app.js';
+import { compileAndRenderCss } from './cssEditor.js';
 import { makeElementSortable } from './canvas.js';
 import { CONTAINER_TAGS } from '../config/elements.js';
 import { deselectAll } from './inspector.js';

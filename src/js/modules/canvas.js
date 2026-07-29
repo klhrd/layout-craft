@@ -4,7 +4,7 @@ import { push as pushHistory } from './history.js';
 import { CONTAINER_TAGS } from '../config/elements.js';
 import { COMPONENTS, buildComponentTemplate } from '../config/components.js';
 import * as cssState from './cssState.js';
-import { compileAndRenderCss } from '../app.js';
+import { compileAndRenderCss } from './cssEditor.js';
 import { showAlignGuides, clearAlignGuides } from './canvasHelpers.js';
 
 let draggedType = null;

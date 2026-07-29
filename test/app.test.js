@@ -62,14 +62,13 @@ function baseDom() {
 }
 
 describe('compileAndRenderCss', () => {
-    let app;
     let liveStyles;
 
     beforeEach(async () => {
         vi.resetModules();
         document.body.innerHTML = baseDom();
         vi.clearAllMocks();
-        app = await import('../src/js/app.js');
+        await import('../src/js/app.js');
         liveStyles = document.getElementById('live-styles');
     });
 
@@ -79,17 +78,19 @@ describe('compileAndRenderCss', () => {
 
     it('renders empty string when no rules exist', async () => {
         const { initCssState } = await import('../src/js/modules/cssState.js');
+        const { compileAndRenderCss } = await import('../src/js/modules/cssEditor.js');
         initCssState();
-        app.compileAndRenderCss();
+        compileAndRenderCss();
         expect(liveStyles.textContent).toBe('');
     });
 
     it('renders CSS rule with selector and properties', async () => {
         const cssState = await import('../src/js/modules/cssState.js');
+        const { compileAndRenderCss } = await import('../src/js/modules/cssEditor.js');
         cssState.initCssState();
         cssState.setRule('.my-class', { color: 'red', fontSize: '16px' });
 
-        app.compileAndRenderCss();
+        compileAndRenderCss();
         expect(liveStyles.textContent).toContain('.my-class {');
         expect(liveStyles.textContent).toContain('color: red;');
         expect(liveStyles.textContent).toContain('fontSize: 16px;');
@@ -97,11 +98,12 @@ describe('compileAndRenderCss', () => {
 
     it('renders multiple rules separated by newlines', async () => {
         const cssState = await import('../src/js/modules/cssState.js');
+        const { compileAndRenderCss } = await import('../src/js/modules/cssEditor.js');
         cssState.initCssState();
         cssState.setRule('.a', { color: 'red' });
         cssState.setRule('.b', { margin: '0' });
 
-        app.compileAndRenderCss();
+        compileAndRenderCss();
         const css = liveStyles.textContent;
         expect(css).toContain('.a {');
         expect(css).toContain('.b {');
@@ -109,22 +111,21 @@ describe('compileAndRenderCss', () => {
 });
 
 describe('getActiveCssCode', () => {
-    let app;
-
     beforeEach(async () => {
         vi.resetModules();
         document.body.innerHTML = baseDom();
         vi.clearAllMocks();
-        app = await import('../src/js/app.js');
+        await import('../src/js/app.js');
     });
 
     afterEach(() => {
         document.body.innerHTML = '';
     });
 
-    it('returns the current content of live-styles', () => {
+    it('returns the current content of live-styles', async () => {
+        const { getActiveCssCode } = await import('../src/js/modules/cssEditor.js');
         document.getElementById('live-styles').textContent = '.x { color: blue; }';
-        expect(app.getActiveCssCode()).toBe('.x { color: blue; }');
+        expect(getActiveCssCode()).toBe('.x { color: blue; }');
     });
 });
 
@@ -236,7 +237,8 @@ describe('initCssEditorCollapse behavior', () => {
     it('compileAndRenderCss requires live-styles element', async () => {
         vi.resetModules();
         document.body.innerHTML = baseDom();
-        const mod = await import('../src/js/app.js');
-        expect(() => mod.compileAndRenderCss()).not.toThrow();
+        await import('../src/js/app.js');
+        const { compileAndRenderCss } = await import('../src/js/modules/cssEditor.js');
+        expect(() => compileAndRenderCss()).not.toThrow();
     });
 });
