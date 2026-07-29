@@ -7,6 +7,11 @@ let dragStartX = 0,
     dragStartLeft = 0,
     dragStartTop = 0;
 
+// Resize handles
+let resizeHandles = [];
+let handleDrag = null;
+let resizeObserver = null;
+
 export function initCanvasHelpers() {
     canvas = document.getElementById('canvas');
     if (!canvas) return;
@@ -103,6 +108,119 @@ document.addEventListener('mouseup', () => {
         dragGuide.classList.remove('dragging');
         dragGuide = null;
     }
+});
+
+/* ── Resize handles ── */
+
+export function showResizeHandles(el) {
+    hideResizeHandles();
+    if (!el || !canvas || !canvas.contains(el)) return;
+
+    if (!resizeObserver) {
+        resizeObserver = new ResizeObserver(() => {
+            const sel = canvas.querySelector('.selected-element');
+            if (sel) positionHandles(sel);
+        });
+        resizeObserver.observe(canvas);
+    }
+
+    const positions = ['nw', 'n', 'ne', 'e', 'se', 's', 'sw', 'w'];
+    positions.forEach((pos) => {
+        const dot = document.createElement('div');
+        dot.className = `resize-handle handle-${pos}`;
+        dot.dataset.handle = pos;
+        canvas.appendChild(dot);
+        resizeHandles.push(dot);
+    });
+
+    positionHandles(el);
+
+    // Start drag
+    resizeHandles.forEach((h) => {
+        h.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const sel = canvas.querySelector('.selected-element');
+            if (!sel) return;
+            handleDrag = {
+                el: sel,
+                handle: h.dataset.handle,
+                startX: e.clientX,
+                startY: e.clientY,
+                startW: sel.offsetWidth,
+                startH: sel.offsetHeight,
+            };
+            document.body.style.cursor = getComputedStyle(h).cursor;
+        });
+    });
+}
+
+function positionHandles(el) {
+    const rect = el.getBoundingClientRect();
+    const canvasRect = canvas.getBoundingClientRect();
+    const offsetX = rect.left - canvasRect.left;
+    const offsetY = rect.top - canvasRect.top;
+    const w = rect.width;
+    const h = rect.height;
+
+    const map = {
+        nw: { left: offsetX - 4, top: offsetY - 4 },
+        n: { left: offsetX + w / 2 - 4, top: offsetY - 4 },
+        ne: { left: offsetX + w - 4, top: offsetY - 4 },
+        e: { left: offsetX + w - 4, top: offsetY + h / 2 - 4 },
+        se: { left: offsetX + w - 4, top: offsetY + h - 4 },
+        s: { left: offsetX + w / 2 - 4, top: offsetY + h - 4 },
+        sw: { left: offsetX - 4, top: offsetY + h - 4 },
+        w: { left: offsetX - 4, top: offsetY + h / 2 - 4 },
+    };
+
+    resizeHandles.forEach((dot) => {
+        const pos = map[dot.dataset.handle];
+        if (pos) {
+            dot.style.left = `${pos.left}px`;
+            dot.style.top = `${pos.top}px`;
+        }
+    });
+}
+
+export function hideResizeHandles() {
+    resizeHandles.forEach((h) => h.remove());
+    resizeHandles = [];
+    if (resizeObserver) {
+        resizeObserver.disconnect();
+        resizeObserver = null;
+    }
+}
+
+document.addEventListener('mousemove', (e) => {
+    if (!handleDrag) return;
+    const dx = e.clientX - handleDrag.startX;
+    const dy = e.clientY - handleDrag.startY;
+    const h = handleDrag.handle;
+
+    let newW = handleDrag.startW;
+    let newH = handleDrag.startH;
+
+    if (h.includes('e')) newW = Math.max(10, handleDrag.startW + dx);
+    if (h.includes('w')) newW = Math.max(10, handleDrag.startW - dx);
+    if (h.includes('s')) newH = Math.max(10, handleDrag.startH + dy);
+    if (h.includes('n')) newH = Math.max(10, handleDrag.startH - dy);
+
+    handleDrag.el.style.width = `${newW}px`;
+    handleDrag.el.style.height = `${newH}px`;
+});
+
+document.addEventListener('mouseup', () => {
+    if (!handleDrag) return;
+    const el = handleDrag.el;
+    const w = el.style.width;
+    const h = el.style.height;
+    el.style.removeProperty('width');
+    el.style.removeProperty('height');
+    // Notify app to commit the size via cssState
+    el.dispatchEvent(new CustomEvent('resize-commit', { detail: { width: w, height: h } }));
+    handleDrag = null;
+    document.body.style.cursor = '';
 });
 
 export function removeAllGuides() {

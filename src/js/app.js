@@ -33,6 +33,19 @@ document.addEventListener('DOMContentLoaded', () => {
     initLayers();
     initContextMenu();
     initCanvasHelpers();
+    // Listen for resize-handle commits from canvasHelpers
+    document.getElementById('canvas').addEventListener('resize-commit', (e) => {
+        const el = e.target;
+        const { width, height } = e.detail;
+        const classList = Array.from(el.classList).filter((c) => c !== 'selected-element' && c !== 'el-hover');
+        const cls = classList.find((c) => cssState.hasRule(`.${CSS.escape(c)}`));
+        if (cls) {
+            const sel = `.${CSS.escape(cls)}`;
+            if (width) cssState.setProperty(sel, 'width', width);
+            if (height) cssState.setProperty(sel, 'height', height);
+            compileAndRenderCss();
+        }
+    });
     initExporter();
     initModeSwitcher();
     initVisualCssActions();

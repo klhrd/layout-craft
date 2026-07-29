@@ -3,6 +3,7 @@ import * as cssState from '../config/cssState.js';
 import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
 import { compileAndRenderCss } from '../app.js';
+import { showResizeHandles, hideResizeHandles } from './canvasHelpers.js';
 
 // src/js/modules/inspector.js: top-level variable declarations.
 let selectedElement = null;
@@ -322,6 +323,7 @@ export function selectElement(el) {
     renderDynamicAttributes(tagName, el);
     renderStyleEditor(el);
     renderHierarchy(el);
+    showResizeHandles(el);
 }
 
 // Dynamically render href, src, etc. fields based on the component's tag.
@@ -887,4 +889,5 @@ export function deselectAll() {
     if (dynamicPropsContainer) dynamicPropsContainer.innerHTML = '';
     if (styleEditorContainer) styleEditorContainer.innerHTML = '';
     if (hierarchyContainer) hierarchyContainer.classList.add('hidden');
+    hideResizeHandles();
 }
