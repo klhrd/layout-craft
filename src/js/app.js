@@ -270,7 +270,7 @@ function createContainerBoxUI(block) {
                 <span style="color: #94a3b8">{</span>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
-                <button class="btn-delete-rule" data-type="${block.type}"><span class="mat-icon">delete</span> Delete</button>
+                <button class="btn-delete-rule" data-type="${block.type}">🗑 Delete</button>
             </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
@@ -581,8 +581,8 @@ function createRuleBoxUI(selector) {
                 <span style="color: #94a3b8">{</span>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
-                <button class="btn-hunt-elements"><span class="mat-icon">trackpad_target</span> ${t('ui.detection.detect')}</button>
-                <button class="btn-delete-rule"><span class="mat-icon">delete</span> Delete</button>
+                <button class="btn-hunt-elements">${t('ui.detection.detect')}</button>
+                <button class="btn-delete-rule">🗑 Delete</button>
             </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
@@ -774,7 +774,7 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
         <span class="block-label">${property}:</span>
         <div style="display: flex; align-items: center;">
             <input type="text" class="block-value-input" value="${value}">
-            <button class="btn-remove-block"><span class="mat-icon">delete</span></button>
+            <button class="btn-remove-block">🗑</button>
         </div>
     `;
 
