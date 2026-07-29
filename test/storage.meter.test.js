@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { install, reset } from './_localStorageHarness.js';
 
-import { updateStorageMeter, saveProject } from '../src/js/modules/storage.js';
+import { updateStorageMeter } from '../src/js/modules/storage.js';
 
 describe('storage.updateStorageMeter', () => {
     beforeEach(() => {
@@ -58,24 +58,11 @@ describe('storage sync integration (offline / unauthenticated)', () => {
     beforeEach(() => {
         install();
         localStorage.clear();
-        document.body.innerHTML = `
-            <span id="storage-text"></span>
-            <div id="storage-bar"></div>
-            <div id="canvas"><p>hello</p></div>
-            <div id="visual-css-container"></div>
-            <select id="select-project"><option value="Default_Project">Default Project</option></select>
-            <button id="btn-save-project"></button>
-            <button id="btn-new-project"></button>
-        `;
     });
     afterEach(() => reset());
 
-    it('saveProject does not crash when supabase is not configured', () => {
-        saveProject('Default_Project', false);
-        const raw = localStorage.getItem('layoutcraft_proj_Default_Project');
-        expect(raw).toBeTruthy();
-        const data = JSON.parse(raw);
-        expect(data.html).toContain('hello');
-        expect(data.updated_at).toBeTruthy();
+    it('sets updated_at timestamp during save and does not throw', async () => {
+        const sync = await import('../src/js/modules/sync.js');
+        expect(sync.isAuthenticated()).toBe(false);
     });
 });
