@@ -128,17 +128,17 @@ function buildLayerEntry(el, parentContainer, depth) {
     visBtn.type = 'button';
     visBtn.className = 'layer-vis-btn';
     const isHidden = el.style.display === 'none';
-    visBtn.textContent = isHidden ? '👁️‍🗨️' : '👁️';
+    visBtn.innerHTML = `<span class="mat-icon">${isHidden ? 'visibility_off' : 'visibility'}</span>`;
     visBtn.title = isHidden ? 'Show' : 'Hide';
     visBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (el.style.display === 'none') {
             el.style.display = '';
-            visBtn.textContent = '👁️';
+            visBtn.innerHTML = '<span class="mat-icon">visibility</span>';
             visBtn.title = 'Hide';
         } else {
             el.style.display = 'none';
-            visBtn.textContent = '👁️‍🗨️';
+            visBtn.innerHTML = '<span class="mat-icon">visibility_off</span>';
             visBtn.title = 'Show';
         }
     });
@@ -148,7 +148,7 @@ function buildLayerEntry(el, parentContainer, depth) {
     lockBtn.type = 'button';
     lockBtn.className = 'layer-lock-btn';
     const isLocked = el.style.pointerEvents === 'none' || el.dataset.locked === 'true';
-    lockBtn.textContent = isLocked ? '🔒' : '🔓';
+    lockBtn.innerHTML = `<span class="mat-icon">${isLocked ? 'lock' : 'lock_open'}</span>`;
     lockBtn.title = isLocked ? 'Unlock' : 'Lock';
     if (isLocked) {
         entry.classList.add('layer-locked');
@@ -159,13 +159,13 @@ function buildLayerEntry(el, parentContainer, depth) {
         if (el.dataset.locked === 'true') {
             delete el.dataset.locked;
             el.style.pointerEvents = '';
-            lockBtn.textContent = '🔓';
+            lockBtn.innerHTML = '<span class="mat-icon">lock_open</span>';
             lockBtn.title = 'Lock';
             entry.classList.remove('layer-locked');
         } else {
             el.dataset.locked = 'true';
             el.style.pointerEvents = 'none';
-            lockBtn.textContent = '🔒';
+            lockBtn.innerHTML = '<span class="mat-icon">lock</span>';
             lockBtn.title = 'Unlock';
             entry.classList.add('layer-locked');
         }

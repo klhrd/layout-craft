@@ -60,13 +60,21 @@
                 </div>
 
                 <div class="toolbar-actions">
-                    <button id="btn-new-project" class="btn-secondary"><span class="mat-icon">add</span> New</button>
-                    <button id="btn-save-project" class="btn-secondary"><span class="mat-icon">save</span> Save</button>
+                    <button id="btn-new-project" class="btn-secondary" title="New Project">
+                        <span class="mat-icon">add</span> New
+                    </button>
+                    <button id="btn-save-project" class="btn-secondary" title="Save Project">
+                        <span class="mat-icon">save</span> Save
+                    </button>
 
                     <div class="toolbar-sep"></div>
 
-                    <button id="btn-undo" class="btn-secondary" disabled><span class="mat-icon">undo</span></button>
-                    <button id="btn-redo" class="btn-secondary" disabled><span class="mat-icon">redo</span></button>
+                    <button id="btn-undo" class="btn-secondary" disabled title="Undo">
+                        <span class="mat-icon">undo</span>
+                    </button>
+                    <button id="btn-redo" class="btn-secondary" disabled title="Redo">
+                        <span class="mat-icon">redo</span>
+                    </button>
 
                     <div class="toolbar-sep"></div>
 
@@ -74,10 +82,29 @@
 
                     <div class="toolbar-sep"></div>
 
-                    <button id="btn-preview" class="btn-secondary">
+                    <span class="zoom-controls" title="Zoom level">
+                        <button id="btn-zoom-out" class="btn-secondary"><span class="mat-icon">zoom_out</span></button>
+                        <span id="zoom-level">100%</span>
+                        <button id="btn-zoom-in" class="btn-secondary"><span class="mat-icon">zoom_in</span></button>
+                    </span>
+
+                    <div class="toolbar-sep"></div>
+
+                    <span class="mode-toggle">
+                        <button id="switch-visual" class="btn-secondary active">
+                            <span class="mat-icon">palette</span>
+                        </button>
+                        <button id="switch-css" class="btn-secondary"><span class="mat-icon">code</span></button>
+                    </span>
+
+                    <div class="toolbar-sep"></div>
+
+                    <button id="btn-preview" class="btn-secondary" title="Preview">
                         <span class="mat-icon">visibility</span> Preview
                     </button>
-                    <button id="btn-export" class="btn-secondary"><span class="mat-icon">download</span> Export</button>
+                    <button id="btn-export" class="btn-secondary" title="Export">
+                        <span class="mat-icon">download</span> Export
+                    </button>
 
                     <div class="toolbar-sep"></div>
 

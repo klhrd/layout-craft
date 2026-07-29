@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initImporter();
 
     initMenus();
+    initZoom();
 
     initStorage(); // Boot the storage manager.
 
@@ -990,6 +991,35 @@ function initMenus() {
 
     document.addEventListener('click', () => {
         panels.forEach((p) => p.classList.remove('open'));
+    });
+}
+
+function initZoom() {
+    const zoomIn = document.getElementById('btn-zoom-in');
+    const zoomOut = document.getElementById('btn-zoom-out');
+    const zoomLabel = document.getElementById('zoom-level');
+    const canvas = document.getElementById('canvas');
+    if (!zoomIn || !zoomOut || !zoomLabel || !canvas) return;
+
+    let zoom = 1;
+    const MIN = 0.25;
+    const MAX = 2;
+
+    function applyZoom() {
+        canvas.style.transform = `scale(${zoom})`;
+        canvas.style.width = `${100 / zoom}%`;
+        zoomLabel.textContent = `${Math.round(zoom * 100)}%`;
+        canvas.classList.toggle('zoomed', zoom !== 1);
+    }
+
+    zoomIn.addEventListener('click', () => {
+        zoom = Math.min(MAX, Math.round((zoom + 0.1) * 100) / 100);
+        applyZoom();
+    });
+
+    zoomOut.addEventListener('click', () => {
+        zoom = Math.max(MIN, Math.round((zoom - 0.1) * 100) / 100);
+        applyZoom();
     });
 }
 

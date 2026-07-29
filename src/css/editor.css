@@ -284,8 +284,8 @@ button.primary-btn:hover {
 .main-workspace {
     display: flex;
     flex: 1;
-    height: calc(100vh - 60px);
     overflow: hidden;
+    min-height: 0;
 }
 
 /* ── Side panels ── */
@@ -316,6 +316,7 @@ button.primary-btn:hover {
 
 .right-sidebar {
     border-left: 1px solid var(--border-color);
+    overflow-y: auto;
 }
 
 .brand-title {
@@ -571,7 +572,8 @@ h3.category-header.active::after {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    max-height: 300px;
+    flex: 1;
+    min-height: 100px;
     overflow-y: auto;
 }
 
@@ -717,6 +719,7 @@ label {
     width: 100%;
     max-width: 100%;
     min-height: 100%;
+    height: auto;
     background: #ffffff;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
@@ -724,6 +727,10 @@ label {
     padding: 24px;
     position: relative;
     transition: all 0.3s ease;
+}
+
+.canvas-container.zoomed {
+    transform-origin: top center;
 }
 
 /* ── Grid overlay (16px snap grid) ── */
@@ -973,10 +980,60 @@ body.preview-mode .canvas-container .canvas-placeholder {
     transform: scale(1.05);
 }
 
+/* ── Zoom controls ── */
+.zoom-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.zoom-controls .btn-secondary {
+    padding: 4px 6px;
+    font-size: 0.8rem;
+}
+
+#zoom-level {
+    min-width: 36px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ── Mode toggle ── */
+.mode-toggle {
+    display: inline-flex;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.mode-toggle .btn-secondary {
+    border: none;
+    border-radius: 0;
+    padding: 4px 8px;
+    font-size: 0.8rem;
+    background: transparent;
+}
+
+.mode-toggle .btn-secondary.active {
+    background: var(--primary);
+    color: #ffffff;
+}
+
 /* ── Mode toggles ── */
 body.mode-visual .css-dictionary-panel,
 body.mode-visual .css-editor-panel {
     display: none !important;
+}
+body.mode-visual .mode-toggle #switch-visual {
+    background: var(--primary);
+    color: #ffffff;
+}
+body.mode-visual .mode-toggle #switch-css {
+    background: transparent;
+    color: var(--text-main);
 }
 body.mode-visual .right-sidebar {
     width: 320px;
@@ -986,6 +1043,14 @@ body.mode-css .toolbox,
 body.mode-css .properties-panel,
 body.mode-css .layers-panel {
     display: none !important;
+}
+body.mode-css .mode-toggle #switch-css {
+    background: var(--primary);
+    color: #ffffff;
+}
+body.mode-css .mode-toggle #switch-visual {
+    background: transparent;
+    color: var(--text-main);
 }
 body.mode-css .right-sidebar {
     width: 420px;
