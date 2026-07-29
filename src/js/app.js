@@ -1021,10 +1021,6 @@ function initMenus() {
                     localStorage.setItem('lc-locale', 'zh-TW');
                     location.reload();
                     break;
-                case 'locale-ja':
-                    localStorage.setItem('lc-locale', 'ja');
-                    location.reload();
-                    break;
             }
         });
     });

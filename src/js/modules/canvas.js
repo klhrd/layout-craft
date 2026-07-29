@@ -5,6 +5,7 @@ import { CONTAINER_TAGS } from '../config/elements.js';
 import { COMPONENTS, buildComponentTemplate } from '../config/components.js';
 import * as cssState from '../config/cssState.js';
 import { compileAndRenderCss } from '../app.js';
+import { showAlignGuides, clearAlignGuides } from './canvasHelpers.js';
 
 let draggedType = null;
 const canvas = document.getElementById('canvas'); // Grabs .canvas-container.
@@ -17,10 +18,14 @@ export function initCanvas() {
         clearDropHighlight();
         const target = resolveDropTarget(e.target);
         if (target !== canvas) target.classList.add('drop-target-active');
+        showAlignGuides(e.clientX, e.clientY, target);
     });
 
     canvas.addEventListener('dragleave', (e) => {
-        if (!canvas.contains(e.relatedTarget)) clearDropHighlight();
+        if (!canvas.contains(e.relatedTarget)) {
+            clearDropHighlight();
+            clearAlignGuides();
+        }
     });
 
     canvas.addEventListener('drop', handleDrop);
@@ -257,6 +262,7 @@ function clearDropHighlight() {
 
 function handleDrop(e) {
     e.preventDefault();
+    clearAlignGuides();
     if (!draggedType) return;
     clearDropHighlight();
 

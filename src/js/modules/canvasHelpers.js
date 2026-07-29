@@ -110,6 +110,73 @@ document.addEventListener('mouseup', () => {
     }
 });
 
+/* ── Snap-to-grid alignment guides ── */
+const ALIGN_THRESHOLD = 6;
+let alignGuides = [];
+
+export function showAlignGuides(cursorX, cursorY, container) {
+    clearAlignGuides();
+    if (!container) container = canvas;
+    if (!container) return;
+
+    const kids = container.children;
+    const cRect = container.getBoundingClientRect();
+
+    // Candidate edges to check: for each child, check top, bottom, left, right, center
+    for (let i = 0; i < kids.length; i++) {
+        const kid = kids[i];
+        if (!kid.getBoundingClientRect) continue;
+        const r = kid.getBoundingClientRect();
+        if (r.width === 0 && r.height === 0) continue;
+
+        // Vertical edges (check cursorX against left/right/center)
+        const vEdges = [
+            { pos: r.left, label: 'left' },
+            { pos: r.left + r.width / 2, label: 'vcenter' },
+            { pos: r.right, label: 'right' },
+        ];
+        for (const e of vEdges) {
+            if (Math.abs(cursorX - e.pos) < ALIGN_THRESHOLD) {
+                const guide = addAlignGuide(e.pos, cRect.top, 1, cRect.height, 'v');
+                guide.dataset.align = e.label;
+                break; // one guide per child per axis
+            }
+        }
+
+        // Horizontal edges (check cursorY against top/bottom/center)
+        const hEdges = [
+            { pos: r.top, label: 'top' },
+            { pos: r.top + r.height / 2, label: 'hcenter' },
+            { pos: r.bottom, label: 'bottom' },
+        ];
+        for (const e of hEdges) {
+            if (Math.abs(cursorY - e.pos) < ALIGN_THRESHOLD) {
+                const guide = addAlignGuide(cRect.left, e.pos, cRect.width, 1, 'h');
+                guide.dataset.align = e.label;
+                break;
+            }
+        }
+    }
+}
+
+function addAlignGuide(left, top, width, height, orient) {
+    const guide = document.createElement('div');
+    guide.className = 'canvas-guide align-guide';
+    guide.style.left = `${left}px`;
+    guide.style.top = `${top}px`;
+    guide.style.width = `${width}px`;
+    guide.style.height = `${height}px`;
+    guide.dataset.orient = orient;
+    document.body.appendChild(guide);
+    alignGuides.push(guide);
+    return guide;
+}
+
+export function clearAlignGuides() {
+    alignGuides.forEach((g) => g.remove());
+    alignGuides = [];
+}
+
 /* ── Resize handles ── */
 
 export function showResizeHandles(el) {
