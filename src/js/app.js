@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initExporter();
     initModeSwitcher();
     initVisualCssActions();
+    initCssEditorCollapse();
     initHistoryUI();
     initOutlinesToggle();
     initImporter();
@@ -243,6 +244,14 @@ function initVisualCssActions() {
             if (currentProj) saveProject(currentProj, false);
         });
     }
+}
+
+function initCssEditorCollapse() {
+    const toggle = document.getElementById('css-editor-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', () => {
+        toggle.parentElement.classList.toggle('collapsed');
+    });
 }
 
 function createContainerBoxUI(block) {

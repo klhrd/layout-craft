@@ -959,6 +959,30 @@ h3.category-header.active::after {
     flex: 1;
 }
 
+.css-editor-panel h3 {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.css-editor-panel h3::after {
+    content: '▸';
+    font-size: 0.7rem;
+    transition: transform 0.2s;
+}
+
+.css-editor-panel.collapsed h3::after {
+    transform: rotate(90deg);
+}
+
+.css-editor-panel.collapsed .css-editor-hint,
+.css-editor-panel.collapsed .css-selector-creator,
+.css-editor-panel.collapsed .css-rules-container {
+    display: none;
+}
+
 .css-editor-hint {
     color: var(--text-muted);
     font-size: 0.8rem;
@@ -980,6 +1004,25 @@ h3.category-header.active::after {
     padding: 6px 8px;
     font-size: 0.75rem;
     flex: 0 0 auto;
+}
+
+/* ── WebKit scrollbar styling ── */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-medium);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--border-strong);
 }
 
 /* ── Inputs & textareas ── */
