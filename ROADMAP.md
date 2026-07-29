@@ -124,15 +124,15 @@ own `feature/<name>` branch with frequent, focused commits.
 Stale branches (already merged into `master` via rebase or sequential merges)
 are cleaned up periodically. See [`docs/branch-audit.md`](docs/branch-audit.md).
 
-| Branch                         | Roadmap      | Purpose                                         |
-| ------------------------------ | ------------ | ----------------------------------------------- |
-| `master`                       | —            | Stable, deployable builds (GitHub Pages source) |
-| `feature/responsive-preview`   | Next-up #1–4 | ✅ Merged — all four items delivered            |
-| `feature/backend-sync`         | Long-term #1 | Cloud storage (Supabase/Firebase)               |
-| `feature/i18n-theming`         | Long-term #2 | Light/dark theme + i18n expansion               |
-| `feature/web-component-export` | Long-term #3 | Export as Custom Elements                       |
-| `feature/collab`               | Long-term #4 | Realtime multiplayer editing                    |
-| `feature/template-marketplace` | Long-term #5 | Curated layout template library                 |
+| Branch                         | Roadmap      | Purpose                                           |
+| ------------------------------ | ------------ | ------------------------------------------------- |
+| `master`                       | —            | Stable, deployable builds (GitHub Pages source)   |
+| `feature/responsive-preview`   | Next-up #1–4 | ✅ Merged — all four items delivered              |
+| `feature/backend-sync`         | Long-term #1 | Cloud storage (Supabase/Firebase)                 |
+| `feature/i18n-theming`         | Long-term #2 | ✅ Merged — CSS variables + dark theme + zh-TW/ja |
+| `feature/web-component-export` | Long-term #3 | Export as Custom Elements                         |
+| `feature/collab`               | Long-term #4 | Realtime multiplayer editing                      |
+| `feature/template-marketplace` | Long-term #5 | Curated layout template library                   |
 
 ---
 
@@ -153,7 +153,7 @@ are cleaned up periodically. See [`docs/branch-audit.md`](docs/branch-audit.md).
 - [x] Canvas rulers + 8-point resize handles — same branch
 - [ ] Snap-to-grid alignment guides (remaining canvas helper)
 - [ ] Backend cloud sync (Supabase/Firebase)
-- [ ] Light/Dark theme toggle + i18n zh-TW / ja
+- [x] Light/Dark theme toggle + i18n zh-TW / ja — merged `feature/i18n-theming`
 - [ ] Web Component export (Custom Elements with shadow DOM)
 - [ ] Multi-user realtime collaboration (Yjs / CRDT)
 - [ ] Template marketplace (20+ curated layouts)
