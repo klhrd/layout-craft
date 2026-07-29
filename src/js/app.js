@@ -2,7 +2,7 @@ import { ELEMENT_CATEGORIES } from './config/elements.js';
 import { CSS_DICTIONARY } from './config/cssDictionary.js';
 import { COMPONENTS } from './config/components.js';
 import { t, setLocale } from './config/i18n.js';
-import * as cssState from './config/cssState.js';
+import * as cssState from './modules/cssState.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
 import { initInspector, selectElement, deselectAll } from './modules/inspector.js';
 import { initLayers, refreshLayers } from './modules/layers.js';

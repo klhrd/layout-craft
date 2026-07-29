@@ -18,7 +18,7 @@ vi.mock('../src/js/modules/canvasHelpers.js', () => ({
 
 import { makeElementSortable, TEXT_EDITABLE_TAGS, setDraggedType, isContainer } from '../src/js/modules/canvas.js';
 import { buildComponentTemplate } from '../src/js/config/components.js';
-import { initCssState, nextClassIndex, setRule, getRule } from '../src/js/config/cssState.js';
+import { initCssState, nextClassIndex, setRule, getRule } from '../src/js/modules/cssState.js';
 import { push, undo, redo, reset, canUndo, canRedo } from '../src/js/modules/history.js';
 
 describe('buildComponentTemplate', () => {

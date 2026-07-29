@@ -14,7 +14,7 @@ import {
     getNestedProperty,
     serialize,
     deserialize,
-} from '../src/js/config/cssState.js';
+} from '../src/js/modules/cssState.js';
 
 beforeEach(() => {
     initCssState();

@@ -1,6 +1,6 @@
 import { makeElementSortable } from './canvas.js';
 import { CONTAINER_TAGS } from '../config/elements.js';
-import * as cssState from '../config/cssState.js';
+import * as cssState from './cssState.js';
 import { compileAndRenderCss } from '../app.js';
 
 function sanitizeImportedNode(node) {

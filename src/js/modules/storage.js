@@ -3,7 +3,7 @@ import { makeElementSortable } from './canvas.js';
 import { CONTAINER_TAGS } from '../config/elements.js';
 import { deselectAll } from './inspector.js';
 import { reset as resetHistory } from './history.js';
-import * as cssState from '../config/cssState.js';
+import * as cssState from './cssState.js';
 import { t } from '../config/i18n.js';
 
 const STORAGE_KEY_PREFIX = 'layoutcraft_proj_';

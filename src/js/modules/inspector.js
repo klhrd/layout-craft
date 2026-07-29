@@ -1,5 +1,5 @@
 import { ELEMENT_CATEGORIES } from '../config/elements.js';
-import * as cssState from '../config/cssState.js';
+import * as cssState from './cssState.js';
 import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
 import { compileAndRenderCss } from '../app.js';

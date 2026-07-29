@@ -78,14 +78,14 @@ describe('compileAndRenderCss', () => {
     });
 
     it('renders empty string when no rules exist', async () => {
-        const { initCssState } = await import('../src/js/config/cssState.js');
+        const { initCssState } = await import('../src/js/modules/cssState.js');
         initCssState();
         app.compileAndRenderCss();
         expect(liveStyles.textContent).toBe('');
     });
 
     it('renders CSS rule with selector and properties', async () => {
-        const cssState = await import('../src/js/config/cssState.js');
+        const cssState = await import('../src/js/modules/cssState.js');
         cssState.initCssState();
         cssState.setRule('.my-class', { color: 'red', fontSize: '16px' });
 
@@ -96,7 +96,7 @@ describe('compileAndRenderCss', () => {
     });
 
     it('renders multiple rules separated by newlines', async () => {
-        const cssState = await import('../src/js/config/cssState.js');
+        const cssState = await import('../src/js/modules/cssState.js');
         cssState.initCssState();
         cssState.setRule('.a', { color: 'red' });
         cssState.setRule('.b', { margin: '0' });
@@ -144,7 +144,7 @@ describe('createRuleBoxUI behavior', () => {
     });
 
     it('rebuildCssRulesUI creates rule box from cssState rule', async () => {
-        const cssState = await import('../src/js/config/cssState.js');
+        const cssState = await import('../src/js/modules/cssState.js');
         cssState.initCssState();
         cssState.setRule('.card', { color: 'red' });
 
@@ -155,7 +155,7 @@ describe('createRuleBoxUI behavior', () => {
     });
 
     it('rule box contains editable-selector-input and delete button', async () => {
-        const cssState = await import('../src/js/config/cssState.js');
+        const cssState = await import('../src/js/modules/cssState.js');
         cssState.initCssState();
         cssState.setRule('.card', { color: 'red' });
 
@@ -183,7 +183,7 @@ describe('addAppliedBlockUI behavior', () => {
     });
 
     it('rebuilt rule box shows applied style blocks', async () => {
-        const cssState = await import('../src/js/config/cssState.js');
+        const cssState = await import('../src/js/modules/cssState.js');
         cssState.initCssState();
         cssState.setRule('.card', { color: 'red', fontSize: '14px' });
 
@@ -195,7 +195,7 @@ describe('addAppliedBlockUI behavior', () => {
     });
 
     it('each applied block has label and value input', async () => {
-        const cssState = await import('../src/js/config/cssState.js');
+        const cssState = await import('../src/js/modules/cssState.js');
         cssState.initCssState();
         cssState.setRule('.card', { color: 'red' });
 
