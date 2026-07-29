@@ -10,7 +10,7 @@ import { initCanvasHelpers } from './modules/canvasHelpers.js';
 import { initContextMenu } from './modules/contextMenu.js';
 import { initExporter } from './modules/exporter.js';
 import { importFromPaste } from './modules/importer.js';
-import { initStorage, saveProject } from './modules/storage.js';
+import { initStorage, saveProject, loadProject, populateProjectList } from './modules/storage.js';
 import * as history from './modules/history.js';
 import { push as pushHistory } from './modules/history.js';
 import {
@@ -20,6 +20,17 @@ import {
     setDraggedCssBlockData,
 } from './modules/cssEditor.js';
 import { initIcons } from './modules/icons.js';
+import {
+    initSupabase,
+    signInWithEmail,
+    signInWithGitHub,
+    signOut,
+    isAuthenticated,
+    getUser,
+    onAuthChange,
+    pullProjects,
+    pullProject,
+} from './modules/sync.js';
 
 window.activeCssData = cssState.getRawData();
 window.refreshLayers = refreshLayers;
@@ -61,7 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initZoom();
     initBreakpoints();
 
+    initSupabase();
     initStorage(); // Boot the storage manager.
+    initAuthUI();
     initIcons();
 
     // Auto-silently save every 30 seconds as a safety net.
@@ -686,4 +699,109 @@ function initHistoryUI() {
             return;
         }
     });
+}
+
+function initAuthUI() {
+    const btn = document.getElementById('btn-auth');
+    if (!btn) return;
+    updateAuthButton();
+    onAuthChange(() => updateAuthButton());
+    btn.addEventListener('click', () => {
+        if (isAuthenticated()) {
+            signOut().then(() => updateAuthButton());
+        } else {
+            showAuthModal();
+        }
+    });
+    if (isAuthenticated()) {
+        syncOnStart();
+    }
+}
+
+function updateAuthButton() {
+    const btn = document.getElementById('btn-auth');
+    if (!btn) return;
+    const user = getUser();
+    if (user) {
+        const label = user.email || user.user_metadata?.user_name || t('ui.cloud.signOut');
+        btn.textContent = label;
+        btn.title = t('ui.cloud.signOut');
+    } else {
+        btn.textContent = t('ui.cloud.signIn');
+        btn.title = t('ui.cloud.signIn');
+    }
+}
+
+function showAuthModal() {
+    const modal = document.getElementById('auth-modal');
+    if (!modal) return;
+    const emailInput = document.getElementById('auth-email-input');
+    const btnEmail = document.getElementById('btn-auth-email');
+    const btnGitHub = document.getElementById('btn-auth-github');
+    const btnCancel = document.getElementById('btn-auth-cancel');
+    modal.style.display = 'flex';
+    emailInput.value = '';
+    btnEmail.onclick = () => {
+        const email = emailInput.value.trim();
+        if (!email) return;
+        signInWithEmail(email).then(() => {
+            modal.style.display = 'none';
+        }).catch((err) => {
+            alert(err.message);
+        });
+    };
+    btnGitHub.onclick = () => {
+        signInWithGitHub().catch((err) => {
+            alert(err.message);
+        });
+    };
+    btnCancel.onclick = () => { modal.style.display = 'none'; };
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+}
+
+function syncOnStart() {
+    pullProjects().then((remoteProjects) => {
+        if (!remoteProjects || remoteProjects.length === 0) return;
+        populateProjectList(remoteProjects);
+        const select = document.getElementById('select-project');
+        const current = select.value;
+        const remote = remoteProjects.find((p) => p.name === current);
+        if (!remote) return;
+        const localRaw = localStorage.getItem('layoutcraft_proj_' + current);
+        if (!localRaw) return;
+        try {
+            const localData = JSON.parse(localRaw);
+            const localTime = new Date(localData.updated_at || 0).getTime();
+            const remoteTime = new Date(remote.updated_at).getTime();
+            if (remoteTime > localTime) {
+                showConflictModal(current, remote);
+            }
+        } catch {
+        }
+    }).catch(() => {});
+}
+
+function showConflictModal(projectName, remoteData) {
+    const modal = document.getElementById('conflict-modal');
+    if (!modal) return;
+    const details = document.getElementById('conflict-details');
+    const btnKeep = document.getElementById('btn-conflict-keep');
+    const btnPull = document.getElementById('btn-conflict-pull');
+    if (details) {
+        details.textContent = projectName.replace(/_/g, ' ') + ' — ' + new Date(remoteData.updated_at).toLocaleString();
+    }
+    modal.style.display = 'flex';
+    btnKeep.onclick = () => { modal.style.display = 'none'; };
+    btnPull.onclick = () => {
+        pullProject(projectName).then((data) => {
+            if (!data) return;
+            const raw = JSON.stringify({ html: data.html, cssData: data.css_data, updated_at: data.updated_at });
+            localStorage.setItem('layoutcraft_proj_' + projectName, raw);
+            loadProject(projectName);
+            modal.style.display = 'none';
+        }).catch(() => {
+            modal.style.display = 'none';
+        });
+    };
+    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
 }
