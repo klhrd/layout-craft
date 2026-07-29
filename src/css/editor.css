@@ -979,6 +979,86 @@ body.show-grid .canvas-container {
     cursor: grabbing;
 }
 
+/* ── Canvas rulers ── */
+.canvas-ruler {
+    position: absolute;
+    background: var(--bg-secondary, #f8fafc);
+    z-index: 100;
+    pointer-events: none;
+    display: none;
+}
+body.show-rulers .canvas-ruler {
+    display: block;
+}
+.ruler-top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+.ruler-left {
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20px;
+    border-right: 1px solid var(--border-color);
+}
+body.show-rulers .canvas-container {
+    margin-top: 20px;
+    margin-left: 20px;
+}
+body.show-rulers #canvas-wrapper {
+    position: relative;
+}
+.ruler-top::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background-image: repeating-linear-gradient(90deg, var(--text-muted) 0 1px, transparent 1px 16px);
+    background-size: 16px 20px;
+    opacity: 0.4;
+    pointer-events: none;
+}
+.ruler-left::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 20px;
+    background-image: repeating-linear-gradient(180deg, var(--text-muted) 0 1px, transparent 1px 16px);
+    background-size: 20px 16px;
+    opacity: 0.4;
+    pointer-events: none;
+}
+/* Tick labels at every 5th mark (80px) */
+.ruler-top::before {
+    content: '0  80  160  240  320  400  480  560  640  720  800  880  960  1040  1120  1200';
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    letter-spacing: 72px;
+    white-space: nowrap;
+    pointer-events: none;
+}
+.ruler-left::before {
+    content: '0  80  160  240  320  400  480  560  640  720  800  880  960  1040  1120  1200';
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    font-size: 0.55rem;
+    color: var(--text-muted);
+    line-height: 72px;
+    writing-mode: vertical-lr;
+    pointer-events: none;
+}
+
 /* ── WYSIWYG canvas (no wireframes by default) ── */
 
 /* Hover highlight (added/removed by JS) */

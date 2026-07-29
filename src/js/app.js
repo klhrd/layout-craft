@@ -986,6 +986,9 @@ function initMenus() {
                 case 'cut':
                     cutSelectedElement();
                     break;
+                case 'rulers':
+                    document.body.classList.toggle('show-rulers');
+                    break;
             }
         });
     });
