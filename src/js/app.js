@@ -1282,13 +1282,59 @@ function initHistoryUI() {
             return;
         }
 
-        // Arrow keys — nudge selected element by 1px
+        // Ctrl+D — Duplicate selected element
+        if (ctrl && key === 'd') {
+            e.preventDefault();
+            const sel = document.querySelector('.canvas-container .selected-element');
+            if (!sel) return;
+            const parent = sel.parentNode;
+            if (!parent) return;
+            const clone = sel.cloneNode(true);
+            const next = sel.nextSibling;
+            if (next) parent.insertBefore(clone, next);
+            else parent.appendChild(clone);
+            selectElement(clone);
+            pushHistory({
+                label: 'Duplicate element',
+                perform: () => {
+                    if (next && next.parentNode === parent) parent.insertBefore(clone, next);
+                    else parent.appendChild(clone);
+                    selectElement(clone);
+                },
+                rollback: () => {
+                    clone.remove();
+                    selectElement(sel);
+                },
+            });
+            return;
+        }
+
+        // Ctrl+/ — Toggle mode
+        if (ctrl && key === '/') {
+            e.preventDefault();
+            const isVisual = document.body.classList.contains('mode-visual');
+            const visualBtn = document.getElementById('switch-visual');
+            const cssBtn = document.getElementById('switch-css');
+            if (isVisual) {
+                document.body.className = 'mode-css';
+                if (cssBtn) cssBtn.classList.add('active');
+                if (visualBtn) visualBtn.classList.remove('active');
+            } else {
+                document.body.className = 'mode-visual';
+                if (visualBtn) visualBtn.classList.add('active');
+                if (cssBtn) cssBtn.classList.remove('active');
+            }
+            return;
+        }
+
+        // Arrow keys — nudge selected element by 1px (or 10px with Shift)
         if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
             const sel = document.querySelector('.canvas-container .selected-element');
             if (!sel) return;
             e.preventDefault();
-            const delta = key === 'arrowup' ? -1 : key === 'arrowdown' ? 1 : 0;
-            const deltaX = key === 'arrowleft' ? -1 : key === 'arrowright' ? 1 : 0;
+            const step = e.shiftKey ? 10 : 1;
+            const delta = key === 'arrowup' ? -step : key === 'arrowdown' ? step : 0;
+            const deltaX = key === 'arrowleft' ? -step : key === 'arrowright' ? step : 0;
             const oldTop = parseInt(sel.style.top) || 0;
             const oldLeft = parseInt(sel.style.left) || 0;
             const newTop = oldTop + delta;
