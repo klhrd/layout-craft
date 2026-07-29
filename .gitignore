@@ -17,6 +17,12 @@ pnpm-debug.log*
 .idea/
 *.swp
 
+# Env files
+.env
+.env.development
+.env.production
+.env.local
+
 # Misc
 .cache/
 *.log
