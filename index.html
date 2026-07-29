@@ -190,14 +190,14 @@
 
                         <div class="css-selector-creator">
                             <input type="text" id="input-new-selector" placeholder="e.g., .my-card or h1:hover" />
-                            <button id="btn-add-selector" class="btn-secondary">
-                                <span class="mat-icon">add</span> Add Rule
+                            <button id="btn-add-selector" class="btn-secondary" title="Add Rule">
+                                <span class="mat-icon">add</span>
                             </button>
-                            <button id="btn-add-media" class="btn-secondary" style="margin-top: 4px; width: 100%">
-                                <span class="mat-icon">devices</span> Add Media
+                            <button id="btn-add-media" class="btn-secondary" title="Add Media Query">
+                                <span class="mat-icon">devices</span>
                             </button>
-                            <button id="btn-add-keyframes" class="btn-secondary" style="margin-top: 4px; width: 100%">
-                                <span class="mat-icon">animation</span> Add Keyframes
+                            <button id="btn-add-keyframes" class="btn-secondary" title="Add Keyframes">
+                                <span class="mat-icon">animation</span>
                             </button>
                         </div>
 
@@ -229,6 +229,18 @@
                 <div class="modal-actions">
                     <button id="btn-import-cancel" class="btn-secondary">Cancel</button>
                     <button id="btn-import-submit" class="primary-btn">Import</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="open-modal" class="modal-overlay">
+            <div class="modal-dialog">
+                <h2 class="modal-title"><span class="mat-icon">folder_open</span> Open Project</h2>
+                <div id="open-project-list" class="open-project-list">
+                    <div class="open-project-empty">No saved projects found.</div>
+                </div>
+                <div class="modal-actions">
+                    <button id="btn-open-cancel" class="btn-secondary">Cancel</button>
                 </div>
             </div>
         </div>

@@ -668,13 +668,20 @@ h3.category-header.active::after {
 
 .css-selector-creator {
     display: flex;
-    gap: 6px;
-    margin-top: 5px;
+    gap: 4px;
+    flex-wrap: wrap;
 }
 
 .css-selector-creator input {
     margin-top: 0;
     flex: 1;
+    min-width: 100px;
+}
+
+.css-selector-creator .btn-secondary {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+    flex: 0 0 auto;
 }
 
 /* ── Inputs & textareas ── */
@@ -720,6 +727,7 @@ label {
     max-width: 100%;
     min-height: 100%;
     height: auto;
+    box-sizing: border-box;
     background: #ffffff;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
@@ -727,6 +735,7 @@ label {
     padding: 24px;
     position: relative;
     transition: all 0.3s ease;
+    overflow-x: hidden;
 }
 
 .canvas-container.zoomed {
@@ -1352,4 +1361,51 @@ body.mode-css .right-sidebar {
     gap: 8px;
     margin-top: 16px;
     justify-content: flex-end;
+}
+
+/* ── Open project list ── */
+.open-project-list {
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.open-project-empty {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    padding: 16px;
+    text-align: center;
+    font-style: italic;
+}
+
+.open-project-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background: #f8fafc;
+}
+
+.open-project-item:hover {
+    background: #f1f5f9;
+}
+
+.open-project-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.open-project-actions {
+    display: flex;
+    gap: 6px;
+}
+
+.open-project-actions .btn-secondary {
+    padding: 4px 10px;
+    font-size: 0.75rem;
 }

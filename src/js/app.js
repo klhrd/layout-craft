@@ -974,7 +974,7 @@ function initMenus() {
                     document.getElementById('btn-export').click();
                     break;
                 case 'open':
-                    document.getElementById('select-project').focus();
+                    showOpenProjectModal();
                     break;
                 case 'copy':
                     copySelectedToClipboard();
@@ -1027,6 +1027,68 @@ function initOutlinesToggle() {
     document.getElementById('btn-outlines')?.addEventListener('click', () => {
         document.body.classList.toggle('show-outlines');
     });
+}
+
+function showOpenProjectModal() {
+    const modal = document.getElementById('open-modal');
+    const list = document.getElementById('open-project-list');
+    const btnCancel = document.getElementById('btn-open-cancel');
+    if (!modal || !list) return;
+
+    // Populate project list
+    const raw = localStorage.getItem('layoutcraft_project_list');
+    const projects = raw ? JSON.parse(raw) : ['Default_Project'];
+    list.innerHTML = '';
+    projects.forEach((proj) => {
+        const item = document.createElement('div');
+        item.className = 'open-project-item';
+
+        const name = document.createElement('span');
+        name.className = 'open-project-name';
+        name.textContent = proj.replace(/_/g, ' ');
+
+        const actions = document.createElement('span');
+        actions.className = 'open-project-actions';
+
+        const loadBtn = document.createElement('button');
+        loadBtn.className = 'btn-secondary';
+        loadBtn.innerHTML = '<span class="mat-icon">folder_open</span> Load';
+        loadBtn.addEventListener('click', () => {
+            document.getElementById('select-project').value = proj;
+            document.getElementById('select-project').dispatchEvent(new Event('change'));
+            modal.style.display = 'none';
+        });
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-secondary';
+        delBtn.style.color = '#ef4444';
+        delBtn.innerHTML = '<span class="mat-icon">delete</span> Delete';
+        delBtn.addEventListener('click', () => {
+            if (!confirm(`Delete "${proj.replace(/_/g, ' ')}"?`)) return;
+            localStorage.removeItem(`layoutcraft_proj_${proj}`);
+            const updated = JSON.parse(localStorage.getItem('layoutcraft_project_list')) || [];
+            const idx = updated.indexOf(proj);
+            if (idx !== -1) updated.splice(idx, 1);
+            if (updated.length === 0) updated.push('Default_Project');
+            localStorage.setItem('layoutcraft_project_list', JSON.stringify(updated));
+            showOpenProjectModal();
+        });
+
+        actions.appendChild(loadBtn);
+        actions.appendChild(delBtn);
+        item.appendChild(name);
+        item.appendChild(actions);
+        list.appendChild(item);
+    });
+
+    modal.style.display = 'flex';
+
+    btnCancel.onclick = () => {
+        modal.style.display = 'none';
+    };
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    };
 }
 
 function copySelectedToClipboard() {
