@@ -31,9 +31,15 @@ const STYLE_PROPS = [
     { key: 'font-size', labelKey: 'ui.inspector.fontSize', widget: 'fontSize' },
     { key: 'font-weight', labelKey: 'ui.inspector.fontWeight', widget: 'select' },
     { key: 'text-align', labelKey: 'ui.inspector.textAlign', widget: 'align' },
-    { key: 'padding', labelKey: 'ui.inspector.padding' },
-    { key: 'margin', labelKey: 'ui.inspector.margin' },
-    { key: 'border-radius', labelKey: 'ui.inspector.borderRadius' },
+    { key: 'font-family', labelKey: 'ui.inspector.fontFamily', widget: 'fontFamily' },
+    { key: 'width', labelKey: 'ui.inspector.width', widget: 'unitSlider' },
+    { key: 'height', labelKey: 'ui.inspector.height', widget: 'unitSlider' },
+    { key: 'gap', labelKey: 'ui.inspector.gap', widget: 'unitSlider' },
+    { key: 'border-radius', labelKey: 'ui.inspector.borderRadius', widget: 'unitSlider' },
+    { key: 'opacity', labelKey: 'ui.inspector.opacity', widget: 'opacity' },
+    { key: 'padding', labelKey: 'ui.inspector.padding', widget: 'spacing' },
+    { key: 'margin', labelKey: 'ui.inspector.margin', widget: 'spacing' },
+    { key: 'box-shadow', labelKey: 'ui.inspector.boxShadow', widget: 'boxShadow' },
 ];
 
 const FONT_WEIGHT_OPTIONS = [
@@ -506,6 +512,262 @@ function createFontSizeWidget(initialValue, onChange) {
     return wrapper;
 }
 
+/* ── Helper: parse "16px" → { num: 16, unit: 'px' } ── */
+function parseUnitValue(val) {
+    if (!val) return { num: null, unit: 'px' };
+    const m = String(val).match(/^([\d.]+)\s*(px|rem|em|%)$/);
+    return m ? { num: parseFloat(m[1]), unit: m[2] } : { num: null, unit: 'px' };
+}
+
+/* ── UnitSlider widget (slider + unit select) ── */
+function createUnitSliderWidget(initialValue, onChange, { min = 0, max = 200, step = 1 } = {}) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'unitslider-widget';
+
+    const { num, unit } = parseUnitValue(initialValue);
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.className = 'unitslider-range';
+    slider.min = String(min);
+    slider.max = String(max);
+    slider.step = String(step);
+    slider.value = num !== null ? String(Math.max(min, Math.min(max, num))) : '0';
+
+    const numInput = document.createElement('input');
+    numInput.type = 'number';
+    numInput.className = 'unitslider-num';
+    numInput.min = String(min);
+    numInput.max = String(max);
+    numInput.step = String(step);
+    numInput.value = slider.value;
+
+    const unitSelect = document.createElement('select');
+    unitSelect.className = 'unitslider-unit';
+    ['px', 'rem', 'em', '%'].forEach((u) => {
+        const opt = document.createElement('option');
+        opt.value = u;
+        opt.textContent = u;
+        if (u === unit) opt.selected = true;
+        unitSelect.appendChild(opt);
+    });
+
+    function updateValue() {
+        const v = numInput.value;
+        const u = unitSelect.value;
+        onChange(v + u);
+    }
+
+    slider.addEventListener('input', () => {
+        numInput.value = slider.value;
+        updateValue();
+    });
+    numInput.addEventListener('input', () => {
+        slider.value = numInput.value;
+        updateValue();
+    });
+    unitSelect.addEventListener('change', updateValue);
+
+    wrapper.appendChild(slider);
+    wrapper.appendChild(numInput);
+    wrapper.appendChild(unitSelect);
+    return wrapper;
+}
+
+/* ── Opacity slider (0–1, step 0.05) ── */
+function createOpacityWidget(initialValue, onChange) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'opacity-widget';
+
+    const slider = document.createElement('input');
+    slider.type = 'range';
+    slider.className = 'opacity-range';
+    slider.min = '0';
+    slider.max = '1';
+    slider.step = '0.05';
+    slider.value = initialValue || '1';
+
+    const label = document.createElement('span');
+    label.className = 'opacity-label';
+    label.textContent = Math.round(parseFloat(slider.value) * 100) + '%';
+
+    slider.addEventListener('input', () => {
+        label.textContent = Math.round(parseFloat(slider.value) * 100) + '%';
+        onChange(slider.value);
+    });
+
+    wrapper.appendChild(slider);
+    wrapper.appendChild(label);
+    return wrapper;
+}
+
+/* ── Font-family system font dropdown ── */
+const FONT_OPTIONS = [
+    { value: '', label: 'Default' },
+    { value: 'Arial, Helvetica, sans-serif', label: 'Arial / Helvetica' },
+    { value: '"Helvetica Neue", Helvetica, Arial, sans-serif', label: 'Helvetica Neue' },
+    { value: 'Georgia, "Times New Roman", serif', label: 'Georgia' },
+    { value: '"Times New Roman", Times, serif', label: 'Times New Roman' },
+    { value: 'Verdana, Geneva, sans-serif', label: 'Verdana' },
+    { value: '"Trebuchet MS", sans-serif', label: 'Trebuchet MS' },
+    { value: 'Tahoma, Geneva, sans-serif', label: 'Tahoma' },
+    { value: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif', label: 'Segoe UI' },
+    { value: 'monospace', label: 'Monospace' },
+    { value: 'cursive', label: 'Cursive' },
+    { value: 'system-ui, -apple-system, sans-serif', label: 'System UI' },
+];
+
+function createFontFamilyWidget(initialValue, onChange) {
+    const select = document.createElement('select');
+    select.className = 'style-select';
+    FONT_OPTIONS.forEach(({ value, label }) => {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = label;
+        if (value === initialValue) opt.selected = true;
+        select.appendChild(opt);
+    });
+    select.addEventListener('change', () => onChange(select.value));
+    return select;
+}
+
+/* ── Spacing diagram for margin / padding ── */
+function createSpacingWidget(initialValue, onChange) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'spacing-widget';
+
+    const diag = document.createElement('div');
+    diag.className = 'spacing-diagram';
+
+    const center = document.createElement('div');
+    center.className = 'spacing-center';
+    center.textContent = 'box';
+    diag.appendChild(center);
+
+    const directions = ['top', 'right', 'bottom', 'left'];
+    const parsers = {
+        top: { pos: 'spacing-top', placeholder: 'T' },
+        right: { pos: 'spacing-right', placeholder: 'R' },
+        bottom: { pos: 'spacing-bottom', placeholder: 'B' },
+        left: { pos: 'spacing-left', placeholder: 'L' },
+    };
+
+    // Parse shorthand. e.g. "10px 20px" → top:10px right:20px bottom:10px left:20px
+    const parts = initialValue ? initialValue.split(/\s+/) : [];
+    function valFor(dir) {
+        const idx = directions.indexOf(dir);
+        if (parts.length === 1) return parts[0];
+        if (parts.length === 2) return parts[idx < 2 ? 0 : 1];
+        if (parts.length === 3) return parts[idx < 1 ? 0 : idx < 2 ? 1 : 2];
+        if (parts.length >= 4) return parts[idx] || '';
+        return '';
+    }
+
+    const inputs = {};
+    directions.forEach((dir) => {
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.className = 'spacing-input ' + parsers[dir].pos;
+        inp.placeholder = parsers[dir].placeholder;
+        inp.value = valFor(dir);
+        inputs[dir] = inp;
+        diag.appendChild(inp);
+    });
+
+    function rebuildShorthand() {
+        const vals = directions.map((d) => inputs[d].value.trim());
+        // Collapse trailing empties
+        while (vals.length > 1 && vals[vals.length - 1] === '' && vals[vals.length - 2] === '') {
+            vals.pop();
+        }
+        while (vals.length > 2 && vals[vals.length - 1] === '' && vals[vals.length - 2] === '') {
+            vals.pop();
+        }
+        while (vals.length > 1 && vals.every((v) => v === vals[0])) {
+            vals.length = 1;
+        }
+        onChange(vals.join(' '));
+    }
+
+    directions.forEach((dir) => {
+        inputs[dir].addEventListener('input', rebuildShorthand);
+    });
+
+    wrapper.appendChild(diag);
+    return wrapper;
+}
+
+/* ── Box-shadow editor ── */
+function createBoxShadowWidget(initialValue, onChange) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'shadow-widget';
+
+    // Parse "10px 10px 5px rgba(0,0,0,0.3)" or similar
+    const parts = initialValue ? initialValue.split(/\s+/) : [];
+    const offsetX = parts[0] || '0';
+    const offsetY = parts[1] || '0';
+    const blur = parts[2] || '0';
+    const color = parts.slice(3).join(' ') || '#000000';
+
+    const row1 = document.createElement('div');
+    row1.className = 'shadow-row';
+
+    const xLabel = document.createElement('label');
+    xLabel.textContent = 'X';
+    const xInput = document.createElement('input');
+    xInput.type = 'text';
+    xInput.className = 'shadow-input';
+    xInput.placeholder = '0';
+    xInput.value = offsetX;
+
+    const yLabel = document.createElement('label');
+    yLabel.textContent = 'Y';
+    const yInput = document.createElement('input');
+    yInput.type = 'text';
+    yInput.className = 'shadow-input';
+    yInput.placeholder = '0';
+    yInput.value = offsetY;
+
+    row1.appendChild(xLabel);
+    row1.appendChild(xInput);
+    row1.appendChild(yLabel);
+    row1.appendChild(yInput);
+
+    const row2 = document.createElement('div');
+    row2.className = 'shadow-row';
+
+    const bLabel = document.createElement('label');
+    bLabel.textContent = 'Blur';
+    const bInput = document.createElement('input');
+    bInput.type = 'text';
+    bInput.className = 'shadow-input';
+    bInput.placeholder = '0';
+    bInput.value = blur;
+
+    const colorPicker = document.createElement('input');
+    colorPicker.type = 'color';
+    colorPicker.className = 'shadow-color';
+    // try to extract hex from rgba
+    const colorMatch = color.match(/#[0-9a-fA-F]{3,8}/);
+    colorPicker.value = colorMatch ? colorMatch[0] : '#000000';
+
+    row2.appendChild(bLabel);
+    row2.appendChild(bInput);
+    row2.appendChild(colorPicker);
+
+    function rebuildShadow() {
+        const val = [xInput.value || '0', yInput.value || '0', bInput.value || '0', colorPicker.value].join(' ');
+        onChange(val);
+    }
+
+    [xInput, yInput, bInput, colorPicker].forEach((el) => {
+        el.addEventListener('input', rebuildShadow);
+    });
+
+    wrapper.appendChild(row1);
+    wrapper.appendChild(row2);
+    return wrapper;
+}
+
 /* ── Render the inline style editor ── */
 function renderStyleEditor(el) {
     if (!styleEditorContainer) return;
@@ -575,6 +837,22 @@ function renderStyleEditor(el) {
             control = createAlignWidget(currentVal || 'left', handleChange);
         } else if (widget === 'fontSize') {
             control = createFontSizeWidget(currentVal, handleChange);
+        } else if (widget === 'fontFamily') {
+            control = createFontFamilyWidget(currentVal, handleChange);
+        } else if (widget === 'unitSlider') {
+            const opts =
+                key === 'border-radius'
+                    ? { min: 0, max: 100, step: 1 }
+                    : key === 'gap'
+                      ? { min: 0, max: 80, step: 1 }
+                      : { min: 0, max: 800, step: 1 };
+            control = createUnitSliderWidget(currentVal, handleChange, opts);
+        } else if (widget === 'opacity') {
+            control = createOpacityWidget(currentVal, handleChange);
+        } else if (widget === 'spacing') {
+            control = createSpacingWidget(currentVal, handleChange);
+        } else if (widget === 'boxShadow') {
+            control = createBoxShadowWidget(currentVal, handleChange);
         } else {
             const input = document.createElement('input');
             input.type = 'text';

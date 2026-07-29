@@ -75,6 +75,12 @@ const DICTIONARY = {
                 padding: 'Padding',
                 margin: 'Margin',
                 borderRadius: 'Border Radius',
+                fontFamily: 'Font Family',
+                width: 'Width',
+                height: 'Height',
+                gap: 'Gap',
+                opacity: 'Opacity',
+                boxShadow: 'Box Shadow',
             },
             storage: {
                 meterLabel: (used, total, pct) => `${used} MB / ${total} MB (${pct}%)`,

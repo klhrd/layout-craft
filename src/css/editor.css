@@ -613,6 +613,166 @@ h3.category-header.active::after {
     border-color: var(--primary);
 }
 
+/* ── Unit slider widget ── */
+.unitslider-widget {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+}
+.unitslider-range {
+    flex: 1;
+    min-width: 40px;
+    height: 4px;
+    cursor: pointer;
+    accent-color: var(--primary, #6366f1);
+}
+.unitslider-num {
+    width: 48px;
+    padding: 3px 4px;
+    font-size: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    text-align: center;
+    font-family: monospace;
+}
+.unitslider-unit {
+    padding: 3px 4px;
+    font-size: 0.7rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: #f8fafc;
+    cursor: pointer;
+}
+.unitslider-num:focus,
+.unitslider-unit:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+/* ── Opacity widget ── */
+.opacity-widget {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+.opacity-range {
+    flex: 1;
+    height: 4px;
+    cursor: pointer;
+    accent-color: var(--primary, #6366f1);
+}
+.opacity-label {
+    min-width: 36px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-family: monospace;
+    color: var(--text-muted);
+}
+
+/* ── Spacing diagram widget ── */
+.spacing-widget {
+    flex: 1;
+}
+.spacing-diagram {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 70px;
+    border: 2px dashed var(--border-color);
+    border-radius: 6px;
+    background: #f1f5f9;
+    padding: 4px;
+}
+.spacing-center {
+    padding: 4px 10px;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    z-index: 1;
+}
+.spacing-input {
+    position: absolute;
+    width: 44px;
+    padding: 2px 4px;
+    font-size: 0.65rem;
+    border: 1px solid var(--border-color);
+    border-radius: 3px;
+    text-align: center;
+    background: #fff;
+    font-family: monospace;
+}
+.spacing-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+.spacing-top {
+    top: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.spacing-right {
+    right: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.spacing-bottom {
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.spacing-left {
+    left: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* ── Box-shadow widget ── */
+.shadow-widget {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+.shadow-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.shadow-row label {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    min-width: auto;
+    margin: 0;
+}
+.shadow-input {
+    width: 48px;
+    padding: 3px 4px;
+    font-size: 0.7rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: monospace;
+}
+.shadow-input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+.shadow-color {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
 /* ── Layers panel ── */
 .layers-panel {
     border-top: 1px solid var(--border-color);
