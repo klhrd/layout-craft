@@ -7,232 +7,138 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 - **Branch**: `master` (clean, in sync with `origin/master`)
 - **Stack**: Vite + Vitest + ESLint + Prettier (Vanilla ES Modules)
 - **Scope**: Single-page editor (`index.html` + 13 source files under `src/`)
-- **Features shipped**: dual-mode editor (Visual / CSS Expert), drag-and-drop components, CSS building blocks with live visual inputs, selector blinking detector, multi-project LocalStorage storage with capacity meter and auto-save, ZIP/HTML export, undo/redo history stack, advanced CSS blocks (media/keyframes/nested rules), React JSX / Vue SFB export, nested sortable containers, HTML/CSS import flow, menu bar with File/Edit/View dropdowns, Material Symbols icons, canvas height fix
+- **Features shipped**: dual-mode editor (Visual / CSS Expert), drag-and-drop components, CSS building blocks with live visual inputs, selector blinking detector, multi-project LocalStorage storage with capacity meter and auto-save, undo/redo history stack, advanced CSS blocks (media/keyframes/nested rules), React JSX / Vue SFB export, nested sortable containers, HTML/CSS import flow, WYSIWYG canvas with hover/select, select-to-style inline editor, layers panel with visibility/lock, context menu, pre-built component library (hero, navbar, card, contact, footer, testimonial, pricing, FAQ), inline text editing, empty-state guidance, menu bar (File/Edit/View) with Material Symbols, zoom controls, inspector hierarchy editing, component CSS auto-extraction
 
 ---
 
-## Short-term (Foundational Engineering)
+## Completed Milestones
 
-> Goal: establish a maintainable, testable, and reproducible codebase before adding more features.
+> All foundational engineering + all Mid-term Feature Expansion items are done.
 
-### 1. Switch default language to English
+- **Short-term #1–6**: English language, ESLint/Prettier, Vitest, Vite, jsconfig, documentation
+- **Mid-term (Feature) #1**: Undo/Redo history stack
+- **Mid-term (Feature) #2**: Advanced CSS blocks (`@media`, `:hover`, pseudo, custom props, keyframes)
+- **Mid-term (Feature) #3**: React JSX / Vue SFB export
+- **Mid-term (Feature) #4**: Nested sortable containers
+- **Mid-term (Feature) #5**: HTML/CSS import flow
 
-- Migrate README.md and in-app UI strings to English as the primary language.
-- Introduce a lightweight i18n dictionary module (`src/js/config/i18n.js`).
-- Update commit messages, comments, and this roadmap to English as the working convention.
+**Partially completed Mid-term UX items:**
 
-### 2. Linting and formatting
-
-- Add ESLint + Prettier with sane defaults for ES Modules.
-- Add `npm run lint` and `npm run format` scripts together with an `AGENTS.md` note.
-- Fix whatever the first lint pass surfaces.
-
-### 3. Unit testing baseline
-
-- Introduce Vitest (zero-config, native ESM friendly).
-- Prioritize pure-logic modules first: `storage.js`, `exporter.js`, `cssDictionary.js`, `elements.js`.
-
-### 4. Build tooling
-
-- Introduce Vite for both dev server and production bundling.
-- Wire up a `dist/` build output and update the GitHub Actions workflow.
-
-### 5. Type safety groundwork
-
-- Add `jsconfig.json` with module resolution and path aliases.
-- (Optional) evaluate migrating critical modules to TypeScript.
-
-### 6. Documentation pass
-
-- Ensure README reflects the new tooling (`npm run dev`, `npm run build`, `npm test`).
-- Document module boundaries in `AGENTS.md`.
+| #   | Item                          | Status |
+| --- | ----------------------------- | ------ |
+| 1   | WYSIWYG canvas                | ✅ Hover highlight + click-to-select + outline toggle done. Missing: edit-mode toggle, resize handles |
+| 2   | Select-to-style               | ✅ Fully done — auto-class generation + inline style editor |
+| 3   | Inline text editing           | ✅ Fully done — double-click, Enter commit, Escape cancel |
+| 4   | Visual property editors       | 🟡 Color picker, font-size presets, align buttons done. Missing: sliders, unit selector, spacing diagram |
+| 5   | Layers / outline panel        | ✅ Fully done — tree with visibility/lock toggle |
+| 6   | Context menu                  | ✅ Fully done — edit text, duplicate, copy/paste, delete, move, wrap |
+| 7   | Pre-built component library   | ✅ Fully done — 8 components with auto-CSS extraction |
+| 8   | Responsive preview            | ❌ Not started |
+| 9   | Keyboard shortcuts            | 🟡 Ctrl+Z/C/V, Del, Escape, arrows done. Missing: Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow |
+| 10  | Canvas helpers                | ❌ Not started |
+| 11  | Empty-state guidance          | ✅ Fully done — Quick Start + Load Sample buttons |
 
 ---
 
-## Mid-term (UX Overhaul)
+## Next-up (High Priority UX)
 
-> Goal: transform the editor from a developer tool into an intuitive visual
-> design surface that non-developers can use. Every interaction should feel
-> direct, responsive, and polished.
+> Goal: deliver a polished, Figma-like design surface that works at any viewport size.
 
-### 1. WYSIWYG canvas
+### 1. Responsive preview with breakpoints
 
-- **Remove edit-mode wireframes.** Dashed borders, min-heights, and coloured
-  backgrounds on canvas children currently make the page look like a debug
-  view. Replace with a subtle hover-highlight + click-to-select model.
-- **Edit-mode toggle.** A per-element "Show outlines" option in the inspector
-  for users who still want the wireframe view.
-- **Selected-element affordance.** Draw a clean blue outline + 8 resize handles
-  on the selected element (like Figma/Webflow).
+- Add viewport breakpoint buttons to the toolbar: Desktop (1440px), Tablet (768px), Mobile (375px).
+- When a breakpoint is active, the `.canvas-container` resizes to that width and centres itself in the workspace (`.canvas` gets `justify-content: center`).
+- A "Responsive" mode where per-breakpoint CSS overrides are stored in `cssState` as `@media` query blocks and rendered automatically.
+- The breakpoint buttons toggle `body` classes (`.bp-desktop`, `.bp-tablet`, `.bp-mobile`) so the grid and outline overlays scale too.
+- Canvas content re-flows naturally as width changes (no horizontal scrollbar in the container).
 
-### 2. Select-to-style (eliminate manual selector workflow)
+### 2. Visual property editors (complete)
 
-- **Problem:** currently you must (1) add a class/ID in the inspector, (2) go
-  to the CSS Rules panel, (3) type a selector by hand, (4) drag property blocks
-  into it. Users should never need to touch a selector.
-- **Solution:** when an element is selected, the inspector shows an inline
-  **Styles** section with editable CSS properties (font, spacing, colour,
-  border, shadow, layout). Changing any value:
-    1. Auto-generates a unique class (e.g. `._lc-1`, `._lc-2`) if the element
-       doesn't already have one.
-    2. Auto-creates a CSS rule for that class in `window.activeCssData`.
-    3. Writes the `<style>` tag (same `compileAndRenderCss` mechanism).
-    4. The undo stack records the property change.
-- **Visual flow:** select → tweak sliders/pickers → see result instantly.
-  The "Visual CSS Rules" panel becomes an advanced view for power users who
-  still want to see/edit raw selectors, but the default path bypasses it
-  entirely.
-- **Edge cases:**
-    - If the element already has a user-assigned class, edit that class's rule.
-    - If multiple elements share the class, editing affects all of them
-      (expected WYSIWYG behaviour — the user sees the cascade).
-    - Removing all custom styles removes the auto-generated class.
+Replace the remaining raw text inputs in the inspector style editor with interactive widgets:
 
-### 3. Inline text editing
+| Property              | Widget                                  |
+| --------------------- | --------------------------------------- |
+| `padding` / `margin`  | Visual 4-direction diagram with inputs  |
+| `width` / `height`    | Slider + unit selector (px/rem/em/%)    |
+| `font-size`           | Slider + preset buttons (already have presets, add slider) |
+| `gap`                 | Slider + unit selector                  |
+| `border-radius`       | Slider + unit selector                  |
+| `opacity`             | Slider (0–1, step 0.05)                 |
+| `box-shadow`          | Color + offset-x/y + blur + spread      |
+| `font-family`         | System font dropdown                    |
 
-- Double-click any text node (p, h1-h6, span, a, button, label, li, td, th)
-  to enter edit mode directly on the canvas.
-- On Enter or blur, commit the change and push an undo command.
-- Escape cancels the edit and reverts to the previous text.
+- Reusable widget components: `UnitSlider`, `ValueDropdown`, `SpacingEditor`.
+- Each widget pushes to the undo stack the same way the current inline editor does.
 
-### 4. Visual property editors (replace raw text inputs)
-
-| Current              | Target                                           |
-| -------------------- | ------------------------------------------------ |
-| `#2563eb` text input | Color swatch + browser color picker              |
-| `1.5rem` text input  | Slider + unit selector (px/rem/em/%)             |
-| `flex` text input    | Dropdown of valid values for the property        |
-| `20px` text input    | Increment/decrement arrows + slider              |
-| `center` text input  | One-click alignment buttons (left/center/right)  |
-| —                    | Font-family dropdown with system fonts listed    |
-| —                    | Font-size: preset buttons (XS, SM, Base, LG, XL) |
-
-- Reusable widget components: `ColorPicker`, `UnitSlider`, `ValueDropdown`,
-  `SpacingEditor` (padding/margin with visual 4-direction diagram).
-
-### 5. Layers / outline panel
-
-- Replace or supplement the right-sidebar inspector with a **layers tree**
-  showing the full DOM hierarchy of the canvas.
-- Click a layer to select the corresponding element on canvas.
-- Drag layers to re-parent/re-order elements (mirrored on canvas).
-- Eye icon to toggle visibility of any element (hides via CSS).
-
-### 6. Context menu (right-click)
-
-- Right-click any canvas element to show:
-    - **Edit text** (if text node)
-    - **Duplicate** (clone element + children)
-    - **Copy / Paste**
-    - **Delete**
-    - **Move forward / backward** (z-index / sibling order)
-    - **Wrap in** div/section/a (nest the selected element)
-
-### 7. Pre-built component library
-
-- Replace raw HTML tags in the toolbox with styled presets:
-    - Hero section (bg image, headline, subtitle, CTA button)
-    - Feature card (icon, title, description)
-    - Pricing table (3-tier, highlight featured)
-    - Navbar (logo + links + mobile hamburger)
-    - Contact form (name, email, message, submit)
-    - Footer (links, social icons, copyright)
-    - Grid gallery (image grid with lightbox placeholder)
-- Each preset creates multiple nested elements with inline styles that the
-  user can then customise in the inspector.
-
-### 8. Responsive preview
-
-- Add viewport breakpoint buttons to the control bar: Desktop (1440 px),
-  Tablet (768 px), Mobile (375 px).
-- When a breakpoint is active, the canvas container resizes to that width
-  and centres itself in the workspace.
-- Add a "Responsive" mode where the user can set per-breakpoint CSS overrides
-  (media queries generated automatically).
-
-### 9. Keyboard shortcuts (power-user)
+### 3. Keyboard shortcuts (complete)
 
 | Shortcut               | Action                               |
 | ---------------------- | ------------------------------------ |
-| `Delete` / `Backspace` | Delete selected element              |
-| `Ctrl+C` / `Ctrl+V`    | Copy / paste selected element        |
 | `Ctrl+D`               | Duplicate selected element           |
-| `Escape`               | Deselect / cancel inline edit        |
-| `Ctrl+A`               | Select all elements (multi-select)   |
-| `Ctrl+/`               | Toggle CSS Expert mode               |
-| `↑` / `↓` / `←` / `→`  | Nudge selected element position (px) |
-| `Shift + arrow`        | Nudge 10 px                          |
+| `Ctrl+/`               | Toggle Visual / CSS Expert mode      |
+| `Shift + ↑/↓/←/→`     | Nudge selected element 10px          |
 
-### 10. Canvas helpers
+### 4. Canvas helpers
 
-- **Snap-to-grid.** Show alignment guide lines when dragging an element
-  aligns with another element's edges or centre.
-- **Resize handles.** Drag the 8 handles on a selected element to change
-  width/height/padding visually on canvas.
-- **Ruler.** Optional rulers along the top and left edges of the canvas.
-
-### 11. Empty-state guidance
-
-- Replace the bare "Drag and drop elements here" placeholder with:
-    - A **"Start from a template"** button that opens a template picker.
-    - A **quick-start grid** showing 3 sample layouts (Landing Page, Blog Post,
-      Dashboard) that load pre-built content with one click.
-    - Animated tooltip pointing at the toolbox on first visit.
+- **Snap-to-grid.** When dragging an element, show alignment guide lines (`canvas-guide`) when its edges align with another element's edges or centre. Use `getBoundingClientRect` comparisons on drag.
+- **Resize handles.** Draw 8 handles (N, S, E, W, NE, NW, SE, SW) on the selected element. Dragging a handle adjusts `width`, `height`, `padding`, or `margin` depending on the handle.
+- **Ruler bars.** Optional rulers along the top and left edges of the canvas, rendered as fixed-position overlays inside `.canvas`. Tick marks every 16px (matching the grid).
 
 ---
 
-## Mid-term (Feature Expansion)
+## Mid-term (Feature Expansion — completed)
 
-> Goal: extend editor capabilities for advanced users.
+> All five feature-expansion items are merged into `master`.
 
-### 1. Undo / Redo history stack
-
-- Command-based history with bounded buffer and keyboard shortcuts.
-- [`feature/ui-skeleton-cleanup`](/docs/branch-audit.md) — merged into `master`.
-
-### 2. Advanced CSS building blocks
-
-- Media queries (`@media`), pseudo-classes (`:hover`, `:focus`), CSS custom properties, and keyframes.
-- Grouped/nested rule blocks in CSS Expert mode.
-
-### 3. Component export formats
-
-- Extend exporter beyond ZIP/HTML to JSX (React) and Vue SFB templates for the current canvas state.
-
-### 4. Nested components
-
-- Parent/child drag-and-drop with Sortable groups, enabling cards containing buttons, grids containing cards, etc.
-
-### 5. Import flow
-
-- Reverse-parse existing HTML/CSS pastes back into building blocks and canvas components.
+| #   | Feature                        | Branch                                  |
+| --- | ------------------------------ | --------------------------------------- |
+| 1   | Undo / Redo history stack      | `feature/ui-skeleton-cleanup`           |
+| 2   | Advanced CSS blocks            | `feature/advanced-css-blocks`           |
+| 3   | React JSX / Vue SFB export     | `feature/export-jsx-vue`                |
+| 4   | Nested sortable containers     | `feature/nested-components`             |
+| 5   | HTML/CSS import flow           | `feature/import-flow`                   |
 
 ---
 
 ## Long-term (Product Positioning)
 
-> Goal: take LayoutCraft from a local editor to a shareable development tool.
+> Goal: take LayoutCraft from a local editor to a shareable, cross-platform development tool.
 
-### 1. Backend sync
+### 1. Backend cloud sync
 
-- Replace LocalStorage-only persistence with optional cloud storage (Supabase or Firebase) to lift the 5MB cap and enable cross-device work.
+- Replace LocalStorage-only persistence with optional cloud storage (Supabase or Firebase).
+- On first save, offer "Save to cloud" which creates/updates a remote project.
+- Automatic sync: local changes push to cloud; cloud changes pull on page load.
+- List remote projects alongside local ones in the Open Project modal.
+- Storage meter shows cloud usage instead of the 5MB LocalStorage cap.
 
-### 2. Multi-user collaboration
+### 2. Light/Dark theme + i18n expansion
 
-- Real-time multiplayer editing on a shared project (operational transform or CRDT-backed).
+- Add a **theme toggle** in View > Appearance (Light / Dark / System).
+- Define CSS custom properties for all colours (`--bg-main`, `--text-main`, `--primary`, etc.) and swap the palette via a `body.theme-dark` class.
+- Expand the i18n dictionary to full coverage for **Traditional Chinese (zh-TW)** and **Japanese (ja)**.
+- Add a locale picker in the menu bar (e.g. View > Language > English / 中文 / 日本語).
+- Persist theme + locale preference in localStorage.
 
-### 3. Template marketplace
+### 3. Web Component export
 
-- Ship a curated library of common layouts (navbar, hero, pricing table, dashboard) importable in one click.
+- Package each block or the full page as a reusable **Custom Element** with shadow DOM.
+- The exporter generates a `.js` file that registers `<layout-craft-block>` with the block's template + styles embedded.
+- Downstream users drop the script tag and use the element anywhere.
 
-### 4. Internationalization & theming
+### 4. Multi-user collaboration
 
-- Add English as default plus Traditional/Simplified Chinese, Japanese, etc. via the i18n dictionary.
-- Light/dark UI theme toggle.
+- Real-time multiplayer editing on a shared project.
+- Use operational transform or CRDT (Yjs) for conflict-free merging.
+- Cursor presence: show other users' cursors and selections on the canvas.
+- Chat / comment sidebar for design feedback.
 
-### 5. Web Component export
+### 5. Template marketplace
 
-- Package each block as a reusable Custom Element with shadow DOM for downstream projects.
+- Ship a curated library of 20+ production-ready layouts (landing page, blog, dashboard, e-commerce, portfolio, etc.).
+- Each template is a pre-built project with multiple pages and responsive styles.
+- Users browse, preview, and import templates in one click from within the editor.
+- Community submission pipeline (future).
 
 ---
 
@@ -243,51 +149,40 @@ from the latest `master` and merge back when green. Each planned item gets its
 own `feature/<name>` branch with frequent, focused commits.
 
 Stale branches (already merged into `master` via rebase or sequential merges)
-are cleaned up periodically. See [`docs/branch-audit.md`](docs/branch-audit.md)
-for the full audit performed on 2026-07-28.
+are cleaned up periodically. See [`docs/branch-audit.md`](docs/branch-audit.md).
 
-| Branch                         | Roadmap               | Purpose                                         |
-| ------------------------------ | --------------------- | ----------------------------------------------- |
-| `master`                       | —                     | Stable, deployable builds (GitHub Pages source) |
-| —                              | Mid-term (UX) #1      | WYSIWYG canvas                                  |
-| —                              | Mid-term (UX) #2      | Select-to-style (auto class + rule generation)  |
-| —                              | Mid-term (UX) #3      | Inline text editing                             |
-| —                              | Mid-term (UX) #4      | Visual property editors                         |
-| —                              | Mid-term (UX) #5      | Layers / outline panel                          |
-| —                              | Mid-term (UX) #6      | Context menu                                    |
-| —                              | Mid-term (UX) #7      | Pre-built component library                     |
-| —                              | Mid-term (UX) #8      | Responsive preview                              |
-| —                              | Mid-term (UX) #9      | Keyboard shortcuts                              |
-| —                              | Mid-term (UX) #10     | Canvas helpers (grid, resize, rulers)           |
-| —                              | Mid-term (UX) #11     | Empty-state guidance                            |
-| —                              | Mid-term (Feature) #1 | ✅ **Done** — undo/redo history                 |
-| —                              | Mid-term (Feature) #2 | ✅ **Done** — advanced CSS blocks               |
-| —                              | Mid-term (Feature) #3 | ✅ **Done** — React JSX / Vue SFB export        |
-| —                              | Mid-term (Feature) #4 | ✅ **Done** — nested sortable containers        |
-| —                              | Mid-term (Feature) #5 | ✅ **Done** — HTML/CSS import flow              |
-| `feature/backend-sync`         | Long-term #1          | Cloud storage (Supabase/Firebase)               |
-| `feature/collab`               | Long-term #2          | Realtime multiplayer editing                    |
-| `feature/template-marketplace` | Long-term #3          | Curated layout template library                 |
-| `feature/i18n-theming`         | Long-term #4          | Additional locales + theme toggle               |
-| `feature/web-component-export` | Long-term #5          | Export as Custom Elements                       |
-| `feature/ui-menu-restructure`  | —                     | Menu bar + Material Symbols + canvas sizing     |
+| Branch                         | Roadmap                   | Purpose                                          |
+| ------------------------------ | ------------------------- | ------------------------------------------------ |
+| `master`                       | —                         | Stable, deployable builds (GitHub Pages source)  |
+| —                              | Next-up #1                | Responsive preview + breakpoints                 |
+| —                              | Next-up #2                | Visual property editors (sliders, spacers, etc.) |
+| —                              | Next-up #3                | Keyboard shortcuts (Ctrl+D, Ctrl+/, Shift+arrow) |
+| —                              | Next-up #4                | Canvas helpers (snap-to-grid, resize, rulers)    |
+| `feature/backend-sync`         | Long-term #1              | Cloud storage (Supabase/Firebase)                |
+| `feature/i18n-theming`         | Long-term #2              | Light/dark theme + i18n expansion                |
+| `feature/web-component-export` | Long-term #3              | Export as Custom Elements                        |
+| `feature/collab`               | Long-term #4              | Realtime multiplayer editing                     |
+| `feature/template-marketplace` | Long-term #5              | Curated layout template library                  |
 
 ---
 
 ## Progress Log
 
-- [x] Create `feature/development-roadmap` branch
-- [x] Draft this roadmap document
-- [x] Short-term #1: Default English language + i18n dictionary
-- [x] Short-term #2: ESLint + Prettier
-- [x] Short-term #3: Vitest baseline
-- [x] Short-term #4: Vite build pipeline
-- [x] Short-term #5: jsconfig.json
-- [x] Short-term #6: README + AGENTS.md documentation pass
-- [x] Mid-term (Feature) #1: Undo/Redo history stack — merged via `feature/ui-skeleton-cleanup`
-- [x] Mid-term (Feature) #2: Advanced CSS blocks (`@media`, `:hover`, pseudo, custom props, keyframes) — merged via `feature/advanced-css-blocks`
-- [x] Mid-term (Feature) #3: Export to React JSX / Vue SFB — merged via `feature/export-jsx-vue`
-- [x] Mid-term (Feature) #4: Nested sortable containers — merged via `feature/nested-components`
-- [x] Mid-term (Feature) #5: HTML/CSS import flow — merged via `feature/import-flow`
-- [x] Branch cleanup on 2026-07-28: deleted 17 stale/merged branches (see [`docs/branch-audit.md`](docs/branch-audit.md))
-- [x] UI menu bar restructure (File/Edit/View menus), Material Symbols icons, inspector icon cleanup, canvas height fix — merged via `feature/ui-menu-restructure`
+- [x] Short-term #1–6: Foundation complete (i18n, lint, tests, build, jsconfig, docs)
+- [x] Mid-term (Feature) #1: Undo/Redo — merged `feature/ui-skeleton-cleanup`
+- [x] Mid-term (Feature) #2: Advanced CSS blocks — merged `feature/advanced-css-blocks`
+- [x] Mid-term (Feature) #3: React JSX / Vue SFB export — merged `feature/export-jsx-vue`
+- [x] Mid-term (Feature) #4: Nested sortable containers — merged `feature/nested-components`
+- [x] Mid-term (Feature) #5: HTML/CSS import flow — merged `feature/import-flow`
+- [x] UI menu bar restructure + Material Symbols + canvas height fix — merged `feature/ui-menu-restructure`
+- [x] Inspector hierarchy controls (Move Up/Down, Wrap, Unwrap)
+- [x] Component CSS auto-extraction to CSS rule panel on drop
+- [ ] Responsive preview with breakpoint buttons (Desktop / Tablet / Mobile)
+- [ ] Visual property editors (slider, unit selector, spacing diagram)
+- [ ] Keyboard shortcuts completion (Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow)
+- [ ] Canvas helpers (snap-to-grid alignment, resize handles, rulers)
+- [ ] Backend cloud sync (Supabase/Firebase)
+- [ ] Light/Dark theme toggle + i18n zh-TW / ja
+- [ ] Web Component export (Custom Elements with shadow DOM)
+- [ ] Multi-user realtime collaboration (Yjs / CRDT)
+- [ ] Template marketplace (20+ curated layouts)
