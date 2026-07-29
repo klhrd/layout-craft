@@ -747,41 +747,47 @@ function showAuthModal() {
     btnEmail.onclick = () => {
         const email = emailInput.value.trim();
         if (!email) return;
-        signInWithEmail(email).then(() => {
-            modal.style.display = 'none';
-        }).catch((err) => {
-            alert(err.message);
-        });
+        signInWithEmail(email)
+            .then(() => {
+                modal.style.display = 'none';
+            })
+            .catch((err) => {
+                alert(err.message);
+            });
     };
     btnGitHub.onclick = () => {
         signInWithGitHub().catch((err) => {
             alert(err.message);
         });
     };
-    btnCancel.onclick = () => { modal.style.display = 'none'; };
-    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+    btnCancel.onclick = () => {
+        modal.style.display = 'none';
+    };
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    };
 }
 
 function syncOnStart() {
-    pullProjects().then((remoteProjects) => {
-        if (!remoteProjects || remoteProjects.length === 0) return;
-        populateProjectList(remoteProjects);
-        const select = document.getElementById('select-project');
-        const current = select.value;
-        const remote = remoteProjects.find((p) => p.name === current);
-        if (!remote) return;
-        const localRaw = localStorage.getItem('layoutcraft_proj_' + current);
-        if (!localRaw) return;
-        try {
+    pullProjects()
+        .then((remoteProjects) => {
+            if (!remoteProjects || remoteProjects.length === 0) return;
+            populateProjectList(remoteProjects);
+            const select = document.getElementById('select-project');
+            const current = select.value;
+            const remote = remoteProjects.find((p) => p.name === current);
+            if (!remote) return;
+            const localRaw = localStorage.getItem('layoutcraft_proj_' + current);
+            if (!localRaw) return;
             const localData = JSON.parse(localRaw);
+            if (!localData) return;
             const localTime = new Date(localData.updated_at || 0).getTime();
             const remoteTime = new Date(remote.updated_at).getTime();
             if (remoteTime > localTime) {
                 showConflictModal(current, remote);
             }
-        } catch {
-        }
-    }).catch(() => {});
+        })
+        .catch(() => {});
 }
 
 function showConflictModal(projectName, remoteData) {
@@ -794,17 +800,23 @@ function showConflictModal(projectName, remoteData) {
         details.textContent = projectName.replace(/_/g, ' ') + ' — ' + new Date(remoteData.updated_at).toLocaleString();
     }
     modal.style.display = 'flex';
-    btnKeep.onclick = () => { modal.style.display = 'none'; };
-    btnPull.onclick = () => {
-        pullProject(projectName).then((data) => {
-            if (!data) return;
-            const raw = JSON.stringify({ html: data.html, cssData: data.css_data, updated_at: data.updated_at });
-            localStorage.setItem('layoutcraft_proj_' + projectName, raw);
-            loadProject(projectName);
-            modal.style.display = 'none';
-        }).catch(() => {
-            modal.style.display = 'none';
-        });
+    btnKeep.onclick = () => {
+        modal.style.display = 'none';
     };
-    modal.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+    btnPull.onclick = () => {
+        pullProject(projectName)
+            .then((data) => {
+                if (!data) return;
+                const raw = JSON.stringify({ html: data.html, cssData: data.css_data, updated_at: data.updated_at });
+                localStorage.setItem('layoutcraft_proj_' + projectName, raw);
+                loadProject(projectName);
+                modal.style.display = 'none';
+            })
+            .catch(() => {
+                modal.style.display = 'none';
+            });
+    };
+    modal.onclick = (e) => {
+        if (e.target === modal) modal.style.display = 'none';
+    };
 }

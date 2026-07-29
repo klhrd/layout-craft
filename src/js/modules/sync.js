@@ -8,9 +8,7 @@ let currentUser = null;
 const authListeners = [];
 
 function getEnv(name) {
-    return typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[name]
-        ? import.meta.env[name]
-        : '';
+    return typeof import.meta !== 'undefined' && import.meta.env && import.meta.env[name] ? import.meta.env[name] : '';
 }
 
 export function initSupabase() {

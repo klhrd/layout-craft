@@ -21,7 +21,9 @@
                             <button data-action="open"><span class="mat-icon">folder_open</span> Open Project</button>
                             <button data-action="save"><span class="mat-icon">save</span> Save</button>
                             <div class="menu-sep"></div>
-                            <button data-action="pull-cloud"><span class="mat-icon">cloud_download</span> Pull from cloud</button>
+                            <button data-action="pull-cloud">
+                                <span class="mat-icon">cloud_download</span> Pull from cloud
+                            </button>
                             <div class="menu-sep"></div>
                             <button data-action="import"><span class="mat-icon">upload</span> Import HTML/CSS</button>
                             <button data-action="export"><span class="mat-icon">download</span> Export</button>
@@ -306,7 +308,9 @@
 
         <div id="auth-modal" class="modal-overlay">
             <div class="modal-dialog">
-                <h2 class="modal-title"><span class="mat-icon">cloud</span> <span data-i18n="ui.cloud.signIn">Sign in</span></h2>
+                <h2 class="modal-title">
+                    <span class="mat-icon">cloud</span> <span data-i18n="ui.cloud.signIn">Sign in</span>
+                </h2>
                 <p data-i18n="ui.cloud.signInPrompt">Enter your email to receive a magic link:</p>
                 <input type="email" id="auth-email-input" class="modal-input" placeholder="you@example.com" />
                 <div class="modal-actions">
@@ -314,18 +318,25 @@
                     <button id="btn-auth-email" class="primary-btn">Send magic link</button>
                 </div>
                 <div class="modal-sep"><span>or</span></div>
-                <button id="btn-auth-github" class="btn-secondary" style="width:100%">Sign in with GitHub</button>
+                <button id="btn-auth-github" class="btn-secondary" style="width: 100%">Sign in with GitHub</button>
             </div>
         </div>
 
         <div id="conflict-modal" class="modal-overlay">
             <div class="modal-dialog">
-                <h2 class="modal-title"><span class="mat-icon">sync_alt</span> <span data-i18n="ui.cloud.conflictTitle">Cloud conflict</span></h2>
+                <h2 class="modal-title">
+                    <span class="mat-icon">sync_alt</span>
+                    <span data-i18n="ui.cloud.conflictTitle">Cloud conflict</span>
+                </h2>
                 <p data-i18n="ui.cloud.conflictMessage">A newer version of this project exists in the cloud.</p>
                 <p id="conflict-details"></p>
                 <div class="modal-actions">
-                    <button id="btn-conflict-keep" class="btn-secondary" data-i18n="ui.cloud.keepLocal">Keep local</button>
-                    <button id="btn-conflict-pull" class="primary-btn" data-i18n="ui.cloud.pullFromCloud">Pull from cloud</button>
+                    <button id="btn-conflict-keep" class="btn-secondary" data-i18n="ui.cloud.keepLocal">
+                        Keep local
+                    </button>
+                    <button id="btn-conflict-pull" class="primary-btn" data-i18n="ui.cloud.pullFromCloud">
+                        Pull from cloud
+                    </button>
                 </div>
             </div>
         </div>
