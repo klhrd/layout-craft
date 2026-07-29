@@ -5,16 +5,27 @@ import { deselectAll } from './inspector.js';
 import { reset as resetHistory } from './history.js';
 import * as cssState from './cssState.js';
 import { t } from '../config/i18n.js';
+import { isAuthenticated, pushProject } from './sync.js';
 
 const STORAGE_KEY_PREFIX = 'layoutcraft_proj_';
 const LIST_KEY = 'layoutcraft_project_list';
 
 let currentProjectName = t('ui.storage.defaultProject');
+let cloudPushTimer = null;
 
 export function initStorage() {
     setupProjectList();
     bindStorageEvents();
     loadProject(currentProjectName); // Load the currently selected project by default.
+}
+
+function scheduleCloudPush(projName) {
+    if (cloudPushTimer) clearTimeout(cloudPushTimer);
+    cloudPushTimer = setTimeout(() => {
+        cloudPushTimer = null;
+        if (!isAuthenticated()) return;
+        pushProject(projName).catch(() => {});
+    }, 5000);
 }
 
 // 1. Initialize the project list and the dropdown.
@@ -39,6 +50,30 @@ function setupProjectList() {
     if (lastActive && list.includes(lastActive)) {
         currentProjectName = lastActive;
         select.value = lastActive;
+    }
+}
+
+export function populateProjectList(remoteProjects) {
+    const list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
+    let changed = false;
+    for (const rp of remoteProjects) {
+        if (!list.includes(rp.name)) {
+            list.push(rp.name);
+            changed = true;
+        }
+    }
+    if (changed) {
+        localStorage.setItem(LIST_KEY, JSON.stringify(list));
+        const select = document.getElementById('select-project');
+        const currentVal = select.value;
+        select.innerHTML = '';
+        list.forEach((proj) => {
+            const opt = document.createElement('option');
+            opt.value = proj;
+            opt.textContent = proj.replace(/_/g, ' ');
+            select.appendChild(opt);
+        });
+        select.value = currentVal;
     }
 }
 
@@ -100,6 +135,7 @@ export function saveProject(projName, showAlert = false) {
     const projectData = {
         html: canvasHtml,
         cssData: cssState.serialize(),
+        updated_at: new Date().toISOString(),
     };
 
     try {
@@ -112,6 +148,7 @@ export function saveProject(projName, showAlert = false) {
                 btn.textContent = t('ui.project.save');
             }, 1200);
         }
+        scheduleCloudPush(projName);
     } catch (e) {
         alert(t('ui.storage.capacityFull'));
     }
