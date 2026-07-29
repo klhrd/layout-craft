@@ -142,14 +142,14 @@ Yjs + WebSocket for realtime multiplayer editing:
 ## Suggested Execution Order
 
 ```
-P1a  (split app.js)          → reduce dev friction
-P1b  (expand test coverage)   → catch regressions during refactoring
-P1c  (cssState module)        → do alongside P1a
-P2a  (Web Component export)   → smallest useful new feature
-P1d  (SVG icons)              → can interleave
-P2b  (backend cloud sync)     → after P2a
-P3a  (collaboration)          → after cloud infra is ready
-P3b  (template marketplace)   → last
+P1a  (split app.js)          ✅ done
+P1b  (expand test coverage)  ✅ done
+P1c  (cssState module)       ✅ done (with P1a)
+P2a  (Web Component export)  ✅ done
+P1d  (SVG icons)             🔜 in progress
+P2b  (backend cloud sync)    ⏳ pending
+P3a  (collaboration)         ⏳ pending
+P3b  (template marketplace)  ⏳ pending
 ```
 
 ---
@@ -159,14 +159,21 @@ P3b  (template marketplace)   → last
 `master` is the source of GitHub Pages deployment. Feature branches are cut
 from the latest `master` and merge back when green.
 
-| Branch                         | Item | Status             |
-| ------------------------------ | ---- | ------------------ |
-| `master`                       | —    | Stable, deployable |
-| `feature/split-app-modules`    | P1a  | Pending            |
-| `feature/expand-test-coverage` | P1b  | Pending            |
-| `feature/css-state-module`     | P1c  | Pending            |
-| `feature/svg-icons`            | P1d  | Pending            |
-| `feature/web-component-export` | P2a  | Pending            |
-| `feature/backend-sync`         | P2b  | Pending            |
-| `feature/collab`               | P3a  | Pending            |
-| `feature/template-marketplace` | P3b  | Pending            |
+| Branch                         | Item | Status              |
+| ------------------------------ | ---- | ------------------- |
+| `master`                       | —    | Stable, deployable  |
+| `feature/split-app-modules`    | P1a  | ✅ Merged to master |
+| `feature/expand-test-coverage` | P1b  | ✅ Merged to master |
+| `feature/css-state-module`     | P1c  | ✅ merged with P1a  |
+| `feature/svg-icons`            | P1d  | 🔜 In progress      |
+| `feature/web-component-export` | P2a  | ✅ Merged to master |
+| `feature/backend-sync`         | P2b  | Pending             |
+| `feature/collab`               | P3a  | Pending             |
+| `feature/template-marketplace` | P3b  | Pending             |
+
+### Execution log
+
+| Date | Action |
+|------|--------|
+| 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged |
+| 2026-07-29 | P1a (split app.js) + P1c (cssState module) done in `feature/split-app-modules`, merged |
