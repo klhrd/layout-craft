@@ -19,6 +19,7 @@ import {
     compileAndRenderCss,
     setDraggedCssBlockData,
 } from './modules/cssEditor.js';
+import { initIcons } from './modules/icons.js';
 
 window.activeCssData = cssState.getRawData();
 window.refreshLayers = refreshLayers;
@@ -61,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initBreakpoints();
 
     initStorage(); // Boot the storage manager.
+    initIcons();
 
     // Auto-silently save every 30 seconds as a safety net.
     setInterval(() => {
