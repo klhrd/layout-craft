@@ -8,7 +8,7 @@ by priority and annotated with the corresponding feature branch name.
 - **Branch**: `master` (clean, in sync with `origin/master`)
 - **Stack**: Vite + Vitest + ESLint + Prettier (Vanilla ES Modules)
 - **Scope**: Single-page editor (`index.html` + source files under `src/`)
-- **Tests**: 49 tests across 8 files, all green
+- **Tests**: 93 tests across 11 files, all green
 - **Lint / Format**: clean
 
 ---
@@ -146,7 +146,7 @@ P1a  (split app.js)          ✅ done
 P1b  (expand test coverage)  ✅ done
 P1c  (cssState module)       ✅ done (with P1a)
 P2a  (Web Component export)  ✅ done
-P1d  (SVG icons)             🔜 in progress
+P1d  (SVG icons)             ✅ done
 P2b  (backend cloud sync)    ⏳ pending
 P3a  (collaboration)         ⏳ pending
 P3b  (template marketplace)  ⏳ pending
@@ -165,7 +165,7 @@ from the latest `master` and merge back when green.
 | `feature/split-app-modules`    | P1a  | ✅ Merged to master |
 | `feature/expand-test-coverage` | P1b  | ✅ Merged to master |
 | `feature/css-state-module`     | P1c  | ✅ merged with P1a  |
-| `feature/svg-icons`            | P1d  | 🔜 In progress      |
+| `feature/svg-icons`            | P1d  | ✅ Merged to master  |
 | `feature/web-component-export` | P2a  | ✅ Merged to master |
 | `feature/backend-sync`         | P2b  | Pending             |
 | `feature/collab`               | P3a  | Pending             |
@@ -177,3 +177,4 @@ from the latest `master` and merge back when green.
 |------|--------|
 | 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged |
 | 2026-07-29 | P1a (split app.js) + P1c (cssState module) done in `feature/split-app-modules`, merged |
+| 2026-07-29 | P1d (svg icons) done in `feature/svg-icons`, merged to master |
