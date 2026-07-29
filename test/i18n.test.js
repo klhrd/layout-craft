@@ -33,7 +33,7 @@ describe('i18n module', () => {
         it('falls back to English when the zh-TW key is missing', () => {
             setLocale('zh-TW');
             expect(t('ui.project.preview')).toBe('👁️ 預覽');
-            expect(t('ui.panels.canvasPlaceholder')).toBe('Drag and drop elements here to start building...');
+            expect(t('ui.panels.canvasPlaceholder')).toBe('將元素拖放到此處開始構建...');
         });
 
         it('ignores unknown locales (keeps the current one)', () => {

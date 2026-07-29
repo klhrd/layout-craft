@@ -1,7 +1,7 @@
 import { ELEMENT_CATEGORIES } from './config/elements.js';
 import { CSS_DICTIONARY } from './config/cssDictionary.js';
 import { COMPONENTS } from './config/components.js';
-import { t } from './config/i18n.js';
+import { t, setLocale } from './config/i18n.js';
 import * as cssState from './config/cssState.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
 import { initInspector, selectElement, deselectAll } from './modules/inspector.js';
@@ -54,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initImporter();
 
     initMenus();
+    applySavedTheme();
+    applySavedLocale();
     initZoom();
     initBreakpoints();
 
@@ -1002,6 +1004,27 @@ function initMenus() {
                 case 'rulers':
                     document.body.classList.toggle('show-rulers');
                     break;
+                case 'theme-light':
+                    setTheme('light');
+                    break;
+                case 'theme-dark':
+                    setTheme('dark');
+                    break;
+                case 'theme-system':
+                    setTheme('system');
+                    break;
+                case 'locale-en':
+                    localStorage.setItem('lc-locale', 'en');
+                    location.reload();
+                    break;
+                case 'locale-zh-TW':
+                    localStorage.setItem('lc-locale', 'zh-TW');
+                    location.reload();
+                    break;
+                case 'locale-ja':
+                    localStorage.setItem('lc-locale', 'ja');
+                    location.reload();
+                    break;
             }
         });
     });
@@ -1009,6 +1032,44 @@ function initMenus() {
     document.addEventListener('click', () => {
         panels.forEach((p) => p.classList.remove('open'));
     });
+}
+
+/* ── Theme toggling ── */
+function setTheme(theme) {
+    if (theme === 'system') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.body.classList.toggle('theme-dark', prefersDark);
+        document.body.classList.remove('theme-light');
+    } else if (theme === 'dark') {
+        document.body.classList.add('theme-dark');
+        document.body.classList.remove('theme-light');
+    } else {
+        document.body.classList.remove('theme-dark');
+        document.body.classList.add('theme-light');
+    }
+    localStorage.setItem('lc-theme', theme);
+}
+
+function applySavedTheme() {
+    const saved = localStorage.getItem('lc-theme');
+    if (saved) {
+        setTheme(saved);
+    } else {
+        // Default to system
+        setTheme('system');
+    }
+    // Listen for system preference changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        const current = localStorage.getItem('lc-theme') || 'system';
+        if (current === 'system') setTheme('system');
+    });
+}
+
+function applySavedLocale() {
+    const saved = localStorage.getItem('lc-locale');
+    if (saved) {
+        setLocale(saved);
+    }
 }
 
 function initZoom() {
