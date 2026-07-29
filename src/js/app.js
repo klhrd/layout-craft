@@ -255,6 +255,9 @@ function initMenus() {
                 case 'save':
                     document.getElementById('btn-save-project').click();
                     break;
+                case 'pull-cloud':
+                    syncOnStart();
+                    break;
                 case 'export':
                     document.getElementById('btn-export').click();
                     break;

@@ -1890,3 +1890,54 @@ body.mode-css .right-sidebar {
     padding: 4px 10px;
     font-size: 0.75rem;
 }
+
+/* ── Auth controls ── */
+.auth-controls {
+    display: inline-flex;
+    align-items: center;
+}
+
+#btn-auth {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ── Modal input ── */
+.modal-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid var(--border-medium);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background: var(--bg-input);
+    color: var(--text-main);
+}
+
+.modal-sep {
+    display: flex;
+    align-items: center;
+    margin: 12px 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.modal-sep::before,
+.modal-sep::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-sep span {
+    padding: 0 12px;
+}
+
+/* ── Conflict details ── */
+#conflict-details {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 8px 0;
+}
