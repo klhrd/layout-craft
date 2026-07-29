@@ -13,6 +13,7 @@ layout-craft/
 ├── vite.config.js             # Vite dev/build/preview config
 ├── vitest.config.js           # Vitest config (jsdom env)
 ├── jsconfig.json              # Editor type-awareness + path aliases
+├── .env.example               # Supabase env var placeholders
 ├── ROADMAP.md                 # Development roadmap
 ├── AGENTS.md                  # Instructions for AI agents and humans
 └── src/
@@ -27,9 +28,10 @@ layout-craft/
         │   └── i18n.js         # t() lookup dictionary; English is the default locale
         └── modules/
             ├── canvas.js       # Canvas core (drag/drop, Sortable wiring)
-            ├── exporter.js     # Export/preview module (bundles HTML/CSS, downloads)
+            ├── exporter.js       # Export/preview module (bundles HTML/CSS, downloads)
             ├── inspector.js    # Property inspector (edit ID/Class/text + dynamic attrs)
-            └── storage.js      # Storage manager (multi-project snapshots, auto-save, quota meter)
+            ├── storage.js      # Storage manager (multi-project snapshots, auto-save, quota meter)
+            └── sync.js         # Cloud sync via Supabase (auth, push, pull, conflict UI)
 ```
 
 ---
@@ -56,6 +58,15 @@ layout-craft/
 - Create multiple independent projects with **+ New** and switch between them via the dropdown.
 - Silent auto-save every 30 seconds as a safety net.
 - The top-right **Storage Use** meter precisely computes UTF-16 byte sizes and turns red above 85% to prevent blowing the browser's 5MB LocalStorage quota.
+
+### 5. ☁️ Optional cloud sync (Supabase)
+
+- Projects are persisted locally first; an optional cloud layer syncs across devices via Supabase.
+- Sign in with email magic link or GitHub OAuth (no password storage).
+- After every edit, a debounced 5-second timer pushes the current state to the cloud.
+- On app start, if authenticated, the project list is refreshed from the cloud.
+- Conflict resolution: per-project timestamp comparison with a "Pull / Keep local" prompt.
+- Works fully offline — everything degrades gracefully when environment variables are absent or the user is not signed in.
 
 ---
 

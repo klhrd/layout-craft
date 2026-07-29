@@ -54,8 +54,27 @@ commit so the tree stays green.
 - `src/js/modules/inspector.js` — element property editor + dynamic attrs.
 - `src/js/modules/exporter.js` — preview/export preview flow.
 - `src/js/modules/storage.js` — multi-project LocalStorage manager + meter.
+- `src/js/modules/sync.js` — optional cloud sync via Supabase (auth, push/pull,
+  debounced background sync, conflict prompt). Gracefully degrades when env vars
+  are missing or the user is not authenticated.
 - `src/js/config/i18n.js` — `t(path, ...args)` lookups with English default.
   Add new user-facing strings here; do not hardcode strings in module code.
+
+## Cloud sync setup
+
+To enable cloud sync, create a `.env` file (or `.env.development` / `.env.production`)
+in the project root with your Supabase project credentials:
+
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+Then run the migration in `docs/supabase-migration.sql` in your Supabase SQL editor
+to create the `projects` table with Row-Level Security.
+
+Without these env vars, all cloud operations are silently skipped — the app runs
+fully offline with LocalStorage only.
 
 ## Conventions
 
