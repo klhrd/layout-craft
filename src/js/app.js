@@ -26,6 +26,7 @@ let clipboardElement = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     cssState.initCssState();
+    applySavedLocale();
     renderToolbox();
     renderCssDictionaryBlocks();
     initCanvas();
@@ -55,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initMenus();
     applySavedTheme();
-    applySavedLocale();
     initZoom();
     initBreakpoints();
 
@@ -928,12 +928,14 @@ function initModeSwitcher() {
     if (!switchVisualBtn || !switchCssBtn) return;
 
     switchVisualBtn.addEventListener('click', () => {
-        document.body.className = 'mode-visual';
+        document.body.classList.add('mode-visual');
+        document.body.classList.remove('mode-css');
         switchVisualBtn.classList.add('active');
         switchCssBtn.classList.remove('active');
     });
     switchCssBtn.addEventListener('click', () => {
-        document.body.className = 'mode-css';
+        document.body.classList.add('mode-css');
+        document.body.classList.remove('mode-visual');
         switchCssBtn.classList.add('active');
         switchVisualBtn.classList.remove('active');
     });
@@ -1389,11 +1391,13 @@ function initHistoryUI() {
             const visualBtn = document.getElementById('switch-visual');
             const cssBtn = document.getElementById('switch-css');
             if (isVisual) {
-                document.body.className = 'mode-css';
+                document.body.classList.add('mode-css');
+                document.body.classList.remove('mode-visual');
                 if (cssBtn) cssBtn.classList.add('active');
                 if (visualBtn) visualBtn.classList.remove('active');
             } else {
-                document.body.className = 'mode-visual';
+                document.body.classList.add('mode-visual');
+                document.body.classList.remove('mode-css');
                 if (visualBtn) visualBtn.classList.add('active');
                 if (cssBtn) cssBtn.classList.remove('active');
             }
