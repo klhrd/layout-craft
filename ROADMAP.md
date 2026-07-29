@@ -33,56 +33,29 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 | 5   | Layers / outline panel      | ✅ Fully done — tree with visibility/lock toggle                                                         |
 | 6   | Context menu                | ✅ Fully done — edit text, duplicate, copy/paste, delete, move, wrap                                     |
 | 7   | Pre-built component library | ✅ Fully done — 8 components with auto-CSS extraction                                                    |
-| 8   | Responsive preview          | ❌ Not started                                                                                           |
-| 9   | Keyboard shortcuts          | 🟡 Ctrl+Z/C/V, Del, Escape, arrows done. Missing: Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow      |
-| 10  | Canvas helpers              | ❌ Not started                                                                                           |
+| 8   | Responsive preview          | ✅ Fully done — Desktop/Tablet/Mobile breakpoint buttons with body[data-bp] constraints                  |
+| 9   | Keyboard shortcuts          | ✅ Fully done — Ctrl+Z/C/V/D, Ctrl+/, Del, Escape, arrows (1px), Shift+arrows (10px)                     |
+| 10  | Canvas helpers              | 🟡 Rulers (View toggle) + 8-point resize handles done. Snap-to-grid alignment guides pending             |
 | 11  | Empty-state guidance        | ✅ Fully done — Quick Start + Load Sample buttons                                                        |
 
 ---
 
-## Next-up (High Priority UX)
+## Next-up (Completed — merged to master)
 
-> Goal: deliver a polished, Figma-like design surface that works at any viewport size.
+> ✅ All four High Priority UX items have been delivered.
 
-### 1. Responsive preview with breakpoints
+| #   | Item                    | Status                                                                                                                                                                             |
+| --- | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Responsive preview      | ✅ Desktop (1440px) / Tablet (768px) / Mobile (375px) buttons in toolbar, `body[data-bp]` constrains `.canvas-container`, centered with shadow                                     |
+| 2   | Visual property editors | ✅ UnitSlider (range + number + px/rem/em/%), opacity slider, font-family dropdown, spacing diagram (4-direction), box-shadow editor — all with undo                               |
+| 3   | Keyboard shortcuts      | ✅ Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow nudge 10px (added alongside existing Ctrl+Z/C/V, Del, Escape, arrows 1px)                                                     |
+| 4   | Canvas helpers          | 🟡 Rulers (View > Rulers toggle, top+left with tick marks every 16px) + 8-point resize handles on selected element complete. **Snap-to-grid alignment guides** remains future work |
 
-- Add viewport breakpoint buttons to the toolbar: Desktop (1440px), Tablet (768px), Mobile (375px).
-- When a breakpoint is active, the `.canvas-container` resizes to that width and centres itself in the workspace (`.canvas` gets `justify-content: center`).
-- A "Responsive" mode where per-breakpoint CSS overrides are stored in `cssState` as `@media` query blocks and rendered automatically.
-- The breakpoint buttons toggle `body` classes (`.bp-desktop`, `.bp-tablet`, `.bp-mobile`) so the grid and outline overlays scale too.
-- Canvas content re-flows naturally as width changes (no horizontal scrollbar in the container).
+### Remaining: Snap-to-grid alignment guides
 
-### 2. Visual property editors (complete)
-
-Replace the remaining raw text inputs in the inspector style editor with interactive widgets:
-
-| Property             | Widget                                                     |
-| -------------------- | ---------------------------------------------------------- |
-| `padding` / `margin` | Visual 4-direction diagram with inputs                     |
-| `width` / `height`   | Slider + unit selector (px/rem/em/%)                       |
-| `font-size`          | Slider + preset buttons (already have presets, add slider) |
-| `gap`                | Slider + unit selector                                     |
-| `border-radius`      | Slider + unit selector                                     |
-| `opacity`            | Slider (0–1, step 0.05)                                    |
-| `box-shadow`         | Color + offset-x/y + blur + spread                         |
-| `font-family`        | System font dropdown                                       |
-
-- Reusable widget components: `UnitSlider`, `ValueDropdown`, `SpacingEditor`.
-- Each widget pushes to the undo stack the same way the current inline editor does.
-
-### 3. Keyboard shortcuts (complete)
-
-| Shortcut          | Action                          |
-| ----------------- | ------------------------------- |
-| `Ctrl+D`          | Duplicate selected element      |
-| `Ctrl+/`          | Toggle Visual / CSS Expert mode |
-| `Shift + ↑/↓/←/→` | Nudge selected element 10px     |
-
-### 4. Canvas helpers
-
-- **Snap-to-grid.** When dragging an element, show alignment guide lines (`canvas-guide`) when its edges align with another element's edges or centre. Use `getBoundingClientRect` comparisons on drag.
-- **Resize handles.** Draw 8 handles (N, S, E, W, NE, NW, SE, SW) on the selected element. Dragging a handle adjusts `width`, `height`, `padding`, or `margin` depending on the handle.
-- **Ruler bars.** Optional rulers along the top and left edges of the canvas, rendered as fixed-position overlays inside `.canvas`. Tick marks every 16px (matching the grid).
+- When dragging an element, show temporary guide lines (`canvas-guide`-style) when its edges align with another element's edges or centre.
+- Use `getBoundingClientRect` comparisons during drag events.
+- Guide lines should auto-hide after the drag ends.
 
 ---
 
@@ -151,18 +124,15 @@ own `feature/<name>` branch with frequent, focused commits.
 Stale branches (already merged into `master` via rebase or sequential merges)
 are cleaned up periodically. See [`docs/branch-audit.md`](docs/branch-audit.md).
 
-| Branch                         | Roadmap      | Purpose                                          |
-| ------------------------------ | ------------ | ------------------------------------------------ |
-| `master`                       | —            | Stable, deployable builds (GitHub Pages source)  |
-| —                              | Next-up #1   | Responsive preview + breakpoints                 |
-| —                              | Next-up #2   | Visual property editors (sliders, spacers, etc.) |
-| —                              | Next-up #3   | Keyboard shortcuts (Ctrl+D, Ctrl+/, Shift+arrow) |
-| —                              | Next-up #4   | Canvas helpers (snap-to-grid, resize, rulers)    |
-| `feature/backend-sync`         | Long-term #1 | Cloud storage (Supabase/Firebase)                |
-| `feature/i18n-theming`         | Long-term #2 | Light/dark theme + i18n expansion                |
-| `feature/web-component-export` | Long-term #3 | Export as Custom Elements                        |
-| `feature/collab`               | Long-term #4 | Realtime multiplayer editing                     |
-| `feature/template-marketplace` | Long-term #5 | Curated layout template library                  |
+| Branch                         | Roadmap      | Purpose                                         |
+| ------------------------------ | ------------ | ----------------------------------------------- |
+| `master`                       | —            | Stable, deployable builds (GitHub Pages source) |
+| `feature/responsive-preview`   | Next-up #1–4 | ✅ Merged — all four items delivered            |
+| `feature/backend-sync`         | Long-term #1 | Cloud storage (Supabase/Firebase)               |
+| `feature/i18n-theming`         | Long-term #2 | Light/dark theme + i18n expansion               |
+| `feature/web-component-export` | Long-term #3 | Export as Custom Elements                       |
+| `feature/collab`               | Long-term #4 | Realtime multiplayer editing                    |
+| `feature/template-marketplace` | Long-term #5 | Curated layout template library                 |
 
 ---
 
@@ -177,10 +147,11 @@ are cleaned up periodically. See [`docs/branch-audit.md`](docs/branch-audit.md).
 - [x] UI menu bar restructure + Material Symbols + canvas height fix — merged `feature/ui-menu-restructure`
 - [x] Inspector hierarchy controls (Move Up/Down, Wrap, Unwrap)
 - [x] Component CSS auto-extraction to CSS rule panel on drop
-- [ ] Responsive preview with breakpoint buttons (Desktop / Tablet / Mobile)
-- [ ] Visual property editors (slider, unit selector, spacing diagram)
-- [ ] Keyboard shortcuts completion (Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow)
-- [ ] Canvas helpers (snap-to-grid alignment, resize handles, rulers)
+- [x] Responsive preview with breakpoint buttons — merged `feature/responsive-preview`
+- [x] Visual property editors (unit slider, spacing diagram, opacity, font-family, box-shadow) — same branch
+- [x] Keyboard shortcuts (Ctrl+D duplicate, Ctrl+/ toggle mode, Shift+arrow) — same branch
+- [x] Canvas rulers + 8-point resize handles — same branch
+- [ ] Snap-to-grid alignment guides (remaining canvas helper)
 - [ ] Backend cloud sync (Supabase/Firebase)
 - [ ] Light/Dark theme toggle + i18n zh-TW / ja
 - [ ] Web Component export (Custom Elements with shadow DOM)
