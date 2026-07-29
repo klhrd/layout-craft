@@ -4,6 +4,10 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>LayoutCraft Studio - Visual Web Builder</title>
+        <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
         <link rel="stylesheet" href="src/css/editor.css" />
         <style id="live-styles"></style>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -12,38 +16,77 @@
     <body class="mode-visual">
         <div class="app-container">
             <div class="control-bar">
-                <div class="left-actions">
-                    <div class="brand-title">LayoutCraft Studio</div>
-                    <div class="mode-switcher">
-                        <button id="switch-visual" class="active">🎨 Visual Mode</button>
-                        <button id="switch-css">💻 CSS Expert Mode</button>
+                <div class="menu-bar">
+                    <span class="brand-title">LayoutCraft Studio</span>
+
+                    <div class="menu-dropdown">
+                        <button class="menu-trigger" data-menu="file-menu">File <span class="arrow">▾</span></button>
+                        <div id="file-menu" class="menu-panel">
+                            <button data-action="open"><span class="mat-icon">folder_open</span> Open Project</button>
+                            <button data-action="save"><span class="mat-icon">save</span> Save</button>
+                            <div class="menu-sep"></div>
+                            <button data-action="import"><span class="mat-icon">upload</span> Import HTML/CSS</button>
+                            <button data-action="export"><span class="mat-icon">download</span> Export</button>
+                        </div>
                     </div>
 
-                    <div class="project-storage-control">
-                        <select id="select-project"></select>
-                        <button id="btn-new-project" class="btn-secondary">+ New</button>
-                        <button id="btn-save-project" class="primary-btn">💾 Save</button>
+                    <div class="menu-dropdown">
+                        <button class="menu-trigger" data-menu="edit-menu">Edit <span class="arrow">▾</span></button>
+                        <div id="edit-menu" class="menu-panel">
+                            <button id="menu-undo" data-action="undo"><span class="mat-icon">undo</span> Undo</button>
+                            <button id="menu-redo" data-action="redo"><span class="mat-icon">redo</span> Redo</button>
+                            <div class="menu-sep"></div>
+                            <button data-action="cut"><span class="mat-icon">content_cut</span> Cut</button>
+                            <button data-action="copy"><span class="mat-icon">content_copy</span> Copy</button>
+                            <button data-action="paste"><span class="mat-icon">content_paste</span> Paste</button>
+                        </div>
+                    </div>
+
+                    <div class="menu-dropdown">
+                        <button class="menu-trigger" data-menu="view-menu">View <span class="arrow">▾</span></button>
+                        <div id="view-menu" class="menu-panel">
+                            <button id="menu-preview" data-action="preview">
+                                <span class="mat-icon">visibility</span> Preview
+                            </button>
+                            <div class="menu-sep"></div>
+                            <button id="menu-grid" data-action="grid">
+                                <span class="mat-icon">grid_on</span> Grid
+                            </button>
+                            <button id="menu-outlines" data-action="outlines">
+                                <span class="mat-icon">border_style</span> Outlines
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="right-actions">
-                    <div class="history-controls">
-                        <button id="btn-undo" class="btn-secondary" disabled>↶ Undo</button>
-                        <button id="btn-redo" class="btn-secondary" disabled>↷ Redo</button>
-                    </div>
+                <div class="toolbar-actions">
+                    <button id="btn-new-project" class="btn-secondary"><span class="mat-icon">add</span> New</button>
+                    <button id="btn-save-project" class="btn-secondary"><span class="mat-icon">save</span> Save</button>
+
+                    <div class="toolbar-sep"></div>
+
+                    <button id="btn-undo" class="btn-secondary" disabled><span class="mat-icon">undo</span></button>
+                    <button id="btn-redo" class="btn-secondary" disabled><span class="mat-icon">redo</span></button>
+
+                    <div class="toolbar-sep"></div>
+
+                    <select id="select-project" title="Switch project"></select>
+
+                    <div class="toolbar-sep"></div>
+
+                    <button id="btn-preview" class="btn-secondary">
+                        <span class="mat-icon">visibility</span> Preview
+                    </button>
+                    <button id="btn-export" class="btn-secondary"><span class="mat-icon">download</span> Export</button>
+
+                    <div class="toolbar-sep"></div>
 
                     <div class="storage-badge">
-                        <span class="storage-label">Storage Use: <span id="storage-text">0 / 5 MB</span></span>
+                        <span class="storage-label"><span id="storage-text">0 / 5 MB</span></span>
                         <div class="storage-bar-track">
                             <div id="storage-bar"></div>
                         </div>
                     </div>
-
-                    <button id="btn-grid" class="btn-secondary">🔲 Grid</button>
-                    <button id="btn-outlines" class="btn-secondary">🔲 Outlines</button>
-                    <button id="btn-import" class="btn-secondary">📥 Import</button>
-                    <button id="btn-preview" class="btn-secondary">👁️ Preview</button>
-                    <button id="btn-export" class="primary-btn">💾 Export Project</button>
                 </div>
             </div>
 
@@ -60,19 +103,25 @@
                     <div class="canvas-container" id="canvas">
                         <div class="canvas-placeholder">
                             <div class="placeholder-card">
-                                <div class="placeholder-icon">🎨</div>
+                                <div class="placeholder-icon">
+                                    <span class="mat-icon" style="font-size: 3rem">palette</span>
+                                </div>
                                 <h2 class="placeholder-title">Start Building</h2>
                                 <p class="placeholder-subtitle">
                                     Drag elements from the toolbox onto the canvas, or get started quickly:
                                 </p>
                                 <div class="placeholder-actions">
-                                    <button id="btn-quick-start" class="primary-btn">🚀 Quick Start</button>
-                                    <button id="btn-load-sample" class="btn-secondary">📂 Load Sample</button>
+                                    <button id="btn-quick-start" class="primary-btn">
+                                        <span class="mat-icon">rocket_launch</span> Quick Start
+                                    </button>
+                                    <button id="btn-load-sample" class="btn-secondary">
+                                        <span class="mat-icon">folder_open</span> Load Sample
+                                    </button>
                                 </div>
                                 <div class="placeholder-hints">
                                     <small
-                                        >💡 Tip: Ctrl+Z undo · Ctrl+C/V copy/paste · Del delete · 🖱️ Right-click for
-                                        more</small
+                                        ><span class="mat-icon" style="font-size: 0.75rem">lightbulb</span> Ctrl+Z undo
+                                        · Ctrl+C/V copy/paste · Del delete · Right-click for more</small
                                     >
                                 </div>
                             </div>
@@ -95,9 +144,11 @@
                             <div id="dynamic-properties"></div>
                             <div id="style-editor"></div>
                             <button id="btn-lift-out" class="btn-secondary" style="margin-top: 6px; width: 100%">
-                                ⬆ Lift Out
+                                <span class="mat-icon">unfold_more</span> Lift Out
                             </button>
-                            <button id="btn-delete" class="danger-btn">Delete Element</button>
+                            <button id="btn-delete" class="danger-btn">
+                                <span class="mat-icon">delete</span> Delete Element
+                            </button>
                         </div>
                     </aside>
 
@@ -112,12 +163,14 @@
 
                         <div class="css-selector-creator">
                             <input type="text" id="input-new-selector" placeholder="e.g., .my-card or h1:hover" />
-                            <button id="btn-add-selector" class="btn-secondary">+ Add Rule</button>
+                            <button id="btn-add-selector" class="btn-secondary">
+                                <span class="mat-icon">add</span> Add Rule
+                            </button>
                             <button id="btn-add-media" class="btn-secondary" style="margin-top: 4px; width: 100%">
-                                + Add Media
+                                <span class="mat-icon">devices</span> Add Media
                             </button>
                             <button id="btn-add-keyframes" class="btn-secondary" style="margin-top: 4px; width: 100%">
-                                + Add Keyframes
+                                <span class="mat-icon">animation</span> Add Keyframes
                             </button>
                         </div>
 
@@ -127,46 +180,14 @@
             </div>
         </div>
 
-        <div
-            id="import-modal"
-            style="
-                display: none;
-                position: fixed;
-                inset: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 99999;
-                align-items: center;
-                justify-content: center;
-            "
-        >
-            <div
-                style="
-                    background: #1e293b;
-                    border-radius: 12px;
-                    padding: 24px;
-                    max-width: 640px;
-                    width: 90%;
-                    max-height: 80vh;
-                    overflow-y: auto;
-                    color: #e2e8f0;
-                "
-            >
-                <h2 style="margin: 0 0 16px">📥 Import HTML / CSS</h2>
+        <div id="import-modal" class="modal-overlay">
+            <div class="modal-dialog">
+                <h2 style="margin: 0 0 16px"><span class="mat-icon">upload</span> Import HTML / CSS</h2>
                 <label style="display: block; font-size: 0.85rem; margin-bottom: 4px">HTML</label>
                 <textarea
                     id="import-html-input"
                     rows="6"
-                    style="
-                        width: 100%;
-                        background: #0f172a;
-                        color: #e2e8f0;
-                        border: 1px solid #334155;
-                        border-radius: 6px;
-                        padding: 8px;
-                        font-family: monospace;
-                        font-size: 0.8rem;
-                        resize: vertical;
-                    "
+                    class="modal-textarea"
                     placeholder="Paste HTML here..."
                 ></textarea>
                 <label style="display: block; font-size: 0.85rem; margin: 12px 0 4px"
@@ -175,17 +196,7 @@
                 <textarea
                     id="import-css-input"
                     rows="4"
-                    style="
-                        width: 100%;
-                        background: #0f172a;
-                        color: #e2e8f0;
-                        border: 1px solid #334155;
-                        border-radius: 6px;
-                        padding: 8px;
-                        font-family: monospace;
-                        font-size: 0.8rem;
-                        resize: vertical;
-                    "
+                    class="modal-textarea"
                     placeholder="Paste CSS here..."
                 ></textarea>
                 <div style="display: flex; gap: 8px; margin-top: 16px; justify-content: flex-end">

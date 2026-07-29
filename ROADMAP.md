@@ -7,7 +7,7 @@ This document tracks the planned development of LayoutCraft Studio, organized by
 - **Branch**: `master` (clean, in sync with `origin/master`)
 - **Stack**: Vite + Vitest + ESLint + Prettier (Vanilla ES Modules)
 - **Scope**: Single-page editor (`index.html` + 13 source files under `src/`)
-- **Features shipped**: dual-mode editor (Visual / CSS Expert), drag-and-drop components, CSS building blocks with live visual inputs, selector blinking detector, multi-project LocalStorage storage with capacity meter and auto-save, ZIP/HTML export, undo/redo history stack
+- **Features shipped**: dual-mode editor (Visual / CSS Expert), drag-and-drop components, CSS building blocks with live visual inputs, selector blinking detector, multi-project LocalStorage storage with capacity meter and auto-save, ZIP/HTML export, undo/redo history stack, advanced CSS blocks (media/keyframes/nested rules), React JSX / Vue SFB export, nested sortable containers, HTML/CSS import flow, menu bar with File/Edit/View dropdowns, Material Symbols icons, canvas height fix
 
 ---
 
@@ -270,6 +270,7 @@ for the full audit performed on 2026-07-28.
 | `feature/template-marketplace` | Long-term #3          | Curated layout template library                 |
 | `feature/i18n-theming`         | Long-term #4          | Additional locales + theme toggle               |
 | `feature/web-component-export` | Long-term #5          | Export as Custom Elements                       |
+| `feature/ui-menu-restructure`  | —                     | Menu bar + Material Symbols + canvas sizing     |
 
 ---
 
@@ -289,3 +290,4 @@ for the full audit performed on 2026-07-28.
 - [x] Mid-term (Feature) #4: Nested sortable containers — merged via `feature/nested-components`
 - [x] Mid-term (Feature) #5: HTML/CSS import flow — merged via `feature/import-flow`
 - [x] Branch cleanup on 2026-07-28: deleted 17 stale/merged branches (see [`docs/branch-audit.md`](docs/branch-audit.md))
+- [x] UI menu bar restructure (File/Edit/View menus), Material Symbols icons, inspector icon cleanup, canvas height fix — merged via `feature/ui-menu-restructure`

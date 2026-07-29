@@ -373,16 +373,16 @@ function createAlignWidget(initialValue, onChange) {
     group.className = 'align-group';
 
     const values = [
-        { v: 'left', label: '⬅' },
-        { v: 'center', label: '⬌' },
-        { v: 'right', label: '➡' },
-        { v: 'justify', label: '⬍' },
+        { v: 'left', label: 'format_align_left' },
+        { v: 'center', label: 'format_align_center' },
+        { v: 'right', label: 'format_align_right' },
+        { v: 'justify', label: 'format_align_justify' },
     ];
     values.forEach(({ v, label }) => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'align-btn' + (v === initialValue ? ' active' : '');
-        btn.textContent = label;
+        btn.innerHTML = `<span class="mat-icon">${label}</span>`;
         btn.dataset.value = v;
         btn.addEventListener('click', () => {
             group.querySelectorAll('.align-btn').forEach((b) => b.classList.remove('active'));

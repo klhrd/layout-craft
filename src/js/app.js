@@ -22,6 +22,7 @@ const btnAddSelector = document.getElementById('btn-add-selector');
 // Temporary backward compat — will be removed after all modules migrate.
 window.activeCssData = cssState.getRawData();
 let draggedCssBlockData = null;
+let clipboardElement = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     cssState.initCssState();
@@ -38,6 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initHistoryUI();
     initOutlinesToggle();
     initImporter();
+
+    initMenus();
 
     initStorage(); // Boot the storage manager.
 
@@ -241,7 +244,7 @@ function createContainerBoxUI(block) {
                 <span style="color: #94a3b8">{</span>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
-                <button class="btn-delete-rule" data-type="${block.type}">❌ Delete</button>
+                <button class="btn-delete-rule" data-type="${block.type}"><span class="mat-icon">delete</span> Delete</button>
             </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
@@ -325,7 +328,7 @@ function createNestedRuleBoxUI(block, parentSelector) {
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
                 <button class="btn-hunt-elements" style="font-size:0.75rem">${t('ui.detection.detect')}</button>
-                <button class="btn-delete-rule">❌</button>
+                <button class="btn-delete-rule"><span class="mat-icon">close</span></button>
             </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
@@ -452,8 +455,8 @@ function createRuleBoxUI(selector) {
                 <span style="color: #94a3b8">{</span>
             </div>
             <div style="display: flex; gap: 6px; align-items: center;">
-                <button class="btn-hunt-elements">${t('ui.detection.detect')}</button>
-                <button class="btn-delete-rule">❌ Delete</button>
+                <button class="btn-hunt-elements"><span class="mat-icon">trackpad_target</span> ${t('ui.detection.detect')}</button>
+                <button class="btn-delete-rule"><span class="mat-icon">delete</span> Delete</button>
             </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
@@ -645,7 +648,7 @@ function addAppliedBlockUI(dropzone, initialSelector, property, label, value) {
         <span class="block-label">${property}:</span>
         <div style="display: flex; align-items: center;">
             <input type="text" class="block-value-input" value="${value}">
-            <button class="btn-remove-block">🗑️</button>
+            <button class="btn-remove-block"><span class="mat-icon">delete</span></button>
         </div>
     `;
 
@@ -819,35 +822,139 @@ function initModeSwitcher() {
     });
 }
 
-// Outlines toggle — switch between WYSIWYG and wireframe view.
-function initOutlinesToggle() {
-    const btn = document.getElementById('btn-outlines');
-    if (!btn) return;
-    btn.textContent = t('ui.canvas.showOutlines');
-    let outlinesOn = false;
+// Menu bar: open/close dropdowns and dispatch menu actions.
+function initMenus() {
+    const triggers = document.querySelectorAll('.menu-trigger');
+    const panels = document.querySelectorAll('.menu-panel');
 
-    btn.addEventListener('click', () => {
-        outlinesOn = !outlinesOn;
-        document.body.classList.toggle('show-outlines', outlinesOn);
-        btn.textContent = outlinesOn ? t('ui.canvas.hideOutlines') : t('ui.canvas.showOutlines');
+    triggers.forEach((tr) => {
+        tr.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const targetId = tr.getAttribute('data-menu');
+            const panel = document.getElementById(targetId);
+            if (!panel) return;
+            const isOpen = panel.classList.contains('open');
+            panels.forEach((p) => p.classList.remove('open'));
+            if (!isOpen) panel.classList.add('open');
+        });
+    });
+
+    panels.forEach((p) => {
+        p.addEventListener('click', (e) => {
+            const btn = e.target.closest('button[data-action]');
+            if (!btn) return;
+
+            const action = btn.getAttribute('data-action');
+            panels.forEach((p2) => p2.classList.remove('open'));
+
+            switch (action) {
+                case 'import':
+                    document.getElementById('import-modal').style.display = 'flex';
+                    break;
+                case 'preview':
+                    document.getElementById('btn-preview').click();
+                    break;
+                case 'grid':
+                    document.body.classList.toggle('show-grid');
+                    break;
+                case 'outlines':
+                    document.body.classList.toggle('show-outlines');
+                    break;
+                case 'undo':
+                    history.undo();
+                    break;
+                case 'redo':
+                    history.redo();
+                    break;
+                case 'save':
+                    document.getElementById('btn-save-project').click();
+                    break;
+                case 'export':
+                    document.getElementById('btn-export').click();
+                    break;
+                case 'open':
+                    document.getElementById('select-project').focus();
+                    break;
+                case 'copy':
+                    copySelectedToClipboard();
+                    break;
+                case 'paste':
+                    pasteFromClipboard();
+                    break;
+                case 'cut':
+                    cutSelectedElement();
+                    break;
+            }
+        });
+    });
+
+    document.addEventListener('click', () => {
+        panels.forEach((p) => p.classList.remove('open'));
+    });
+}
+
+function initOutlinesToggle() {
+    document.getElementById('btn-outlines')?.addEventListener('click', () => {
+        document.body.classList.toggle('show-outlines');
+    });
+}
+
+function copySelectedToClipboard() {
+    const sel = document.querySelector('.canvas-container .selected-element');
+    if (sel) clipboardElement = sel.cloneNode(true);
+}
+
+function pasteFromClipboard() {
+    if (!clipboardElement) return;
+    const canvas = document.getElementById('canvas');
+    const clone = clipboardElement.cloneNode(true);
+    canvas.appendChild(clone);
+    selectElement(clone);
+    pushHistory({
+        label: 'Paste element',
+        perform: () => {
+            canvas.appendChild(clone);
+            selectElement(clone);
+        },
+        rollback: () => {
+            clone.remove();
+        },
+    });
+}
+
+function cutSelectedElement() {
+    const sel = document.querySelector('.canvas-container .selected-element');
+    if (!sel) return;
+    clipboardElement = sel.cloneNode(true);
+    const parent = sel.parentNode;
+    const next = sel.nextSibling;
+    sel.remove();
+    deselectAll();
+    pushHistory({
+        label: 'Cut element',
+        perform: () => {
+            if (next && next.parentNode === parent) parent.insertBefore(sel, next);
+            else parent.appendChild(sel);
+            selectElement(sel);
+        },
+        rollback: () => {
+            if (next && next.parentNode === parent) parent.insertBefore(sel, next);
+            else parent.appendChild(sel);
+            selectElement(sel);
+        },
     });
 }
 
 // Undo/Redo toolbar buttons + global keyboard shortcuts.
 // Buttons reflect canUndo/canRedo via the history subscribe channel.
 function initImporter() {
-    const btnImport = document.getElementById('btn-import');
     const modal = document.getElementById('import-modal');
     const btnCancel = document.getElementById('btn-import-cancel');
     const btnSubmit = document.getElementById('btn-import-submit');
     const htmlInput = document.getElementById('import-html-input');
     const cssInput = document.getElementById('import-css-input');
 
-    if (!btnImport || !modal) return;
-
-    btnImport.addEventListener('click', () => {
-        modal.style.display = 'flex';
-    });
+    if (!modal) return;
 
     btnCancel.addEventListener('click', () => {
         modal.style.display = 'none';
@@ -881,9 +988,8 @@ function initHistoryUI() {
     const btnRedo = document.getElementById('btn-redo');
     if (!btnUndo || !btnRedo) return;
 
-    // Keep DOM labels wired to i18n (re-applied here every emit cycle).
-    btnUndo.textContent = t('ui.history.undo');
-    btnRedo.textContent = t('ui.history.redo');
+    btnUndo.title = t('ui.history.undo');
+    btnRedo.title = t('ui.history.redo');
 
     const applyState = ({ canUndo, canRedo }) => {
         btnUndo.disabled = !canUndo;
@@ -895,9 +1001,6 @@ function initHistoryUI() {
 
     btnUndo.addEventListener('click', () => history.undo());
     btnRedo.addEventListener('click', () => history.redo());
-
-    // Clipboard for copy/paste.
-    let clipboardElement = null;
 
     // Global keyboard shortcuts.
     document.addEventListener('keydown', (e) => {
@@ -918,10 +1021,7 @@ function initHistoryUI() {
 
         // Copy
         if (ctrl && key === 'c') {
-            const sel = document.querySelector('.canvas-container .selected-element');
-            if (sel) {
-                clipboardElement = sel.cloneNode(true);
-            }
+            copySelectedToClipboard();
             return;
         }
 
@@ -929,20 +1029,7 @@ function initHistoryUI() {
         if (ctrl && key === 'v') {
             if (!clipboardElement) return;
             e.preventDefault();
-            const canvas = document.getElementById('canvas');
-            const clone = clipboardElement.cloneNode(true);
-            canvas.appendChild(clone);
-            selectElement(clone);
-            pushHistory({
-                label: 'Paste element',
-                perform: () => {
-                    canvas.appendChild(clone);
-                    selectElement(clone);
-                },
-                rollback: () => {
-                    clone.remove();
-                },
-            });
+            pasteFromClipboard();
             return;
         }
 

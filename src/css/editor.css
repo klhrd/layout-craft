@@ -18,7 +18,6 @@
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    overflow: hidden;
 }
 
 .app-container {
@@ -27,76 +26,165 @@ body {
     height: 100vh;
 }
 
+/* ── Material Symbols ── */
+.mat-icon {
+    font-family: 'Material Symbols Outlined';
+    font-weight: 400;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    vertical-align: middle;
+}
+
 /* ── Control bar ── */
 .control-bar {
-    height: 60px;
     background: var(--bg-panel);
     border-bottom: 1px solid var(--border-color);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 24px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     z-index: 100;
+    flex-shrink: 0;
 }
 
-.left-actions,
-.right-actions {
+/* ── Menu bar row ── */
+.menu-bar {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 4px;
+    padding: 4px 12px;
+    border-bottom: 1px solid var(--border-color);
+    background: #f1f5f9;
 }
 
-/* ── Project storage control ── */
-.project-storage-control {
+.menu-bar .brand-title {
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--primary);
+    margin-right: 16px;
+}
+
+.menu-dropdown {
+    position: relative;
+}
+
+.menu-trigger {
+    background: transparent;
+    border: none;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+.menu-trigger:hover {
+    background: #e2e8f0;
+}
+
+.menu-trigger .arrow {
+    font-size: 0.6rem;
+    margin-left: 2px;
+}
+
+.menu-panel {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    min-width: 200px;
+    padding: 4px;
+    z-index: 9999;
+}
+
+.menu-panel.open {
+    display: block;
+}
+
+.menu-panel button {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: 15px;
-    border-left: 1px solid var(--border-color);
-    padding-left: 15px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    text-align: left;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-main);
+}
+
+.menu-panel button:hover {
+    background: #f1f5f9;
+}
+
+.menu-sep {
+    height: 1px;
+    background: var(--border-color);
+    margin: 4px 8px;
+}
+
+/* ── Toolbar actions row ── */
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+}
+
+.toolbar-sep {
+    width: 1px;
+    height: 24px;
+    background: var(--border-color);
+    margin: 0 4px;
+}
+
+.toolbar-actions .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+}
+
+.toolbar-actions #btn-undo,
+.toolbar-actions #btn-redo {
+    padding: 6px 8px;
+}
+
+.toolbar-actions #btn-undo:disabled,
+.toolbar-actions #btn-redo:disabled {
+    opacity: 0.35;
 }
 
 #select-project {
-    padding: 6px;
+    padding: 5px 6px;
     border-radius: 6px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     border: 1px solid #cbd5e1;
     width: 130px;
 }
 
-#btn-new-project {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-}
-
 #btn-save-project {
-    padding: 6px 12px;
-    font-size: 0.8rem;
     background-color: #10b981;
 }
 
-/* ── History controls ── */
-.history-controls {
-    display: flex;
-    gap: 4px;
-    margin-right: 8px;
-}
-
-#btn-undo,
-#btn-redo {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-    opacity: 0.45;
-}
-
-/* ── Storage meter badge ── */
 .storage-badge {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 2px;
-    margin-right: 10px;
 }
 
 .storage-label {
