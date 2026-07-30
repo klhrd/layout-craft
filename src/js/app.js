@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initStorage(); // Boot the storage manager.
     initAuthUI();
     initIcons();
+    import('./modules/templateGallery.js').then(({ initTemplateGallery }) => initTemplateGallery());
 
     // Auto-silently save every 30 seconds as a safety net.
     setInterval(() => {

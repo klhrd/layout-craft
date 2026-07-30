@@ -5,7 +5,7 @@ by priority and annotated with the corresponding feature branch name.
 
 ## Current Status
 
-- **Branch**: `feature/backend-sync` (P2b implementation)
+- **Branch**: `master`
 - **Stack**: Vite + Vitest + ESLint + Prettier + Supabase SDK (Vanilla ES Modules)
 - **Scope**: Single-page editor (`index.html` + source files under `src/`)
 - **Tests**: tests across 12 files, all green
@@ -15,21 +15,24 @@ by priority and annotated with the corresponding feature branch name.
 
 ## What's Shipped (all on `master`)
 
-| Item                                                                              | Branch                        |
-| --------------------------------------------------------------------------------- | ----------------------------- |
-| Short-term #1–6 (i18n, lint, tests, build, jsconfig, docs)                        | —                             |
-| Mid-term Feature #1–5 (undo/redo, advanced CSS, JSX/Vue export, nested, import)   | `feature/*` (merged)          |
-| UI menu restructure + Material Symbols                                            | `feature/ui-menu-restructure` |
-| Inspector hierarchy controls + component CSS extraction                           | —                             |
-| Responsive preview (breakpoint buttons)                                           | `feature/responsive-preview`  |
-| Visual property editors (slider, spacing, opacity, font-family, box-shadow)       | same                          |
-| Keyboard shortcuts (Ctrl+D, Ctrl+/, Shift+arrow)                                  | same                          |
-| Canvas rulers + 8-point resize handles                                            | same                          |
-| Light/Dark theme + CSS variables + zh-TW/ja i18n                                  | `feature/i18n-theming`        |
-| Snap-to-grid alignment guides                                                     | `feature/snap-to-grid`        |
-| Collapsible Visual CSS Rules + WebKit scrollbar styling                           | —                             |
-| Icons — no longer depend on Material Symbols font ligatures                       | —                             |
-| Bug fixes (mode switcher body class, locale init order, icon swap, undo/redo CSS) | —                             |
+| Item                                                                              | Branch                         |
+| --------------------------------------------------------------------------------- | ------------------------------ |
+| Short-term #1–6 (i18n, lint, tests, build, jsconfig, docs)                        | —                              |
+| Mid-term Feature #1–5 (undo/redo, advanced CSS, JSX/Vue export, nested, import)   | `feature/*` (merged)           |
+| UI menu restructure + Material Symbols                                            | `feature/ui-menu-restructure`  |
+| Inspector hierarchy controls + component CSS extraction                           | —                              |
+| Responsive preview (breakpoint buttons)                                           | `feature/responsive-preview`   |
+| Visual property editors (slider, spacing, opacity, font-family, box-shadow)       | same                           |
+| Keyboard shortcuts (Ctrl+D, Ctrl+/, Shift+arrow)                                  | same                           |
+| Canvas rulers + 8-point resize handles                                            | same                           |
+| Light/Dark theme + CSS variables + zh-TW/ja i18n                                  | `feature/i18n-theming`         |
+| Snap-to-grid alignment guides                                                     | `feature/snap-to-grid`         |
+| Collapsible Visual CSS Rules + WebKit scrollbar styling                           | —                              |
+| Icons — no longer depend on Material Symbols font ligatures                       | —                              |
+| Bug fixes (mode switcher body class, locale init order, icon swap, undo/redo CSS) | —                              |
+| P2b: Backend cloud sync (Supabase auth + push/pull + conflict prompt)             | `feature/backend-sync`         |
+| P3b: Template marketplace (5 MVP templates + gallery modal)                       | `feature/template-marketplace` |
+| P3a: Realtime collaboration (Yjs adapter + presence + follow mode)                | `feature/collab`               |
 
 ---
 
@@ -148,8 +151,8 @@ P1c  (cssState module)       ✅ done (with P1a)
 P2a  (Web Component export)  ✅ done
 P1d  (SVG icons)             ✅ done
 P2b  (backend cloud sync)    ✅ done
-P3a  (collaboration)         ⏳ pending
-P3b  (template marketplace)  ⏳ pending
+P3a  (collaboration)         ✅ done
+P3b  (template marketplace)  ✅ done
 ```
 
 ---
@@ -167,15 +170,17 @@ from the latest `master` and merge back when green.
 | `feature/css-state-module`     | P1c  | ✅ merged with P1a  |
 | `feature/svg-icons`            | P1d  | ✅ Merged to master |
 | `feature/web-component-export` | P2a  | ✅ Merged to master |
-| `feature/backend-sync`         | P2b  | ⏳ Done, NOT merged |
-| `feature/collab`               | P3a  | Pending             |
-| `feature/template-marketplace` | P3b  | Pending             |
+| `feature/backend-sync`         | P2b  | ✅ Merged to master |
+| `feature/collab`               | P3a  | ✅ Merged to master |
+| `feature/template-marketplace` | P3b  | ✅ Merged to master |
 
 ### Execution log
 
-| Date       | Action                                                                                 |
-| ---------- | -------------------------------------------------------------------------------------- |
-| 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged            |
-| 2026-07-29 | P1a (split app.js) + P1c (cssState module) done in `feature/split-app-modules`, merged |
-| 2026-07-29 | P1d (svg icons) done in `feature/svg-icons`, merged to master                          |
-| 2026-07-29 | P2b (backend cloud sync) done in `feature/backend-sync`, not yet merged                |
+| Date       | Action                                                                                                                                                |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged                                                                           |
+| 2026-07-29 | P1a (split app.js) + P1c (cssState module) done in `feature/split-app-modules`, merged                                                                |
+| 2026-07-29 | P1d (svg icons) done in `feature/svg-icons`, merged to master                                                                                         |
+| 2026-07-30 | P2b (backend cloud sync) done in `feature/backend-sync`, merged to master                                                                             |
+| 2026-07-30 | P3b (template marketplace) done in `feature/template-marketplace` — 5 MVP templates, gallery modal, replace/append insertion, tests, merged to master |
+| 2026-07-30 | P3a (realtime collaboration) done in `feature/collab` — Yjs adapter, presence overlay, follow mode, merged to master                                  |

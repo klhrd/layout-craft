@@ -125,6 +125,12 @@
 
                     <div class="toolbar-sep"></div>
 
+                    <button id="btn-templates" class="btn-secondary" title="Templates">
+                        <span class="mat-icon">dashboard</span> Templates
+                    </button>
+
+                    <div class="toolbar-sep"></div>
+
                     <button id="btn-preview" class="btn-secondary" title="Preview">
                         <span class="mat-icon">visibility</span> Preview
                     </button>
@@ -194,6 +200,14 @@
                     <aside class="properties-panel">
                         <h3>Inspector</h3>
                         <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
+                        <div id="collab-controls" class="collab-controls">
+                            <button id="btn-follow" class="btn-secondary" title="Follow a remote peer">
+                                <span class="mat-icon">visibility</span> Follow
+                            </button>
+                            <label class="collab-anon-label">
+                                <input type="checkbox" id="chk-anonymous" /> Anonymous
+                            </label>
+                        </div>
                         <div id="editor-form" class="hidden">
                             <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
                             <label for="input-id">ID</label>
@@ -290,6 +304,47 @@
                 <div class="modal-actions">
                     <button id="btn-import-cancel" class="btn-secondary">Cancel</button>
                     <button id="btn-import-submit" class="primary-btn">Import</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="template-modal" class="modal-overlay">
+            <div class="modal-dialog modal-dialog-wide">
+                <h2 class="modal-title">
+                    <span class="mat-icon">dashboard</span> <span id="template-modal-title">Template Gallery</span>
+                </h2>
+
+                <div class="template-toolbar">
+                    <div class="template-categories" id="template-categories">
+                        <button class="template-cat-btn active" data-cat="all">All</button>
+                        <button class="template-cat-btn" data-cat="marketing">Marketing</button>
+                        <button class="template-cat-btn" data-cat="app-shell">App Shell</button>
+                        <button class="template-cat-btn" data-cat="forms">Forms</button>
+                        <button class="template-cat-btn" data-cat="e-commerce">E-commerce</button>
+                    </div>
+                    <input
+                        type="text"
+                        id="template-search"
+                        class="template-search-input"
+                        placeholder="Search templates..."
+                    />
+                </div>
+
+                <div id="template-grid" class="template-grid"></div>
+
+                <div class="template-preview-overlay" id="template-preview-overlay">
+                    <div class="template-preview-card" id="template-preview-card">
+                        <div class="template-preview-html" id="template-preview-html"></div>
+                        <div class="template-preview-actions">
+                            <button id="btn-template-replace" class="primary-btn">Replace Canvas</button>
+                            <button id="btn-template-append" class="btn-secondary">Append to Canvas</button>
+                            <button id="btn-template-preview-cancel" class="btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="btn-template-close" class="btn-secondary">Close</button>
                 </div>
             </div>
         </div>
