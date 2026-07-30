@@ -1890,3 +1890,34 @@ body.mode-css .right-sidebar {
     padding: 4px 10px;
     font-size: 0.75rem;
 }
+
+.collab-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border-color, #e2e8f0);
+    margin-top: 8px;
+}
+
+.collab-controls #btn-follow {
+    width: 100%;
+}
+
+.collab-controls #btn-follow.active {
+    background: var(--primary, #2563eb);
+    color: #fff;
+}
+
+.collab-anon-label {
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-secondary, #64748b);
+}
+
+.follow-highlight {
+    outline: 3px solid var(--accent, #6366f1) !important;
+    outline-offset: 2px;
+}

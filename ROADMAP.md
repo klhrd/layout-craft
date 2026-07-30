@@ -165,7 +165,7 @@ from the latest `master` and merge back when green.
 | `feature/split-app-modules`    | P1a  | ✅ Merged to master |
 | `feature/expand-test-coverage` | P1b  | ✅ Merged to master |
 | `feature/css-state-module`     | P1c  | ✅ merged with P1a  |
-| `feature/svg-icons`            | P1d  | ✅ Merged to master  |
+| `feature/svg-icons`            | P1d  | ✅ Merged to master |
 | `feature/web-component-export` | P2a  | ✅ Merged to master |
 | `feature/backend-sync`         | P2b  | Pending             |
 | `feature/collab`               | P3a  | Pending             |
@@ -173,8 +173,8 @@ from the latest `master` and merge back when green.
 
 ### Execution log
 
-| Date | Action |
-|------|--------|
-| 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged |
+| Date       | Action                                                                                 |
+| ---------- | -------------------------------------------------------------------------------------- |
+| 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged            |
 | 2026-07-29 | P1a (split app.js) + P1c (cssState module) done in `feature/split-app-modules`, merged |
-| 2026-07-29 | P1d (svg icons) done in `feature/svg-icons`, merged to master |
+| 2026-07-29 | P1d (svg icons) done in `feature/svg-icons`, merged to master                          |
