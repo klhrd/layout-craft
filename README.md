@@ -24,12 +24,15 @@ layout-craft/
         ├── config/
         │   ├── cssDictionary.js # CSS property block dictionary (names + defaults)
         │   ├── elements.js     # Component library (Layout, Typography, Forms, ...)
-        │   └── i18n.js         # t() lookup dictionary; English is the default locale
+        │   ├── i18n.js         # t() lookup dictionary; English is the default locale
+        │   └── templates.js    # 5 MVP starter templates (navbar, hero, pricing, footer, login)
         └── modules/
             ├── canvas.js       # Canvas core (drag/drop, Sortable wiring)
             ├── exporter.js     # Export/preview module (bundles HTML/CSS, downloads)
             ├── inspector.js    # Property inspector (edit ID/Class/text + dynamic attrs)
-            └── storage.js      # Storage manager (multi-project snapshots, auto-save, quota meter)
+            ├── storage.js      # Storage manager (multi-project snapshots, auto-save, quota meter)
+            ├── templateLoader.js # Template insertion (replace/append) with storage quota warning
+            └── templateGallery.js # Gallery modal with category filter, search, and preview popover
 ```
 
 ---
@@ -51,7 +54,14 @@ layout-craft/
 - Every CSS rule box has a `🎯 Detect` toggle in the top-right corner.
 - Toggling it ON highlights all matching canvas elements and starts a breathing blink animation, so you always see exactly which elements the rule affects.
 
-### 4. 📊 Multi-project storage with quota guard
+### 4. 📋 Template marketplace
+
+- Open the **Templates** gallery from the toolbar to browse 5 starter templates (navbar, hero, pricing table, footer, login form).
+- Filter by category or search by title/tag. Click a template to preview, then **Replace Canvas** or **Append to Canvas**.
+- Templates are bundled JSON snapshots with HTML + CSS data, editable via the Inspector and CSS builder after insertion.
+- Storage quota warning before importing large templates.
+
+### 5. 📊 Multi-project storage with quota guard
 
 - Create multiple independent projects with **+ New** and switch between them via the dropdown.
 - Silent auto-save every 30 seconds as a safety net.

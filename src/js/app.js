@@ -61,8 +61,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initZoom();
     initBreakpoints();
 
-    initStorage(); // Boot the storage manager.
+    initStorage();
     initIcons();
+    import('./modules/templateGallery.js').then(({ initTemplateGallery }) => initTemplateGallery());
 
     // Auto-silently save every 30 seconds as a safety net.
     setInterval(() => {
