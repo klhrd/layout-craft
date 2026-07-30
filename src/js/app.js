@@ -31,6 +31,9 @@ import {
     pullProjects,
     pullProject,
 } from './modules/sync.js';
+import { createYDoc, initCanvasSync, initCssSync } from './modules/yjsAdapter.js';
+import { initPresence, setThrottledCursor, updateCursor } from './modules/presence.js';
+import { initFollowMode } from './modules/followMode.js';
 
 window.activeCssData = cssState.getRawData();
 window.refreshLayers = refreshLayers;
@@ -77,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initAuthUI();
     initIcons();
     import('./modules/templateGallery.js').then(({ initTemplateGallery }) => initTemplateGallery());
+    initCollab();
 
     // Auto-silently save every 30 seconds as a safety net.
     setInterval(() => {
@@ -383,6 +387,29 @@ function initBreakpoints() {
                 btn.classList.add('active');
             }
         });
+    });
+}
+
+let _collabDoc = null;
+
+function initCollab() {
+    const canvasEl = document.getElementById('canvas');
+    if (!canvasEl) return;
+
+    _collabDoc = createYDoc();
+    initCanvasSync(_collabDoc, canvasEl);
+    initCssSync(_collabDoc);
+    initPresence(_collabDoc, localStorage.getItem('lc-display-name') || undefined);
+    initFollowMode();
+
+    const wrapper = canvasEl.closest('.canvas-container') || canvasEl;
+    wrapper.addEventListener('mousemove', (e) => {
+        const rect = wrapper.getBoundingClientRect();
+        setThrottledCursor(e.clientX - rect.left, e.clientY - rect.top);
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+        updateCursor(-100, -100);
     });
 }
 

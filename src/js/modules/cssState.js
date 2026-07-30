@@ -1,5 +1,10 @@
 let _blocks = [];
 let _counter = 1;
+let _onChange = null;
+
+export function setOnChange(fn) {
+    _onChange = fn;
+}
 
 function isOldFormat(data) {
     return data && !Array.isArray(data) && typeof data === 'object';
@@ -20,6 +25,7 @@ function findBlockIndex(selector, list) {
 export function initCssState() {
     _blocks = [];
     _counter = 1;
+    if (_onChange) _onChange();
 }
 
 export function getRule(selector) {
@@ -34,11 +40,13 @@ export function setRule(selector, rule) {
     } else {
         _blocks.push({ type: 'rule', selector, styles: rule });
     }
+    if (_onChange) _onChange();
 }
 
 export function deleteRule(selector) {
     const idx = findBlockIndex(selector, _blocks);
     if (idx !== -1) _blocks.splice(idx, 1);
+    if (_onChange) _onChange();
 }
 
 export function getAllRules() {
@@ -61,6 +69,7 @@ export function setProperty(selector, prop, value) {
         _blocks.push({ type: 'rule', selector, styles });
     }
     styles[prop] = value;
+    if (_onChange) _onChange();
 }
 
 export function deleteProperty(selector, prop) {
@@ -70,11 +79,13 @@ export function deleteProperty(selector, prop) {
     if (Object.keys(styles).length === 0) {
         deleteRule(selector);
     }
+    if (_onChange) _onChange();
 }
 
 export function renameRule(oldSelector, newSelector) {
     const idx = findBlockIndex(oldSelector, _blocks);
     if (idx !== -1) _blocks[idx].selector = newSelector;
+    if (_onChange) _onChange();
 }
 
 export function serialize() {
@@ -89,6 +100,7 @@ export function deserialize(data) {
     } else {
         _blocks = [];
     }
+    if (_onChange) _onChange();
 }
 
 export function nextClassIndex() {
@@ -103,12 +115,9 @@ export function setCounter(n) {
     _counter = n;
 }
 
-// Raw reference for backward compatibility during migration.
 export function getRawData() {
     return _blocks;
 }
-
-// ── Tree API ──────────────────────────────────────────────
 
 export function getBlocks() {
     return _blocks;
@@ -122,10 +131,12 @@ export function addBlock(block, parentSelector) {
         if (parent) {
             if (!parent.children) parent.children = [];
             parent.children.push(block);
+            if (_onChange) _onChange();
             return;
         }
     }
     _blocks.push(block);
+    if (_onChange) _onChange();
 }
 
 export function removeBlock(selector, parentSelector) {
@@ -133,6 +144,7 @@ export function removeBlock(selector, parentSelector) {
     if (!list) return;
     const idx = list.findIndex((b) => b.selector === selector);
     if (idx !== -1) list.splice(idx, 1);
+    if (_onChange) _onChange();
 }
 
 export function getBlock(selector, parentSelector) {
@@ -153,7 +165,6 @@ export function getAllFlatRules() {
     return result;
 }
 
-// Tree-aware property access for nested rules inside media/keyframes containers.
 export function hasNestedRule(selector, parentSelector) {
     const parent = _blocks.find((b) => b.selector === parentSelector && (b.type === 'media' || b.type === 'keyframes'));
     if (!parent || !parent.children) return false;
@@ -170,6 +181,7 @@ export function setNestedProperty(parentSelector, selector, prop, value) {
         parent.children.push(rule);
     }
     rule.styles[prop] = value;
+    if (_onChange) _onChange();
 }
 
 export function getNestedProperty(parentSelector, selector, prop) {
