@@ -1,132 +1,151 @@
-# 🛠️ LayoutCraft Studio
+# LayoutCraft Studio
 
-A low-code (no-code / low-code) visual web editor built with vanilla JavaScript. Features drag-and-drop component layout, visual CSS block stacking, real-time selector detection (blink highlight), and multi-project LocalStorage management.
-
----
-
-## 📂 Directory Tree
-
-```text
-layout-craft/
-├── index.html                  # App entry (workspace HTML scaffold)
-├── package.json                # npm scripts and dev dependencies
-├── vite.config.js             # Vite dev/build/preview config
-├── vitest.config.js           # Vitest config (jsdom env)
-├── jsconfig.json              # Editor type-awareness + path aliases
-├── .env.example               # Supabase env var placeholders
-├── ROADMAP.md                 # Development roadmap
-├── AGENTS.md                  # Instructions for AI agents and humans
-└── src/
-    ├── css/
-    │   ├── canvas-preview.css # Canvas element rendering and preview mode styles
-    │   └── editor.css         # Editor UI, CSS blocks, blink animation styles
-    └── js/
-        ├── app.js             # Main entry (init, global compile, event dispatch)
-        ├── config/
-        │   ├── cssDictionary.js # CSS property block dictionary (names + defaults)
-        │   ├── elements.js     # Component library (Layout, Typography, Forms, ...)
-        │   ├── i18n.js         # t() lookup dictionary; English is the default locale
-        │   └── templates.js    # 5 MVP starter templates (navbar, hero, pricing, footer, login)
-        └── modules/
-            ├── canvas.js       # Canvas core (drag/drop, Sortable wiring)
-            ├── exporter.js       # Export/preview module (bundles HTML/CSS, downloads)
-            ├── inspector.js    # Property inspector (edit ID/Class/text + dynamic attrs)
-            ├── storage.js      # Storage manager (multi-project snapshots, auto-save, quota meter)
-            └── sync.js         # Cloud sync via Supabase (auth, push, pull, conflict UI)
-            ├── templateLoader.js # Template insertion (replace/append) with storage quota warning
-            └── templateGallery.js # Gallery modal with category filter, search, and preview popover
-            ├── yjsAdapter.js   # Yjs CRDT bridge: canvas DOM + cssState <-> Y.Doc
-            ├── presence.js     # Remote cursor/selection overlay via Yjs awareness
-            └── followMode.js   # Follow-mode toggle (scroll to peer, highlight)
-```
+A vanilla-JavaScript low-code web editor. Drag elements onto a canvas, stack
+visual CSS blocks, edit properties inline, and export clean HTML/CSS — no
+framework, no build step beyond Vite for the dev server.
 
 ---
 
-## 🚀 Core Features
+## Features
 
-### 1. 🧱 Dual editing modes
+- **Dual editing modes** — Visual layout (drag/drop components) + CSS Expert
+  mode (stack property blocks under a selector like LEGO bricks).
+- **Live selector detector** — every CSS rule box has a 🎯 Detect toggle that
+  blinks all matching canvas elements.
+- **Visual property editors** — color swatches, alignment buttons, sliders,
+  font pickers, opacity, box-shadow, spacing diagram.
+- **Per-element inspector** — edit ID/Class/text content + dynamic attributes;
+  8-point resize handles; hierarchy controls (move up/down, wrap, unwrap,
+  lift-out).
+- **Layers panel** — tree view of canvas elements with visibility/lock toggles.
+- **Context menu** — duplicate, copy/paste styles, wrap in `<div>`, edit text.
+- **Keyboard shortcuts** — Ctrl+Z/Y undo/redo, Ctrl+C/V copy/paste, Ctrl+D
+  duplicate, arrow nudge, Ctrl+/ toggle mode, Shift+arrow nudge 10px.
+- **Responsive preview** — Desktop / Tablet (768px) / Mobile (375px) frames.
+- **Canvas rulers + snap-to-grid** — draggable guide lines, 16px grid overlay.
+- **Light/dark theme** with CSS custom properties + three locales (en, zh-TW, ja).
+- **Template marketplace** — 5 MVP starter templates (navbar, hero, pricing,
+  footer, login form) insertable via **Replace** or **Append** with storage
+  quota warning.
+- **Optional cloud sync** — Supabase auth (email magic-link / GitHub OAuth),
+  debounced push after edits, pull on start, "Cloud is newer — Pull / Keep
+  local" conflict prompt. Fully offline-capable when env vars are absent.
+- **Realtime collaboration** — Yjs CRDT bridge for canvas DOM + CSS state,
+  remote cursor/selection overlay (10 Hz), Follow mode, anonymous read-only
+  join.
+- **Multi-project LocalStorage** with 5 MB meter and 85% red warning.
+- **Export** — standalone HTML/CSS, React JSX, Vue SFC, or Web Component
+  (Custom Element with shadow DOM).
+- **Undo/redo** — bounded command stack with debounced history entries.
 
-- **🎨 Visual Mode**: Focus on page skeleton layout. Drag Layout / Typography / Forms components in from the left, and use the right-hand `Inspector` to edit text, ID, or Class directly.
-- **💻 CSS Expert Mode**: Click to create a CSS selector box (e.g. `.card`), then drag CSS property blocks into the box from the left like LEGO bricks — no hand-written CSS required.
-
-### 2. Visual property inputs
-
-- After a CSS block is dropped into a selector, a dedicated **input field** appears for it.
-- Each input subscribes to `input` events so that changes (e.g. `padding: 20px`) are reflected on the canvas instantly.
-
-### 3. 🎯 Selector detector (blinking)
-
-- Every CSS rule box has a `🎯 Detect` toggle in the top-right corner.
-- Toggling it ON highlights all matching canvas elements and starts a breathing blink animation, so you always see exactly which elements the rule affects.
-
-### 4. 📋 Template marketplace
-
-- Open the **Templates** gallery from the toolbar to browse 5 starter templates (navbar, hero, pricing table, footer, login form).
-- Filter by category or search by title/tag. Click a template to preview, then **Replace Canvas** or **Append to Canvas**.
-- Templates are bundled JSON snapshots with HTML + CSS data, editable via the Inspector and CSS builder after insertion.
-- Storage quota warning before importing large templates.
-
-### 5. 📊 Multi-project storage with quota guard
-
-- Create multiple independent projects with **+ New** and switch between them via the dropdown.
-- Silent auto-save every 30 seconds as a safety net.
-- The top-right **Storage Use** meter precisely computes UTF-16 byte sizes and turns red above 85% to prevent blowing the browser's 5MB LocalStorage quota.
-
-### 5. ☁️ Optional cloud sync (Supabase)
-
-- Projects are persisted locally first; an optional cloud layer syncs across devices via Supabase.
-- Sign in with email magic link or GitHub OAuth (no password storage).
-- After every edit, a debounced 5-second timer pushes the current state to the cloud.
-- On app start, if authenticated, the project list is refreshed from the cloud.
-- Conflict resolution: per-project timestamp comparison with a "Pull / Keep local" prompt.
-- Works fully offline — everything degrades gracefully when environment variables are absent or the user is not signed in.
-
----
-
-## 🛠️ Development and Setup
-
-The project uses **native ES Modules** and is served and bundled by **Vite**. SortableJS is still pulled from a CDN via a `<script>` tag; the rest of the source is bundled by Vite directly.
-
-### Prerequisites
-
-- Node.js 20+ (with npm)
-
-### Quick Start
-
-1. Install dependencies:
+## Quick start
 
 ```bash
 npm install
+npm run dev      # Vite dev server (hot reload) → http://localhost:5173
 ```
 
-2. Start the dev server (hot reload):
+### Common commands
 
 ```bash
-npm run dev
+npm run build          # Production bundle into dist/
+npm run preview        # Preview the built bundle locally
+npm run lint           # ESLint
+npm run format:check   # Prettier formatting check
+npm test               # Run unit tests once
+npm run test:watch     # Unit tests in watch mode
 ```
 
-3. Open the URL Vite prints (defaults to `http://localhost:5173`) and start building.
+### Cloud sync setup
 
-### Other common commands
+Cloud sync is optional. Create a `.env` (or `.env.development` /
+`.env.production`) in the repo root with your Supabase project credentials:
 
-```bash
-# Package a production bundle into dist/
-npm run build
-
-# Preview the built bundle locally
-npm run preview
-
-# Run ESLint
-npm run lint
-
-# Check formatting with Prettier
-npm run format:check
-
-# Run unit tests
-npm test
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
 ```
+
+Then run the migration in [`docs/migrations/supabase-migration.sql`](docs/migrations/supabase-migration.sql)
+in your Supabase SQL editor to create the `projects` table with Row-Level
+Security. Without these env vars, all cloud operations are silently skipped —
+the app runs fully offline with LocalStorage only.
 
 ### Deployment
 
 Pushing to `master` triggers GitHub Actions, which runs `npm ci && npm run build`
 and deploys the `dist/` folder to GitHub Pages.
+
+## Project structure
+
+```text
+layout-craft/
+├── index.html               # App entry (workspace HTML scaffold)
+├── package.json             # npm scripts + dependencies
+├── vite.config.js           # Vite dev/build/preview config
+├── vitest.config.js         # Vitest config (happy-dom env)
+├── jsconfig.json            # Editor type-awareness + path aliases
+├── .env.example             # Supabase env var placeholders
+├── AGENTS.md                # Instructions for AI agents and humans
+├── docs/                    # All project documentation (see below)
+└── src/
+    ├── css/
+    │   └── editor.css       # Editor UI, canvas, blink animation styles
+    └── js/
+        ├── app.js           # Entry point: orchestrates all modules
+        ├── config/          # Pure data modules (no DOM access)
+        │   ├── components.js     # Pre-built component library
+        │   ├── cssDictionary.js # CSS property block catalogue
+        │   ├── elements.js      # Draggable HTML element catalogue
+        │   ├── i18n.js          # t() lookup dictionary (en/zh-TW/ja)
+        │   └── templates.js     # 5 MVP starter templates
+        └── modules/         # DOM-aware feature modules
+            ├── canvas.js        # Drag/drop + SortableJS wiring
+            ├── canvasHelpers.js # Snap grid, guides, resize handles
+            ├── contextMenu.js   # Right-click context menu
+            ├── cssEditor.js     # Visual CSS Rules (drag/drop/delete)
+            ├── cssState.js      # Mutable CSS state (tree data model)
+            ├── exporter.js      # Preview mode + HTML/CSS download
+            ├── followMode.js    # Collab Follow mode + peer highlight
+            ├── history.js       # Undo/redo command stack
+            ├── icons.js         # Inline SVG icon set + MutationObserver
+            ├── importer.js      # HTML/CSS paste import + sanitisation
+            ├── inspector.js     # Property inspector + dynamic attrs
+            ├── layers.js        # Layers tree panel
+            ├── presence.js      # Remote cursor/selection overlay
+            ├── storage.js       # Multi-project LocalStorage + quota meter
+            ├── sync.js          # Optional Supabase cloud sync
+            ├── templateGallery.js # Template gallery modal
+            ├── templateLoader.js  # Template replace/append insertion
+            ├── yjsAdapter.js    # Yjs DOM<->Y.Doc + cssState<->Y.Map bridge
+            └── codegen/
+                ├── domWalker.js  # DOM tree walker for exporters
+                ├── jsxExport.js  # React JSX export
+                ├── vueExport.js  # Vue SFC export
+                └── wcExport.js   # Web Component export
+```
+
+## Documentation
+
+All project docs live in [`docs/`](docs/):
+
+| Document                                                                           | Description                                                                    |
+| ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md)                                               | Development roadmap (short/mid/long-term plan + branch status + execution log) |
+| [`docs/handoff.md`](docs/handoff.md)                                               | Handoff snapshot with architecture rules and known quirks                      |
+| [`docs/progress.md`](docs/progress.md)                                             | UX Overhaul progress log (items #1–#11)                                        |
+| [`docs/branch-audit.md`](docs/branch-audit.md)                                     | Historical audit of all stale feature branches                                 |
+| [`docs/undo-redo.md`](docs/undo-redo.md)                                           | Undo/redo history stack design                                                 |
+| [`docs/advanced-css-blocks.md`](docs/advanced-css-blocks.md)                       | `@media` / `@keyframes` / custom properties design                             |
+| [`docs/nested-components.md`](docs/nested-components.md)                           | Nested sortable containers design                                              |
+| [`docs/export-jsx-vue.md`](docs/export-jsx-vue.md)                                 | React JSX / Vue SFC export design                                              |
+| [`docs/import-flow.md`](docs/import-flow.md)                                       | HTML/CSS paste import design                                                   |
+| [`docs/web-component-export.md`](docs/web-component-export.md)                     | Web Component (Custom Element) export design                                   |
+| [`docs/backend-sync.md`](docs/backend-sync.md)                                     | Supabase cloud sync design (P2b)                                               |
+| [`docs/i18n-theming.md`](docs/i18n-theming.md)                                     | i18n + light/dark theme design                                                 |
+| [`docs/collab.md`](docs/collab.md)                                                 | Realtime Yjs collaboration design (P3a)                                        |
+| [`docs/template-marketplace.md`](docs/template-marketplace.md)                     | Template marketplace design (P3b)                                              |
+| [`docs/migrations/supabase-migration.sql`](docs/migrations/supabase-migration.sql) | Supabase `projects` table + RLS migration                                      |
+
+See [`AGENTS.md`](AGENTS.md) for the canonical commands and conventions that
+agents (and humans) should follow when working on this repo.

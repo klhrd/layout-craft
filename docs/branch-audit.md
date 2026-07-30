@@ -23,10 +23,10 @@ actions.
 | Head commit | `b07ad0a` — Mark Short-term #6 complete in ROADMAP |
 | ----------- | -------------------------------------------------- |
 
-The ROADMAP at `ROADMAP.md` still references `feature/development-roadmap` as
+The ROADMAP at `docs/ROADMAP.md` still references `feature/development-roadmap` as
 the active branch and describes a pre-tooling stack. These are stale since all
 Short-term items (#1–#6) have been completed and merged. **Suggestion:** update
-the "Current Status" section of ROADMAP.md once `feature/undo-redo` is merged.
+the "Current Status" section of `docs/ROADMAP.md` once `feature/undo-redo` is merged.
 
 ---
 
@@ -126,7 +126,7 @@ docs at once is also acceptable.
 **Verification:** `npm test` → 19/19 pass (7 history + 7 i18n + 5 storage).
 
 **Recommendation:** 🔶 merge into `master` as a complete feature. Update
-ROADMAP.md to mark Mid-term #1 as complete.
+`docs/ROADMAP.md` to mark Mid-term #1 as complete.
 
 ```bash
 git checkout master
@@ -134,7 +134,7 @@ git merge feature/undo-redo --no-ff -m "Merge feature/undo-redo: command-based h
 git branch -d feature/undo-redo
 ```
 
-**Post-merge:** update ROADMAP.md:
+**Post-merge:** update `docs/ROADMAP.md`:
 
 - Mark Mid-term #1 as `[x]`
 - Update "Current Status" section (active branch, stack description)
@@ -187,10 +187,10 @@ No divergence. All work is local-only.
 
 ## Summary of recommended actions
 
-| What                                                             | Why                                   | When                      |
-| ---------------------------------------------------------------- | ------------------------------------- | ------------------------- |
-| Delete 6 stale local branches                                    | Clutter-free `git branch -l`          | Anytime                   |
-| Merge 9 design-doc branches into `master`                        | Land existing planning docs           | Before or after undo-redo |
-| Merge `feature/ui-skeleton-cleanup` into `master`                | Land complete undo/redo + CSS cleanup | Next                      |
-| Update ROADMAP.md "Current Status" and mark Mid-term #1 as `[x]` | Keep planning doc in sync             | After merge               |
-| Push `master` to `origin/master`                                 | Deploy to GitHub Pages                | After merge               |
+| What                                                                    | Why                                   | When                      |
+| ----------------------------------------------------------------------- | ------------------------------------- | ------------------------- |
+| Delete 6 stale local branches                                           | Clutter-free `git branch -l`          | Anytime                   |
+| Merge 9 design-doc branches into `master`                               | Land existing planning docs           | Before or after undo-redo |
+| Merge `feature/ui-skeleton-cleanup` into `master`                       | Land complete undo/redo + CSS cleanup | Next                      |
+| Update `docs/ROADMAP.md` "Current Status" and mark Mid-term #1 as `[x]` | Keep planning doc in sync             | After merge               |
+| Push `master` to `origin/master`                                        | Deploy to GitHub Pages                | After merge               |
