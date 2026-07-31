@@ -1,6 +1,7 @@
 import { ELEMENT_CATEGORIES } from './config/elements.js';
 import { CSS_DICTIONARY } from './config/cssDictionary.js';
 import { COMPONENTS } from './config/components.js';
+import { DEVICES } from './config/devices.js';
 import { t, setLocale } from './config/i18n.js';
 import * as cssState from './modules/cssState.js';
 import { initCanvas, setDraggedType } from './modules/canvas.js';
@@ -377,6 +378,9 @@ function initZoom() {
 function initBreakpoints() {
     const buttons = document.querySelectorAll('.bp-toggle .btn-secondary[data-bp]');
     buttons.forEach((btn) => {
+        const bp = btn.dataset.bp;
+        const match = DEVICES.find((d) => String(d.width ?? 'none') === bp || (d.width === null && bp === 'none'));
+        if (!match) return;
         btn.addEventListener('click', () => {
             const bp = btn.dataset.bp;
             buttons.forEach((b) => b.classList.remove('active'));

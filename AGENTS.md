@@ -48,8 +48,9 @@ commit so the tree stays green.
 
 - `src/js/app.js` — entry point; orchestrates Canvas, Inspector, Exporter,
   Storage, mode switcher, and the visual CSS rule builder.
-- `src/js/config/` — pure configuration: `elements.js`, `cssDictionary.js`,
-  `i18n.js`. No DOM access here; these are data only.
+- `src/js/config/` — pure configuration: `codegen.js`, `components.js`,
+  `cssDictionary.js`, `devices.js`, `elements.js`, `styleProps.js`,
+  `templates.js`, `i18n.js`. No DOM access here; these are data only.
 - `src/js/modules/canvas.js` — drag/drop + Sortable wiring.
 - `src/js/modules/inspector.js` — element property editor + dynamic attrs.
 - `src/js/modules/exporter.js` — preview/export preview flow.

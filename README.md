@@ -94,11 +94,14 @@ layout-craft/
     └── js/
         ├── app.js           # Entry point: orchestrates all modules
         ├── config/          # Pure data modules (no DOM access)
+        │   ├── codegen.js        # JSX attr map, boolean attrs, void elements
         │   ├── components.js     # Pre-built component library
-        │   ├── cssDictionary.js # CSS property block catalogue
-        │   ├── elements.js      # Draggable HTML element catalogue
-        │   ├── i18n.js          # t() lookup dictionary (en/zh-TW/ja)
-        │   └── templates.js     # 5 MVP starter templates
+        │   ├── cssDictionary.js  # CSS property block catalogue
+        │   ├── devices.js        # Preview breakpoint presets (desktop/tablet/mobile)
+        │   ├── elements.js       # Draggable HTML element catalogue + tag labels
+        │   ├── i18n.js           # t() lookup dictionary (en/zh-TW/ja)
+        │   ├── styleProps.js     # Inspector style editor grid (font/color/spacing widgets)
+        │   └── templates.js      # 5 MVP starter templates
         └── modules/         # DOM-aware feature modules
             ├── canvas.js        # Drag/drop + SortableJS wiring
             ├── canvasHelpers.js # Snap grid, guides, resize handles

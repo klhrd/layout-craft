@@ -1,4 +1,5 @@
 import { ELEMENT_CATEGORIES } from '../config/elements.js';
+import { STYLE_PROPS, FONT_WEIGHT_OPTIONS, FONT_SIZE_PRESETS, FONT_OPTIONS } from '../config/styleProps.js';
 import * as cssState from './cssState.js';
 import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
@@ -23,46 +24,6 @@ let hierarchyContainer = null;
 let hierarchyParentName = null;
 
 // Counter for auto-generated classes (e.g. ._lc-1, ._lc-2).
-
-// The set of CSS properties shown in the quick style editor.
-// `widget` selects the input type: 'color', 'select', 'align', 'fontSize', or 'text' (default).
-const STYLE_PROPS = [
-    { key: 'color', labelKey: 'ui.inspector.color', widget: 'color' },
-    { key: 'background-color', labelKey: 'ui.inspector.bgColor', widget: 'color' },
-    { key: 'font-size', labelKey: 'ui.inspector.fontSize', widget: 'fontSize' },
-    { key: 'font-weight', labelKey: 'ui.inspector.fontWeight', widget: 'select' },
-    { key: 'text-align', labelKey: 'ui.inspector.textAlign', widget: 'align' },
-    { key: 'font-family', labelKey: 'ui.inspector.fontFamily', widget: 'fontFamily' },
-    { key: 'width', labelKey: 'ui.inspector.width', widget: 'unitSlider' },
-    { key: 'height', labelKey: 'ui.inspector.height', widget: 'unitSlider' },
-    { key: 'gap', labelKey: 'ui.inspector.gap', widget: 'unitSlider' },
-    { key: 'border-radius', labelKey: 'ui.inspector.borderRadius', widget: 'unitSlider' },
-    { key: 'opacity', labelKey: 'ui.inspector.opacity', widget: 'opacity' },
-    { key: 'padding', labelKey: 'ui.inspector.padding', widget: 'spacing' },
-    { key: 'margin', labelKey: 'ui.inspector.margin', widget: 'spacing' },
-    { key: 'box-shadow', labelKey: 'ui.inspector.boxShadow', widget: 'boxShadow' },
-];
-
-const FONT_WEIGHT_OPTIONS = [
-    { value: '100', label: '100 Thin' },
-    { value: '200', label: '200 Extra Light' },
-    { value: '300', label: '300 Light' },
-    { value: '400', label: '400 Normal' },
-    { value: '500', label: '500 Medium' },
-    { value: '600', label: '600 Semi Bold' },
-    { value: '700', label: '700 Bold' },
-    { value: '800', label: '800 Extra Bold' },
-    { value: '900', label: '900 Black' },
-];
-
-const FONT_SIZE_PRESETS = [
-    { value: '0.75rem', label: 'XS' },
-    { value: '0.875rem', label: 'SM' },
-    { value: '1rem', label: 'Base' },
-    { value: '1.25rem', label: 'LG' },
-    { value: '1.5rem', label: 'XL' },
-    { value: '2rem', label: '2XL' },
-];
 
 // Tiny debounce help: collapse rapid keystrokes into a single history
 // command so undo can roll back a whole "padding: 20px -> 40px" change
@@ -601,22 +562,6 @@ function createOpacityWidget(initialValue, onChange) {
     wrapper.appendChild(label);
     return wrapper;
 }
-
-/* ── Font-family system font dropdown ── */
-const FONT_OPTIONS = [
-    { value: '', label: 'Default' },
-    { value: 'Arial, Helvetica, sans-serif', label: 'Arial / Helvetica' },
-    { value: '"Helvetica Neue", Helvetica, Arial, sans-serif', label: 'Helvetica Neue' },
-    { value: 'Georgia, "Times New Roman", serif', label: 'Georgia' },
-    { value: '"Times New Roman", Times, serif', label: 'Times New Roman' },
-    { value: 'Verdana, Geneva, sans-serif', label: 'Verdana' },
-    { value: '"Trebuchet MS", sans-serif', label: 'Trebuchet MS' },
-    { value: 'Tahoma, Geneva, sans-serif', label: 'Tahoma' },
-    { value: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif', label: 'Segoe UI' },
-    { value: 'monospace', label: 'Monospace' },
-    { value: 'cursive', label: 'Cursive' },
-    { value: 'system-ui, -apple-system, sans-serif', label: 'System UI' },
-];
 
 function createFontFamilyWidget(initialValue, onChange) {
     const select = document.createElement('select');

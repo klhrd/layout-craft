@@ -16,6 +16,53 @@ export const CONTAINER_TAGS = [
     'dl',
 ];
 
+/*
+Human-readable labels for every HTML tag the editor can render in the Layers
+panel. Keys are lowercased tag names; missing tags fall back to the raw tag
+upcased by the caller. Extend this map when new draggable elements are added
+to ELEMENT_CATEGORIES.
+*/
+export const TAG_LABELS = {
+    div: 'Div',
+    p: 'Paragraph',
+    h1: 'Heading 1',
+    h2: 'Heading 2',
+    h3: 'Heading 3',
+    h4: 'Heading 4',
+    h5: 'Heading 5',
+    h6: 'Heading 6',
+    span: 'Span',
+    a: 'Link',
+    button: 'Button',
+    img: 'Image',
+    ul: 'Unordered List',
+    ol: 'Ordered List',
+    li: 'List Item',
+    input: 'Input',
+    textarea: 'Textarea',
+    label: 'Label',
+    form: 'Form',
+    section: 'Section',
+    header: 'Header',
+    footer: 'Footer',
+    nav: 'Nav',
+    main: 'Main',
+    aside: 'Aside',
+    blockquote: 'Blockquote',
+    pre: 'Pre',
+    code: 'Code',
+    hr: 'HR',
+    br: 'BR',
+    strong: 'Strong',
+    em: 'Emphasis',
+    table: 'Table',
+    thead: 'Table Head',
+    tbody: 'Table Body',
+    tr: 'Table Row',
+    th: 'Table Header',
+    td: 'Table Cell',
+};
+
 export const ELEMENT_CATEGORIES = {
     layout: {
         title: 'Layout Blocks',

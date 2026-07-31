@@ -2,6 +2,7 @@ import { deselectAll } from './inspector.js';
 import { getActiveCssCode } from './cssEditor.js';
 import { cancelActiveInlineEdit } from './canvas.js';
 import { t } from '../config/i18n.js';
+import { DEVICES } from '../config/devices.js';
 import { buildJsxExport } from './codegen/jsxExport.js';
 import { buildVueExport } from './codegen/vueExport.js';
 import { exportAsWebComponent } from './codegen/wcExport.js';
@@ -29,12 +30,6 @@ const canvas = document.getElementById('canvas');
 const btnPreview = document.getElementById('btn-preview');
 const btnExport = document.getElementById('btn-export');
 
-const DEVICES = [
-    { label: 'Desktop', width: null, icon: '🖥️' },
-    { label: 'Tablet', width: 768, icon: '📱' },
-    { label: 'Mobile', width: 375, icon: '📲' },
-];
-
 let activeDeviceIdx = 0;
 
 function getCanvasContent() {
@@ -58,7 +53,7 @@ export function initExporter() {
             const btn = document.createElement('button');
             btn.type = 'button';
             btn.className = 'preview-device-btn' + (i === 0 ? ' active' : '');
-            btn.textContent = `${d.icon} ${d.label}`;
+            btn.innerHTML = `<span class="mat-icon">${d.icon}</span> ${d.label}`;
             btn.addEventListener('click', () => {
                 toolbar.querySelectorAll('.preview-device-btn').forEach((b) => b.classList.remove('active'));
                 btn.classList.add('active');

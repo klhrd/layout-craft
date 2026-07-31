@@ -1,31 +1,4 @@
-const JSX_ATTR_MAP = {
-    class: 'className',
-    for: 'htmlFor',
-    tabindex: 'tabIndex',
-    readonly: 'readOnly',
-    maxlength: 'maxLength',
-    colspan: 'colSpan',
-    rowspan: 'rowSpan',
-};
-
-const BOOLEAN_ATTRS = new Set(['disabled', 'required', 'checked', 'selected', 'readonly', 'multiple']);
-
-const VOID_ELEMENTS = new Set([
-    'area',
-    'base',
-    'br',
-    'col',
-    'embed',
-    'hr',
-    'img',
-    'input',
-    'link',
-    'meta',
-    'param',
-    'source',
-    'track',
-    'wbr',
-]);
+import { JSX_ATTR_MAP, BOOLEAN_ATTRS, VOID_ELEMENTS } from '../../config/codegen.js';
 
 export function attrMap(node, format) {
     const attrs = {};
