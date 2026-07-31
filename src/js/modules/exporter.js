@@ -6,6 +6,7 @@ import { DEVICES } from '../config/devices.js';
 import { buildJsxExport } from './codegen/jsxExport.js';
 import { buildVueExport } from './codegen/vueExport.js';
 import { exportAsWebComponent } from './codegen/wcExport.js';
+import { makeZip } from './zipWriter.js';
 
 export function buildExportHtml(innerHtml) {
     return `<!DOCTYPE html>
@@ -139,6 +140,7 @@ export function initExporter() {
 
         const items = [
             { label: '📄 Single-file HTML (inlined CSS)', format: 'html-single' },
+            { label: '📦 Whole-site ZIP (HTML + CSS + assets)', format: 'zip' },
             { label: '🌐 HTML + CSS', format: 'html' },
             { label: '⚛️ React JSX + CSS', format: 'react' },
             { label: '💚 Vue SFB (scoped)', format: 'vue' },
@@ -189,6 +191,10 @@ function doExport(format) {
     if (format === 'html-single') {
         const html = buildSingleFileHtml(canvasClone.innerHTML, cssCode);
         downloadFile('index.html', html);
+    } else if (format === 'zip') {
+        buildSiteZip(canvasClone.innerHTML, cssCode).then((bytes) => {
+            downloadBytes('site.zip', bytes, 'application/zip');
+        });
     } else if (format === 'html') {
         const html = buildExportHtml(canvasClone.innerHTML);
         downloadFile('index.html', html);
@@ -209,6 +215,57 @@ function doExport(format) {
 export function cleanStyles(element) {
     element.classList.remove('selected-element');
     Array.from(element.children).forEach((child) => cleanStyles(child));
+}
+
+const MIME_EXT = {
+    png: 'png',
+    jpeg: 'jpg',
+    jpg: 'jpg',
+    gif: 'gif',
+    webp: 'webp',
+    'svg+xml': 'svg',
+};
+
+export function extractDataImages(html) {
+    const assets = [];
+    let counter = 0;
+    const rewritten = html.replace(
+        /src="(data:image\/([a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=]+))"/g,
+        (match, uri, mime, b64) => {
+            counter++;
+            const ext = MIME_EXT[mime] || 'bin';
+            const filename = `assets/img-${counter}.${ext}`;
+            const binary = atob(b64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            assets.push({ name: filename, data: bytes });
+            return `src="./${filename}"`;
+        },
+    );
+    return { html: rewritten, assets };
+}
+
+export async function buildSiteZip(innerHtml, cssCode) {
+    const { html, assets } = extractDataImages(innerHtml);
+    const files = [
+        { name: 'index.html', data: buildExportHtml(html) },
+        { name: 'style.css', data: buildExportCss(cssCode) },
+        ...assets,
+    ];
+    return makeZip(files);
+}
+
+function downloadBytes(filename, bytes, mime) {
+    const blob = new Blob([bytes], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const element = document.createElement('a');
+    element.setAttribute('href', url);
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function downloadFile(filename, text) {
