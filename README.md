@@ -45,8 +45,9 @@ framework, no build step beyond Vite for the dev server.
   remote cursor/selection overlay (10 Hz), Follow mode, anonymous read-only
   join.
 - **Multi-project LocalStorage** with 5 MB meter and 85% red warning.
-- **Export** — standalone HTML/CSS, React JSX, Vue SFC, or Web Component
-  (Custom Element with shadow DOM).
+- **Export** — standalone HTML/CSS, whole-site ZIP (HTML + CSS + images in an
+  `assets/` folder), React JSX, Vue SFC, or Web Component (Custom Element with
+  shadow DOM).
 - **Undo/redo** — bounded command stack with debounced history entries.
 
 ## Quick start
@@ -161,7 +162,9 @@ layout-craft/
             ├── templateGallery.js # Template gallery modal
             ├── templateLoader.js  # Template replace/append insertion
             ├── tokenEditor.js   # Design tokens panel (:root CSS variables)
+            ├── tokenPicker.js   # var(--token) picker popup
             ├── yjsAdapter.js    # Yjs DOM<->Y.Doc + cssState<->Y.Map bridge
+            ├── zipWriter.js     # Zero-dep ZIP writer (CompressionStream)
             └── codegen/
                 ├── domWalker.js  # DOM tree walker for exporters
                 ├── jsxExport.js  # React JSX export

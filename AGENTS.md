@@ -57,6 +57,11 @@ commit so the tree stays green.
 - `src/js/modules/storage.js` — multi-project LocalStorage manager + meter.
 - `src/js/modules/tokenEditor.js` — design tokens panel (`--css-*` variables,
   stored per-project, emitted as `:root { … }`).
+- `src/js/modules/tokenPicker.js` — `var(--token)` picker popup shared by the
+  CSS sidebar value inputs and the Inspector style rows.
+- `src/js/modules/zipWriter.js` — zero-dependency ZIP writer (`CompressionStream`
+  deflate-raw with store fallback, hand-rolled CRC32); consumed by the exporter
+  for the whole-site zip export.
 - `src/js/modules/sync.js` — optional cloud sync via Supabase (auth, push/pull,
   debounced background sync, conflict prompt). Gracefully degrades when env vars
   are missing or the user is not authenticated.

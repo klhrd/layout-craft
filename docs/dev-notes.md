@@ -19,7 +19,7 @@ scratchpad of _why_ things were done a certain way.
   project tokens win). Deliberate: appending a section shouldn't clobber the
   user's current design system.
 
-## 2026-07-31 — P5c zip export (in progress)
+## 2026-07-31 — P5c zip export (done, merged)
 
 - Plan: whole-site zip (index.html + styles.css + assets/) as a new export
   option, completing the P4b leftover.
@@ -38,4 +38,7 @@ scratchpad of _why_ things were done a certain way.
 - Verified: tests parse the produced zip (EOCD → central dir → local
   headers) and inflate entries with Node zlib; both deflate and store paths
   covered.
-- Committed step 1 (zipWriter + exporter integration + tests) already.
+- DONE: committed in 3 commits on `feature/zip-export` (zip writer + tests,
+  dev-notes, lint/format fix — `while(true)` tripped `no-constant-condition`,
+  rewrote as a `for` loop over the reader). 196 tests green, lint/format/
+  build clean, merged to master.
