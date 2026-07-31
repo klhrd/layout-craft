@@ -11,7 +11,7 @@ import { initCanvasHelpers } from './modules/canvasHelpers.js';
 import { initContextMenu } from './modules/contextMenu.js';
 import { initExporter } from './modules/exporter.js';
 import { importFromPaste } from './modules/importer.js';
-import { initStorage, saveProject, loadProject, populateProjectList } from './modules/storage.js';
+import { initStorage, saveProject } from './modules/storage.js';
 import * as history from './modules/history.js';
 import { push as pushHistory } from './modules/history.js';
 import {
@@ -22,17 +22,7 @@ import {
     setDraggedCssBlockData,
 } from './modules/cssEditor.js';
 import { initIcons } from './modules/icons.js';
-import {
-    initSupabase,
-    signInWithEmail,
-    signInWithGitHub,
-    signOut,
-    isAuthenticated,
-    getUser,
-    onAuthChange,
-    pullProjects,
-    pullProject,
-} from './modules/sync.js';
+import { initSupabase } from './modules/sync.js';
 import { createYDoc, initCanvasSync, initCssSync } from './modules/yjsAdapter.js';
 import { initPresence, setThrottledCursor, updateCursor } from './modules/presence.js';
 import { initFollowMode } from './modules/followMode.js';
@@ -80,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initSupabase();
     initStorage(); // Boot the storage manager.
-    initAuthUI();
+    // initAuthUI(); // Disabled: product is account-free (open-source, self-hosted). See docs/ROADMAP.md.
     initIcons();
     import('./modules/templateGallery.js').then(({ initTemplateGallery }) => initTemplateGallery());
     initCollab();
@@ -264,7 +254,7 @@ function initMenus() {
                     document.getElementById('btn-save-project').click();
                     break;
                 case 'pull-cloud':
-                    syncOnStart();
+                    // syncOnStart(); // Disabled: account-free positioning.
                     break;
                 case 'export':
                     document.getElementById('btn-export').click();
@@ -738,6 +728,12 @@ function initHistoryUI() {
     });
 }
 
+/*
+ * Auth UI is disabled with the account-free product positioning
+ * (open-source, self-hosted, local-first). To re-enable cloud sync,
+ * uncomment these functions, the initAuthUI() call in initApp(), and
+ * the auth-modal / auth-controls markup in index.html. See docs/ROADMAP.md.
+
 function initAuthUI() {
     const btn = document.getElementById('btn-auth');
     if (!btn) return;
@@ -823,7 +819,12 @@ function syncOnStart() {
         })
         .catch(() => {});
 }
+*/
 
+/*
+ * Conflict modal is part of the disabled cloud-sync flow (see the auth UI
+ * block above). Uncomment together with the auth UI to re-enable.
+ *
 function showConflictModal(projectName, remoteData) {
     const modal = document.getElementById('conflict-modal');
     if (!modal) return;
@@ -854,3 +855,4 @@ function showConflictModal(projectName, remoteData) {
         if (e.target === modal) modal.style.display = 'none';
     };
 }
+*/

@@ -21,10 +21,11 @@
                             <button data-action="open"><span class="mat-icon">folder_open</span> Open Project</button>
                             <button data-action="save"><span class="mat-icon">save</span> Save</button>
                             <div class="menu-sep"></div>
+                            <!-- Disabled with account-free positioning: cloud sync requires auth. See docs/ROADMAP.md.
                             <button data-action="pull-cloud">
                                 <span class="mat-icon">cloud_download</span> Pull from cloud
                             </button>
-                            <div class="menu-sep"></div>
+                            -->
                             <button data-action="import"><span class="mat-icon">upload</span> Import HTML/CSS</button>
                             <button data-action="export"><span class="mat-icon">download</span> Export</button>
                         </div>
@@ -149,9 +150,11 @@
 
                     <div class="toolbar-sep"></div>
 
+                    <!--
                     <span class="auth-controls">
                         <button id="btn-auth" class="btn-secondary" title="Sign in">Sign in</button>
                     </span>
+                    -->
                 </div>
             </div>
 
@@ -361,6 +364,7 @@
             </div>
         </div>
 
+        <!--
         <div id="auth-modal" class="modal-overlay">
             <div class="modal-dialog">
                 <h2 class="modal-title">
@@ -376,6 +380,7 @@
                 <button id="btn-auth-github" class="btn-secondary" style="width: 100%">Sign in with GitHub</button>
             </div>
         </div>
+        -->
 
         <div id="conflict-modal" class="modal-overlay">
             <div class="modal-dialog">
