@@ -48,6 +48,9 @@ framework, no build step beyond Vite for the dev server.
 - **Export** — standalone HTML/CSS, whole-site ZIP (HTML + CSS + images in an
   `assets/` folder), React JSX, Vue SFC, or Web Component (Custom Element with
   shadow DOM).
+- **Offline PWA** — installable manifest + zero-dependency service worker
+  (precaches the whole app at build time, cache-first serving) so the editor
+  boots fully offline after the first visit.
 - **Undo/redo** — bounded command stack with debounced history entries.
 
 ## Quick start

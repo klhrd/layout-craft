@@ -3,7 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#2563eb" />
         <title>LayoutCraft Studio - Visual Web Builder</title>
+        <link rel="manifest" href="./manifest.webmanifest" />
+        <link rel="icon" type="image/svg+xml" href="./icons/icon.svg" />
         <link rel="stylesheet" href="src/css/editor.css" />
         <style id="live-styles"></style>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -409,5 +412,12 @@
         </div>
 
         <script type="module" src="src/js/app.js"></script>
+        <script>
+            // Offline PWA: sw.js only exists in the production build (written
+            // by scripts/pwa.js). Dev 404s are expected and ignored.
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('./sw.js').catch(function () {});
+            }
+        </script>
     </body>
 </html>
