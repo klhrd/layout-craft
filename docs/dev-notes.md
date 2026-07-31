@@ -42,3 +42,29 @@ scratchpad of _why_ things were done a certain way.
   dev-notes, lint/format fix — `while(true)` tripped `no-constant-condition`,
   rewrote as a `for` loop over the reader). 196 tests green, lint/format/
   build clean, merged to master.
+
+## 2026-07-31 — P5d offline PWA (in progress)
+
+- Plan: service worker + installable manifest so the editor boots fully
+  offline; LocalStorage + `.lcproj` flows already work offline by design.
+- Open question: `vite-plugin-pwa` (Workbox, standard but adds a dependency
+  tree + ~40 kB runtime) vs hand-rolled SW generated at build time.
+- DECIDED: zero-dependency, matching the P5c zip decision. A tiny Vite
+  plugin (`scripts/pwa.js`) scans `dist/` in `closeBundle`, hashes the file
+  list, and writes `dist/sw.js` with the precache list inlined. The SW
+  itself is ~25 lines of vanilla: cache-first for same-origin GET, network
+  with cache fallback for the rest.
+- CRITICAL offline catch: SortableJS loads from jsdelivr CDN via `<script>`.
+  A precache-only SW would break the editor offline. So the fetch handler
+  also caches cross-origin GET responses (CORS-enabled — jsdelivr sends
+  `Access-Control-Allow-Origin: *`), making CDN scripts work offline after
+  the first visit. Non-CORS third-party resources are never cached (opaque
+  responses fail the `res.ok` check) — acceptable, noted in ROADMAP.
+- Cache versioning: SW content = f(file list), so any build that changes
+  assets changes the cache name (`lc-<hash>`); `activate` deletes old
+  `lc-*` caches. No manual version bumps.
+- Icons: SVG manifest icon (Chrome/Edge/Firefox support `image/svg+xml`
+  with `purpose: any maskable`). No PNG pipeline in the repo; iOS home
+  screen will fall back to a screenshot — accepted, noted.
+- Dev mode: `register('./sw.js')` 404s silently (`.catch(() => {})`), no
+  PROD gate needed.
