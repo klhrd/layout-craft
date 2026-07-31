@@ -168,6 +168,10 @@ All items below are **local-first and account-free**.
 - Docs: install guide (clone → `npm i` → `npm run dev` / `build`), optional
   Supabase/WebSocket env setup for cloud sync + collab
 - `docker-compose.yml` for one-command self-host (static server + optional sync backend)
+- ✅ **Done 2026-07-31** — `docs/self-hosting.md` (install, deploy options,
+  nginx config, Docker build-args for optional sync), `Dockerfile`
+  (multi-stage node→nginx), `docker-compose.yml`, `.dockerignore`, README
+  Quick Start / Self-hosting sections updated.
 
 #### P4b. File-first sharing
 
@@ -220,7 +224,7 @@ P1d  (SVG icons)             ✅ done
 P2b  (backend cloud sync)    ✅ done
 P3a  (collaboration)         ✅ done
 P3b  (template marketplace)  ✅ done
-P4a  (self-host quickstart)  next
+P4a  (self-host quickstart)  ✅ done
 P4b  (file-first sharing)    next
 P4c  (template library)      later
 P4d  (design tokens)         later
@@ -245,7 +249,7 @@ from the latest `master` and merge back when green.
 | `feature/backend-sync`         | P2b  | ✅ Merged to master |
 | `feature/collab`               | P3a  | ✅ Merged to master |
 | `feature/template-marketplace` | P3b  | ✅ Merged to master |
-| `feature/self-host-quickstart` | P4a  | ⏳ Planned          |
+| `feature/self-host-quickstart` | P4a  | ✅ Merged to master |
 | `feature/file-sharing`         | P4b  | ⏳ Planned          |
 | `feature/template-library`     | P4c  | ⏳ Planned          |
 | `feature/design-tokens`        | P4d  | ⏳ Planned          |

@@ -56,9 +56,30 @@ npm test               # Run unit tests once
 npm run test:watch     # Unit tests in watch mode
 ```
 
+### Self-hosting
+
+LayoutCraft is an open-source, self-hostable, local-first tool. The production
+build is a static site (`dist/`) that runs with zero backend — just serve it:
+
+```bash
+npm run build
+# then host dist/ anywhere (nginx, GitHub Pages, Netlify, ...)
+```
+
+One-command Docker self-host (nginx container on `http://localhost:8080`):
+
+```bash
+docker compose up -d --build
+```
+
+See [`docs/self-hosting.md`](docs/self-hosting.md) for the full guide
+(nginx config, deploy options, optional Supabase sync, Docker build args).
+
 ### Cloud sync setup
 
-Cloud sync is optional. Create a `.env` (or `.env.development` /
+Cloud sync is an **optional add-on and is disabled by default** (the product
+is account-free — see [`docs/ROADMAP.md`](docs/ROADMAP.md)). If you self-host
+and want sync for your own instance, create a `.env` (or `.env.development` /
 `.env.production`) in the repo root with your Supabase project credentials:
 
 ```env
@@ -68,8 +89,10 @@ VITE_SUPABASE_ANON_KEY=your-anon-key-here
 
 Then run the migration in [`docs/migrations/supabase-migration.sql`](docs/migrations/supabase-migration.sql)
 in your Supabase SQL editor to create the `projects` table with Row-Level
-Security. Without these env vars, all cloud operations are silently skipped —
-the app runs fully offline with LocalStorage only.
+Security, and re-enable the commented-out auth UI (search for "account-free
+positioning" in `src/js/app.js` and `index.html`). Without env vars, all cloud
+operations are silently skipped — the app runs fully offline with LocalStorage
+only.
 
 ### Deployment
 
@@ -81,6 +104,9 @@ and deploys the `dist/` folder to GitHub Pages.
 ```text
 layout-craft/
 ├── index.html               # App entry (workspace HTML scaffold)
+├── Dockerfile               # Multi-stage build (node → nginx)
+├── docker-compose.yml       # One-command self-host
+├── nginx.conf               # nginx config for the Docker image
 ├── package.json             # npm scripts + dependencies
 ├── vite.config.js           # Vite dev/build/preview config
 ├── vitest.config.js         # Vitest config (happy-dom env)
@@ -145,6 +171,7 @@ All project docs live in [`docs/`](docs/):
 | [`docs/import-flow.md`](docs/import-flow.md)                                       | HTML/CSS paste import design                                                   |
 | [`docs/web-component-export.md`](docs/web-component-export.md)                     | Web Component (Custom Element) export design                                   |
 | [`docs/backend-sync.md`](docs/backend-sync.md)                                     | Supabase cloud sync design (P2b)                                               |
+| [`docs/self-hosting.md`](docs/self-hosting.md)                                     | Self-hosting guide: install, deploy, Docker, optional Supabase sync (P4a)      |
 | [`docs/i18n-theming.md`](docs/i18n-theming.md)                                     | i18n + light/dark theme design                                                 |
 | [`docs/collab.md`](docs/collab.md)                                                 | Realtime Yjs collaboration design (P3a)                                        |
 | [`docs/template-marketplace.md`](docs/template-marketplace.md)                     | Template marketplace design (P3b)                                              |

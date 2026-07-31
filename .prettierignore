@@ -2,3 +2,7 @@
 node_modules/
 *.min.js
 package-lock.json
+
+Dockerfile
+.dockerignore
+nginx.conf

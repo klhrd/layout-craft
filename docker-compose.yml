@@ -1,0 +1,11 @@
+services:
+    layoutcraft:
+        build:
+            context: .
+            args:
+                VITE_SUPABASE_URL: ${VITE_SUPABASE_URL:-}
+                VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY:-}
+        container_name: layoutcraft
+        ports:
+            - '${LC_HTTP_PORT:-8080}:80'
+        restart: unless-stopped
