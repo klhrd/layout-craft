@@ -12,6 +12,7 @@ import { initContextMenu } from './modules/contextMenu.js';
 import { initExporter } from './modules/exporter.js';
 import { importFromPaste } from './modules/importer.js';
 import { initStorage, saveProject } from './modules/storage.js';
+import { exportProjectFile, importProjectFile, initProjectFileDrop } from './modules/projectFile.js';
 import * as history from './modules/history.js';
 import { push as pushHistory } from './modules/history.js';
 import {
@@ -71,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSupabase();
     initStorage(); // Boot the storage manager.
     // initAuthUI(); // Disabled: product is account-free (open-source, self-hosted). See docs/ROADMAP.md.
+    initProjectFileDrop();
     initIcons();
     import('./modules/templateGallery.js').then(({ initTemplateGallery }) => initTemplateGallery());
     initCollab();
@@ -259,6 +261,22 @@ function initMenus() {
                 case 'export':
                     document.getElementById('btn-export').click();
                     break;
+                case 'export-project':
+                    exportProjectFile(document.getElementById('select-project').value);
+                    break;
+                case 'import-project': {
+                    const input = document.getElementById('import-project-input');
+                    input.onchange = () => {
+                        const file = input.files && input.files[0];
+                        input.value = '';
+                        if (!file) return;
+                        importProjectFile(file)
+                            .then((name) => alert(t('ui.project.importSuccess', name)))
+                            .catch((err) => alert(err.message));
+                    };
+                    input.click();
+                    break;
+                }
                 case 'open':
                     showOpenProjectModal();
                     break;

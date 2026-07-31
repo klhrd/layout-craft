@@ -22,6 +22,23 @@ ${innerHtml.trim()}
 </html>`;
 }
 
+export function buildSingleFileHtml(innerHtml, cssCode) {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LayoutCraft Site</title>
+    <style>
+${cssCode}
+    </style>
+</head>
+<body>
+${innerHtml.trim()}
+</body>
+</html>`;
+}
+
 export function buildExportCss(cssCode) {
     return `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n${cssCode}`;
 }
@@ -121,6 +138,7 @@ export function initExporter() {
         `;
 
         const items = [
+            { label: '📄 Single-file HTML (inlined CSS)', format: 'html-single' },
             { label: '🌐 HTML + CSS', format: 'html' },
             { label: '⚛️ React JSX + CSS', format: 'react' },
             { label: '💚 Vue SFB (scoped)', format: 'vue' },
@@ -168,7 +186,10 @@ function doExport(format) {
     const canvasClone = getCanvasContent();
     const cssCode = buildExportCss(getActiveCssCode());
 
-    if (format === 'html') {
+    if (format === 'html-single') {
+        const html = buildSingleFileHtml(canvasClone.innerHTML, cssCode);
+        downloadFile('index.html', html);
+    } else if (format === 'html') {
         const html = buildExportHtml(canvasClone.innerHTML);
         downloadFile('index.html', html);
         downloadFile('style.css', cssCode);

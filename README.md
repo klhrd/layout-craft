@@ -26,7 +26,11 @@ framework, no build step beyond Vite for the dev server.
 - **Light/dark theme** with CSS custom properties + three locales (en, zh-TW, ja).
 - **Template marketplace** — 5 MVP starter templates (navbar, hero, pricing,
   footer, login form) insertable via **Replace** or **Append** with storage
-  quota warning.
+  quota warning. Drop extra templates into `public/templates/` (manifest-driven,
+  no code changes) to extend the gallery of your own install.
+- **File-first sharing** — projects export/import as `.lcproj` JSON (File menu
+  or drag the file onto the window); exports include single-file HTML with
+  inlined CSS.
 - **Optional cloud sync** — Supabase auth (email magic-link / GitHub OAuth),
   debounced push after edits, pull on start, "Cloud is newer — Pull / Keep
   local" conflict prompt. Fully offline-capable when env vars are absent.
@@ -113,6 +117,8 @@ layout-craft/
 ├── jsconfig.json            # Editor type-awareness + path aliases
 ├── .env.example             # Supabase env var placeholders
 ├── AGENTS.md                # Instructions for AI agents and humans
+├── public/
+│   └── templates/           # Drop-in template folder (manifest-driven)
 ├── docs/                    # All project documentation (see below)
 └── src/
     ├── css/
@@ -142,6 +148,7 @@ layout-craft/
             ├── inspector.js     # Property inspector + dynamic attrs
             ├── layers.js        # Layers tree panel
             ├── presence.js      # Remote cursor/selection overlay
+            ├── projectFile.js   # .lcproj export/import + drag-and-drop
             ├── storage.js       # Multi-project LocalStorage + quota meter
             ├── sync.js          # Optional Supabase cloud sync
             ├── templateGallery.js # Template gallery modal
@@ -176,6 +183,7 @@ All project docs live in [`docs/`](docs/):
 | [`docs/collab.md`](docs/collab.md)                                                 | Realtime Yjs collaboration design (P3a)                                        |
 | [`docs/template-marketplace.md`](docs/template-marketplace.md)                     | Template marketplace design (P3b)                                              |
 | [`docs/migrations/supabase-migration.sql`](docs/migrations/supabase-migration.sql) | Supabase `projects` table + RLS migration                                      |
+| [`public/templates/README.md`](public/templates/README.md)                         | Drop-in template folder format (`manifest.json` + JSON files)                  |
 
 See [`AGENTS.md`](AGENTS.md) for the canonical commands and conventions that
 agents (and humans) should follow when working on this repo.

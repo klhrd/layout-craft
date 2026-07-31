@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 
 // These functions don't need DOM at module level, so static import is fine.
-import { buildExportHtml, buildExportCss, cleanStyles } from '../src/js/modules/exporter.js';
+import { buildExportHtml, buildExportCss, buildSingleFileHtml, cleanStyles } from '../src/js/modules/exporter.js';
 
 describe('buildExportHtml', () => {
     it('wraps inner HTML in a full document template', () => {
@@ -48,6 +48,15 @@ describe('cleanStyles', () => {
     it('does not throw on an element with no children', () => {
         const el = document.createElement('br');
         expect(() => cleanStyles(el)).not.toThrow();
+    });
+});
+
+describe('buildSingleFileHtml', () => {
+    it('inlines CSS in a <style> block and omits the stylesheet link', () => {
+        const result = buildSingleFileHtml('<p>Hi</p>', '.p { color: red; }');
+        expect(result).toContain('<style>');
+        expect(result).toContain('.p { color: red; }');
+        expect(result).not.toContain('style.css');
     });
 });
 

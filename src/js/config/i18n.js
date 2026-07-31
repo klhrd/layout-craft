@@ -36,6 +36,10 @@ const DICTIONARY = {
                 export: '💾 Export Project',
                 newPrompt: 'Enter new project name:',
                 existsAlert: 'Project name already exists!',
+                exportProject: '📤 Export Project (.lcproj)',
+                importProject: '📥 Import Project (.lcproj)',
+                importSuccess: 'Project imported: {0}',
+                importInvalid: 'Invalid .lcproj file — nothing was imported.',
             },
             panels: {
                 cssBlocks: 'CSS Blocks',
@@ -151,6 +155,10 @@ const DICTIONARY = {
                 export: '💾 匯出專案',
                 newPrompt: '輸入新專案名稱：',
                 existsAlert: '專案名稱已存在！',
+                exportProject: '📤 匯出專案 (.lcproj)',
+                importProject: '📥 匯入專案 (.lcproj)',
+                importSuccess: '專案已匯入：{0}',
+                importInvalid: '無效的 .lcproj 檔案 — 未匯入任何內容。',
             },
             panels: {
                 cssBlocks: 'CSS 區塊',
@@ -266,6 +274,10 @@ const DICTIONARY = {
                 export: '💾 プロジェクトをエクスポート',
                 newPrompt: '新しいプロジェクト名を入力：',
                 existsAlert: 'プロジェクト名は既に存在します！',
+                exportProject: '📤 プロジェクトをエクスポート (.lcproj)',
+                importProject: '📥 プロジェクトをインポート (.lcproj)',
+                importSuccess: 'プロジェクトをインポートしました：{0}',
+                importInvalid: '無効な .lcproj ファイル — 何もインポートされませんでした。',
             },
             panels: {
                 cssBlocks: 'CSS ブロック',

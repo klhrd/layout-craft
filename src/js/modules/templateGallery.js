@@ -2,6 +2,7 @@ import { TEMPLATES } from '../config/templates.js';
 import { t } from '../config/i18n.js';
 import { instantiateTemplate } from './templateLoader.js';
 
+let templates = [...TEMPLATES];
 let activeCategory = 'all';
 let searchQuery = '';
 
@@ -13,8 +14,40 @@ const ICONS = {
     'login-form': '🔐',
 };
 
+async function loadDropInTemplates() {
+    try {
+        const res = await fetch('./templates/manifest.json', { cache: 'no-store' });
+        if (!res.ok) return;
+        const manifest = await res.json();
+        if (!manifest || !Array.isArray(manifest.templates)) return;
+        const loaded = await Promise.all(
+            manifest.templates.map(async (entry) => {
+                try {
+                    const fileRes = await fetch(`./templates/${entry.file}`, { cache: 'no-store' });
+                    if (!fileRes.ok) return null;
+                    const content = await fileRes.json();
+                    return {
+                        id: entry.id,
+                        title: entry.title,
+                        category: entry.category || 'marketing',
+                        tags: entry.tags || [],
+                        html: content.html || '',
+                        cssData: content.cssData || {},
+                    };
+                } catch (e) {
+                    return null;
+                }
+            }),
+        );
+        const valid = loaded.filter((tmpl) => tmpl && tmpl.html);
+        if (valid.length) templates = [...TEMPLATES, ...valid];
+    } catch (e) {
+        // Manifest missing → built-in templates only.
+    }
+}
+
 function filterTemplates() {
-    return TEMPLATES.filter((tmpl) => {
+    return templates.filter((tmpl) => {
         if (activeCategory !== 'all' && tmpl.category !== activeCategory) return false;
         if (searchQuery) {
             const q = searchQuery.toLowerCase();
@@ -109,6 +142,10 @@ export function initTemplateGallery() {
 
     titleEl.textContent = t('ui.templates.title');
     btnOpen.textContent = t('ui.templates.button');
+
+    loadDropInTemplates().then(() => {
+        if (activeCategory === 'all') renderGrid();
+    });
 
     btnOpen.addEventListener('click', () => {
         const catBtns = catContainer.querySelectorAll('.template-cat-btn');

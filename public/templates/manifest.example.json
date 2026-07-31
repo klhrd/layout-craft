@@ -1,0 +1,11 @@
+{
+    "templates": [
+        {
+            "id": "my-hero",
+            "title": "My Hero",
+            "category": "marketing",
+            "tags": ["hero", "landing", "example"],
+            "file": "my-hero.json"
+        }
+    ]
+}

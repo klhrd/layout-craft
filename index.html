@@ -27,7 +27,14 @@
                             </button>
                             -->
                             <button data-action="import"><span class="mat-icon">upload</span> Import HTML/CSS</button>
+                            <button data-action="import-project">
+                                <span class="mat-icon">file_open</span> Import Project (.lcproj)
+                            </button>
+                            <button data-action="export-project">
+                                <span class="mat-icon">file_download</span> Export Project (.lcproj)
+                            </button>
                             <button data-action="export"><span class="mat-icon">download</span> Export</button>
+                            <input type="file" id="import-project-input" accept=".lcproj,application/json" hidden />
                         </div>
                     </div>
 
