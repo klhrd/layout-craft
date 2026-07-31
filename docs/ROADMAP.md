@@ -221,6 +221,78 @@ All items below are **local-first and account-free**.
 
 ---
 
+## P5 — Future plan (close the loop on P4, then build the ecosystem)
+
+All items below stay **local-first and account-free**, extending the P4
+foundation (file sharing, templates, tokens) rather than adding new services.
+
+### Near-term (finish the current plan)
+
+#### P5a. AI assistant (P4e)
+
+**Branch**: `feature/ai-css-assistant`
+**Effort**: ~14 days
+
+The only remaining P4 item — natural-language CSS/component generation mapped
+onto the existing `cssDictionary` + `templates` catalogues; bring-your-own API
+key stored locally, no account. Recommended before moving to P5 mid-term
+items, as it can reuse the token panel and template pipeline.
+
+### Mid-term (make what's shipped feel complete)
+
+#### P5b. Token-aware design system UI
+
+**Branch**: `feature/token-aware-inspector`
+**Effort**: ~10–14 days
+
+- Color/spacing/font pickers in the Inspector and CSS sidebar can read from
+  and write to the token panel (add token from a picked value)
+- CSS property value inputs get a `var(--xxx)` dropdown listing current tokens
+- Templates gain an optional `tokens` field so drop-in/imported templates can
+  seed a project's tokens
+- Token rename rewrites `var(--xxx)` references across all rules
+
+#### P5c. Whole-site zip export
+
+**Branch**: `feature/zip-export`
+**Effort**: ~5–7 days
+
+- Finish the P4b leftover: export a full static site as a `.zip`
+  (HTML + CSS + assets folder) — not just the single-file HTML option
+- Export options become: Single-file HTML / HTML+CSS / Whole-site zip
+
+#### P5d. Offline PWA
+
+**Branch**: `feature/pwa-offline`
+**Effort**: ~7–10 days
+
+- Service worker (Vite `vite-plugin-pwa`) + installable manifest
+- Boots fully offline from cache; LocalStorage + `.lcproj` flows untouched
+- Sharpens the "local-first" positioning without adding any account surface
+
+### Long-term (ecosystem direction)
+
+#### P5e. Template ecosystem loop
+
+**Branch**: `feature/template-ecosystem`
+**Effort**: ~14 days
+
+- Drop-in templates support tokens (via P5b) and an optional preview image;
+  gallery shows remote-friendly previews without a server
+- A template folder can bundle multiple `.lcproj`-style variants
+- Community sharing = drop a folder into `public/templates/`, no backend
+
+#### P5f. Stable export/plugin extension points
+
+**Branch**: `feature/plugin-extension-points`
+**Effort**: ~14–21 days
+
+- Stabilize the exporter API (`buildExportHtml` / `buildExportCss` /
+  `buildSingleFileHtml` / zip pipeline) into a documented contract
+- Third-party export targets plug in via a small registry, no fork required
+
+---
+
 ## Suggested Execution Order
 
 ```
@@ -237,6 +309,11 @@ P4b  (file-first sharing)    ✅ done
 P4c  (template library)      ✅ done
 P4d  (design tokens)         ✅ done
 P4e  (AI assistant)          next (optional)
+P5b  (token-aware inspector) recommended after P4e
+P5c  (zip export)            small, do any time
+P5d  (offline PWA)           after P5c
+P5e  (template ecosystem)    after P5b
+P5f  (plugin extension)      last (needs stable exporter)
 ```
 
 ---
@@ -246,22 +323,27 @@ P4e  (AI assistant)          next (optional)
 `master` is the source of GitHub Pages deployment. Feature branches are cut
 from the latest `master` and merge back when green.
 
-| Branch                         | Item | Status              |
-| ------------------------------ | ---- | ------------------- |
-| `master`                       | —    | Stable, deployable  |
-| `feature/split-app-modules`    | P1a  | ✅ Merged to master |
-| `feature/expand-test-coverage` | P1b  | ✅ Merged to master |
-| `feature/css-state-module`     | P1c  | ✅ merged with P1a  |
-| `feature/svg-icons`            | P1d  | ✅ Merged to master |
-| `feature/web-component-export` | P2a  | ✅ Merged to master |
-| `feature/backend-sync`         | P2b  | ✅ Merged to master |
-| `feature/collab`               | P3a  | ✅ Merged to master |
-| `feature/template-marketplace` | P3b  | ✅ Merged to master |
-| `feature/self-host-quickstart` | P4a  | ✅ Merged to master |
-| `feature/file-sharing`         | P4b  | ✅ Merged to master |
-| `feature/template-library`     | P4c  | ✅ Merged to master |
-| `feature/design-tokens`        | P4d  | ✅ Merged to master |
-| `feature/ai-css-assistant`     | P4e  | ⏳ Optional         |
+| Branch                            | Item | Status              |
+| --------------------------------- | ---- | ------------------- |
+| `master`                          | —    | Stable, deployable  |
+| `feature/split-app-modules`       | P1a  | ✅ Merged to master |
+| `feature/expand-test-coverage`    | P1b  | ✅ Merged to master |
+| `feature/css-state-module`        | P1c  | ✅ merged with P1a  |
+| `feature/svg-icons`               | P1d  | ✅ Merged to master |
+| `feature/web-component-export`    | P2a  | ✅ Merged to master |
+| `feature/backend-sync`            | P2b  | ✅ Merged to master |
+| `feature/collab`                  | P3a  | ✅ Merged to master |
+| `feature/template-marketplace`    | P3b  | ✅ Merged to master |
+| `feature/self-host-quickstart`    | P4a  | ✅ Merged to master |
+| `feature/file-sharing`            | P4b  | ✅ Merged to master |
+| `feature/template-library`        | P4c  | ✅ Merged to master |
+| `feature/design-tokens`           | P4d  | ✅ Merged to master |
+| `feature/ai-css-assistant`        | P4e  | ⏳ Optional         |
+| `feature/token-aware-inspector`   | P5b  | ⏳ Planned          |
+| `feature/zip-export`              | P5c  | ⏳ Planned          |
+| `feature/pwa-offline`             | P5d  | ⏳ Planned          |
+| `feature/template-ecosystem`      | P5e  | ⏳ Planned          |
+| `feature/plugin-extension-points` | P5f  | ⏳ Planned          |
 
 ### Execution log
 
