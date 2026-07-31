@@ -24,10 +24,12 @@ framework, no build step beyond Vite for the dev server.
 - **Responsive preview** — Desktop / Tablet (768px) / Mobile (375px) frames.
 - **Canvas rulers + snap-to-grid** — draggable guide lines, 16px grid overlay.
 - **Light/dark theme** with CSS custom properties + three locales (en, zh-TW, ja).
-- **Template marketplace** — 5 MVP starter templates (navbar, hero, pricing,
-  footer, login form) insertable via **Replace** or **Append** with storage
-  quota warning. Drop extra templates into `public/templates/` (manifest-driven,
-  no code changes) to extend the gallery of your own install.
+- **Template marketplace** — 22 starter templates across marketing, app
+  shells, forms and e-commerce (heroes, feature grids, pricing, dashboards,
+  product grids, checkout…), insertable via **Replace** or **Append** with
+  storage quota warning. Drop extra templates into `public/templates/`
+  (manifest-driven, no code changes) to extend the gallery of your own
+  install.
 - **File-first sharing** — projects export/import as `.lcproj` JSON (File menu
   or drag the file onto the window); exports include single-file HTML with
   inlined CSS.

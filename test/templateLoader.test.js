@@ -39,9 +39,9 @@ afterEach(() => {
 });
 
 describe('TEMPLATES data structure', () => {
-    it('exports an array of 5 templates', () => {
+    it('exports an array of 22 templates', () => {
         expect(Array.isArray(TEMPLATES)).toBe(true);
-        expect(TEMPLATES.length).toBe(5);
+        expect(TEMPLATES.length).toBe(22);
     });
 
     it.each(TEMPLATES)('$id has required fields', (tmpl) => {

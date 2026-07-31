@@ -12,6 +12,23 @@ const ICONS = {
     'pricing-table': '💰',
     footer: '🔽',
     'login-form': '🔐',
+    'hero-split': '🖼️',
+    'feature-grid': '🧩',
+    testimonials: '💬',
+    'cta-banner': '📣',
+    'stats-section': '📊',
+    'team-section': '👥',
+    'blog-card': '📝',
+    'faq-list': '❓',
+    'dashboard-layout': '📈',
+    'profile-card': '🪪',
+    'chat-list': '💬',
+    'todo-list': '✅',
+    'signup-form': '📝',
+    'contact-form': '✉️',
+    'newsletter-form': '📬',
+    'product-grid': '🛍️',
+    'cart-summary': '🛒',
 };
 
 async function loadDropInTemplates() {
