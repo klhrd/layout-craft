@@ -84,12 +84,14 @@ function renderTokenUI() {
                 nameInput.value = oldName;
                 return;
             }
+            if (newName === oldName) return;
             const tokensNow = cssState.getTokens();
-            if (tokensNow[newName] !== undefined && newName !== oldName) {
+            if (tokensNow[newName] !== undefined) {
                 alert(t('ui.tokens.exists'));
                 nameInput.value = oldName;
                 return;
             }
+            cssState.replaceTokenRef(oldName, newName);
             cssState.deleteToken(oldName);
             cssState.setToken(newName, valueInput.value);
             oldName = newName;

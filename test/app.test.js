@@ -399,3 +399,79 @@ describe('token editor UI', () => {
         expect(row.querySelector('.token-value-input').value).toBe('16px');
     });
 });
+
+describe('token picker on css block value inputs', () => {
+    let visualCssContainer;
+
+    beforeEach(async () => {
+        vi.resetModules();
+        document.body.innerHTML = baseDom();
+        vi.clearAllMocks();
+        await import('../src/js/app.js');
+        visualCssContainer = document.getElementById('visual-css-container');
+    });
+
+    afterEach(() => {
+        document.body.innerHTML = '';
+        vi.unstubAllGlobals();
+    });
+
+    it('renders a token picker button next to every value input', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setRule('.card', { color: 'red' });
+
+        window.rebuildCssRulesUI();
+        const block = visualCssContainer.querySelector('.applied-css-block');
+        expect(block.querySelector('.btn-token-picker')).not.toBeNull();
+    });
+
+    it('selecting a token from the popup sets value to var(--name)', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setToken('--brand', '#123456');
+        cssState.setRule('.card', { color: 'red' });
+        window.rebuildCssRulesUI();
+
+        const block = visualCssContainer.querySelector('.applied-css-block');
+        block.querySelector('.btn-token-picker').click();
+        const item = block.querySelector('.token-picker-item');
+        expect(item).not.toBeNull();
+        expect(item.textContent).toContain('--brand');
+
+        item.click();
+        const valueInput = block.querySelector('.block-value-input');
+        expect(valueInput.value).toBe('var(--brand)');
+        expect(document.getElementById('live-styles').textContent).toContain('color: var(--brand);');
+    });
+
+    it('save as token stores the current value and applies var()', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setRule('.card', { color: 'red' });
+        window.rebuildCssRulesUI();
+
+        vi.stubGlobal(
+            'prompt',
+            vi.fn(() => '--my-color'),
+        );
+        const block = visualCssContainer.querySelector('.applied-css-block');
+        block.querySelector('.btn-token-picker').click();
+        block.querySelector('.token-picker-save').click();
+
+        expect(cssState.getTokens()['--my-color']).toBe('red');
+        const valueInput = block.querySelector('.block-value-input');
+        expect(valueInput.value).toBe('var(--my-color)');
+        expect(document.getElementById('live-styles').textContent).toContain('color: var(--my-color);');
+    });
+
+    it('renaming a token rewrites var() references in cssState', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setToken('--brand', '#123456');
+        cssState.setRule('.card', { color: 'var(--brand)' });
+
+        cssState.replaceTokenRef('--brand', '--accent');
+        expect(cssState.getProperty('.card', 'color')).toBe('var(--accent)');
+    });
+});

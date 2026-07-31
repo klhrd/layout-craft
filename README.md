@@ -35,7 +35,9 @@ framework, no build step beyond Vite for the dev server.
   inlined CSS.
 - **Design tokens** — CSS custom properties (colors, spacing, type scale) live
   in a token panel inside the CSS sidebar, persist with the project (LocalStorage
-    - `.lcproj`), and export as a `:root { … }` block in every CSS output.
+    - `.lcproj`), and export as a `:root { … }` block in every CSS output. Every
+      CSS value input and Inspector row has a token picker: insert `var(--name)` or
+      save the current value as a token; renaming a token rewrites all references.
 - **Optional cloud sync** — Supabase auth (email magic-link / GitHub OAuth),
   debounced push after edits, pull on start, "Cloud is newer — Pull / Keep
   local" conflict prompt. Fully offline-capable when env vars are absent.

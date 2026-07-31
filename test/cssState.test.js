@@ -18,6 +18,8 @@ import {
     setTokens,
     setToken,
     deleteToken,
+    replaceTokenRef,
+    getProperty,
 } from '../src/js/modules/cssState.js';
 
 beforeEach(() => {
@@ -154,5 +156,33 @@ describe('design tokens', () => {
         setToken('--color-primary', '#2563eb');
         initCssState();
         expect(getTokens()).toEqual({});
+    });
+});
+
+describe('replaceTokenRef', () => {
+    it('rewrites var() references in top-level rules', () => {
+        setRule('.a', { color: 'var(--old-name)', fontSize: '16px' });
+        replaceTokenRef('--old-name', '--new-name');
+        expect(getProperty('.a', 'color')).toBe('var(--new-name)');
+        expect(getProperty('.a', 'fontSize')).toBe('16px');
+    });
+
+    it('rewrites multiple occurrences inside one value', () => {
+        setRule('.a', { background: 'linear-gradient(var(--c), var(--c) 50%, #fff)' });
+        replaceTokenRef('--c', '--brand');
+        expect(getProperty('.a', 'background')).toBe('linear-gradient(var(--brand), var(--brand) 50%, #fff)');
+    });
+
+    it('rewrites references in nested rules (media query children)', () => {
+        addBlock({ type: 'media', selector: '@media (max-width: 600px)', children: [] });
+        setNestedProperty('@media (max-width: 600px)', '.card', 'color', 'var(--c)');
+        replaceTokenRef('--c', '--brand');
+        expect(getNestedProperty('@media (max-width: 600px)', '.card', 'color')).toBe('var(--brand)');
+    });
+
+    it('leaves other token references untouched', () => {
+        setRule('.a', { color: 'var(--keep)' });
+        replaceTokenRef('--gone', '--brand');
+        expect(getProperty('.a', 'color')).toBe('var(--keep)');
     });
 });

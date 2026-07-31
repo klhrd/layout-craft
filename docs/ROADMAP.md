@@ -240,7 +240,7 @@ items, as it can reuse the token panel and template pipeline.
 
 ### Mid-term (make what's shipped feel complete)
 
-#### P5b. Token-aware design system UI
+#### P5b. Token-aware design system UI ✅ done
 
 **Branch**: `feature/token-aware-inspector`
 **Effort**: ~10–14 days
@@ -251,6 +251,13 @@ items, as it can reuse the token panel and template pipeline.
 - Templates gain an optional `tokens` field so drop-in/imported templates can
   seed a project's tokens
 - Token rename rewrites `var(--xxx)` references across all rules
+- ✅ **Done 2026-07-31** — new `tokenPicker.js` popup (palette button) on every
+  CSS block value input and every Inspector style row: lists current tokens,
+  inserts `var(--name)`, and offers "Save as token" from the current value.
+  `cssState.replaceTokenRef()` rewrites `var()` references (incl. nested rules)
+  when a token is renamed in the panel. Templates `navbar`, `dashboard-layout`,
+  `signup-form` gained a `tokens` seed field; `instantiateTemplate` seeds on
+  replace and merges on append. +12 tests (185 total).
 
 #### P5c. Whole-site zip export
 
@@ -309,7 +316,7 @@ P4b  (file-first sharing)    ✅ done
 P4c  (template library)      ✅ done
 P4d  (design tokens)         ✅ done
 P4e  (AI assistant)          next (optional)
-P5b  (token-aware inspector) recommended after P4e
+P5b  (token-aware inspector) ✅ done
 P5c  (zip export)            small, do any time
 P5d  (offline PWA)           after P5c
 P5e  (template ecosystem)    after P5b
@@ -339,7 +346,7 @@ from the latest `master` and merge back when green.
 | `feature/template-library`        | P4c  | ✅ Merged to master |
 | `feature/design-tokens`           | P4d  | ✅ Merged to master |
 | `feature/ai-css-assistant`        | P4e  | ⏳ Optional         |
-| `feature/token-aware-inspector`   | P5b  | ⏳ Planned          |
+| `feature/token-aware-inspector`   | P5b  | ✅ Merged to master |
 | `feature/zip-export`              | P5c  | ⏳ Planned          |
 | `feature/pwa-offline`             | P5d  | ⏳ Planned          |
 | `feature/template-ecosystem`      | P5e  | ⏳ Planned          |
@@ -360,3 +367,4 @@ from the latest `master` and merge back when green.
 | 2026-07-31 | P4b (file-first sharing) done in `feature/file-sharing` — `.lcproj` export/import (File menu + drag-and-drop onto window), single-file HTML export option, drop-in template folder `public/templates/` (manifest-driven, merged into gallery at runtime). +12 tests.                                                                                                                                                                                                            |
 | 2026-07-31 | P4c (template library) done in `feature/template-library` — 5 → 22 templates: hero split, feature grid, testimonials, CTA banner, stats, team, blog cards, FAQ, dashboard shell, profile card, chat list, todo list, signup/contact/newsletter forms, product grid, cart summary. Gallery icons for all 22. +17 tests via `it.each` data-structure coverage.                                                                                                                    |
 | 2026-07-31 | P4d (design tokens) done in `feature/design-tokens` — token panel in the CSS sidebar (`tokenEditor.js`), per-project token storage (LocalStorage + `.lcproj`), `:root` output in compiled/exported CSS, rehydration on load/import. Also fixed a latent bug: `window.saveProject` was never assigned, so drop-in templates and token saves silently didn't persist — now exposed from app.js. +18 tests; vitest `hookTimeout`/`testTimeout` raised to 30s for parallel workers. |
+| 2026-07-31 | P5b (token-aware design system UI) done in `feature/token-aware-inspector` — palette-button token popup on every CSS block value input and Inspector style row (insert `var(--name)` / save current value as token via `tokenPicker.js`); `cssState.replaceTokenRef()` rewrites `var()` refs incl. nested rules on token rename; templates `navbar`/`dashboard-layout`/`signup-form` seed tokens on replace and merge on append. +12 tests (185 total).                         |

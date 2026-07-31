@@ -110,6 +110,26 @@ export function renameRule(oldSelector, newSelector) {
     if (_onChange) _onChange();
 }
 
+function rewriteTokenRefsInStyles(styles, oldName, newName) {
+    for (const prop of Object.keys(styles)) {
+        const val = styles[prop];
+        if (typeof val === 'string' && val.includes(`var(${oldName})`)) {
+            styles[prop] = val.split(`var(${oldName})`).join(`var(${newName})`);
+        }
+    }
+}
+
+export function replaceTokenRef(oldName, newName) {
+    const walk = (blocks) => {
+        for (const block of blocks) {
+            if (block.styles) rewriteTokenRefsInStyles(block.styles, oldName, newName);
+            if (Array.isArray(block.children) && block.children.length) walk(block.children);
+        }
+    };
+    walk(_blocks);
+    if (_onChange) _onChange();
+}
+
 export function serialize() {
     return JSON.parse(JSON.stringify(_blocks));
 }

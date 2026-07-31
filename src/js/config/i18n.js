@@ -78,6 +78,9 @@ const DICTIONARY = {
                 invalidName: 'Token names must start with --',
                 exists: 'This token already exists',
                 empty: 'No tokens yet. Click + to add a design token.',
+                pickerTitle: 'Insert or save a design token',
+                pickerEmpty: 'No tokens yet. Use "Save as token" to create one.',
+                saveAsToken: 'Save as token',
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `Enter ${attr}...`,
@@ -206,6 +209,9 @@ const DICTIONARY = {
                 invalidName: 'Token 名稱必須以 -- 開頭',
                 exists: '此 Token 已存在',
                 empty: '尚無 Token。按 + 新增設計 Token。',
+                pickerTitle: '插入或另存為設計 Token',
+                pickerEmpty: '尚無 Token。用「另存為 Token」建立一個。',
+                saveAsToken: '另存為 Token',
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `輸入 ${attr}...`,
@@ -334,6 +340,9 @@ const DICTIONARY = {
                 invalidName: 'トークン名は -- で始まる必要があります',
                 exists: 'このトークンは既に存在します',
                 empty: 'トークンはまだありません。+ をクリックしてデザイントークンを追加。',
+                pickerTitle: 'デザイントークンを挿入または保存',
+                pickerEmpty: 'トークンはまだありません。「トークンとして保存」で作成できます。',
+                saveAsToken: 'トークンとして保存',
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `${attr} を入力...`,

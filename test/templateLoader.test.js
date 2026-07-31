@@ -97,4 +97,37 @@ describe('instantiateTemplate', () => {
         const result = instantiateTemplate(tmpl, 'replace');
         expect(result).toBe(true);
     });
+
+    it('seeds project tokens on replace mode when the template has tokens', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setToken('--old', 'x');
+
+        const tmpl = TEMPLATES.find((t) => t.id === 'navbar');
+        instantiateTemplate(tmpl, 'replace');
+        expect(cssState.getTokens()['--color-primary']).toBe('#2563eb');
+        expect(cssState.getTokens()['--old']).toBeUndefined();
+    });
+
+    it('merges template tokens into existing ones on append mode', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setToken('--keep', 'mine');
+
+        const tmpl = TEMPLATES.find((t) => t.id === 'signup-form');
+        instantiateTemplate(tmpl, 'append');
+        const tokens = cssState.getTokens();
+        expect(tokens['--keep']).toBe('mine');
+        expect(tokens['--color-primary']).toBe('#2563eb');
+    });
+
+    it('templates without tokens leave the token store untouched', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setToken('--keep', 'mine');
+
+        const tmpl = TEMPLATES.find((t) => t.id === 'hero-centered');
+        instantiateTemplate(tmpl, 'replace');
+        expect(cssState.getTokens()).toEqual({ '--keep': 'mine' });
+    });
 });

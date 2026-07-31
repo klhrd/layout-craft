@@ -61,6 +61,15 @@ export function instantiateTemplate(template, mode) {
         rehydrateCanvas(existingHtml + html, template.cssData);
     }
 
+    if (template.tokens) {
+        if (mode === 'replace') {
+            cssState.setTokens(template.tokens);
+        } else {
+            cssState.setTokens({ ...cssState.getTokens(), ...template.tokens });
+        }
+        if (window.rebuildTokenUI) window.rebuildTokenUI();
+    }
+
     if (window.saveProject) {
         const proj = document.getElementById('select-project');
         if (proj && proj.value) window.saveProject(proj.value, false);

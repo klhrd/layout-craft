@@ -3,6 +3,7 @@ import { t } from '../config/i18n.js';
 import * as cssState from './cssState.js';
 import { push as pushHistory } from './history.js';
 import { saveProject } from './storage.js';
+import { createTokenPickerButton } from './tokenPicker.js';
 
 const liveStyles = document.getElementById('live-styles');
 const visualCssContainer = document.getElementById('visual-css-container');
@@ -622,6 +623,16 @@ export function addAppliedBlockUI(dropzone, initialSelector, property, label, va
     `;
 
     const valueInput = block.querySelector('.block-value-input');
+
+    const tokenPicker = createTokenPickerButton({
+        currentValue: value,
+        onPick: (val) => {
+            valueInput.value = val;
+            valueInput.dispatchEvent(new Event('input'));
+        },
+    });
+    const controlsRow = block.querySelector('div');
+    controlsRow.insertBefore(tokenPicker, controlsRow.querySelector('.btn-remove-block'));
     let editTimer = null;
     let editOldVal = value;
     valueInput.addEventListener('input', () => {

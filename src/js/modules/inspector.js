@@ -5,6 +5,7 @@ import { t } from '../config/i18n.js';
 import { push as pushHistory } from './history.js';
 import { compileAndRenderCss } from './cssEditor.js';
 import { showResizeHandles, hideResizeHandles } from './canvasHelpers.js';
+import { createTokenPickerButton } from './tokenPicker.js';
 
 // src/js/modules/inspector.js: top-level variable declarations.
 let selectedElement = null;
@@ -811,6 +812,12 @@ function renderStyleEditor(el) {
 
         row.appendChild(label);
         row.appendChild(control);
+        row.appendChild(
+            createTokenPickerButton({
+                currentValue: currentVal,
+                onPick: handleChange,
+            }),
+        );
         styleEditorContainer.appendChild(row);
     });
 }

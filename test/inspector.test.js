@@ -68,6 +68,16 @@ describe('selectElement', () => {
         expect(document.getElementById('selected-tag-name').textContent).toBe('div');
     });
 
+    it('renders a token picker button in every style row', () => {
+        const el = document.getElementById('test-el');
+        inspector.selectElement(el);
+        const rows = document.querySelectorAll('.style-row');
+        expect(rows.length).toBeGreaterThan(0);
+        rows.forEach((row) => {
+            expect(row.querySelector('.btn-token-picker')).not.toBeNull();
+        });
+    });
+
     it('clears previous selection before selecting a new element', () => {
         const canvas = document.getElementById('canvas');
         const el1 = document.getElementById('test-el');
