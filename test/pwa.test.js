@@ -24,7 +24,7 @@ describe('generateSwCode', () => {
     });
 
     it('precaches on install and skips waiting', () => {
-        expect(code).toContain("cache.addAll(PRECACHE)");
+        expect(code).toContain('cache.addAll(PRECACHE)');
         expect(code).toContain('self.skipWaiting()');
     });
 
