@@ -275,7 +275,7 @@ items, as it can reuse the token panel and template pipeline.
   the HTML into `assets/img-N.<ext>` and rewrites `src` to relative paths;
   external URLs pass through untouched. +11 tests (196 total).
 
-#### P5d. Offline PWA
+#### P5d. Offline PWA ✅ done
 
 **Branch**: `feature/pwa-offline`
 **Effort**: ~7–10 days
@@ -283,6 +283,16 @@ items, as it can reuse the token panel and template pipeline.
 - Service worker (Vite `vite-plugin-pwa`) + installable manifest
 - Boots fully offline from cache; LocalStorage + `.lcproj` flows untouched
 - Sharpens the "local-first" positioning without adding any account surface
+- ✅ **Done 2026-07-31** — zero-dependency SW: `scripts/pwa.js` Vite plugin
+  scans `dist/` in `closeBundle`, hashes the file list, and writes
+  `dist/sw.js` with the precache list inlined (cache name `lc-<hash>`;
+  stale caches purged on activate). Install precaches every asset,
+  fetch is cache-first with network fallback — CDN scripts (SortableJS)
+  work offline after the first visit. `public/manifest.webmanifest` +
+  maskable SVG icon, `theme-color` meta, SW registration in `index.html`
+  (dev 404 ignored). +6 tests (202 total).
+- Known limits: iOS home-screen lacks a PNG icon (falls back to a
+  screenshot); non-CORS third-party resources are never cached.
 
 ### Long-term (ecosystem direction)
 
@@ -325,8 +335,8 @@ P4d  (design tokens)         ✅ done
 P4e  (AI assistant)          next (optional)
 P5b  (token-aware inspector) ✅ done
 P5c  (zip export)            ✅ done
-P5d  (offline PWA)           next
-P5e  (template ecosystem)    after P5d
+P5d  (offline PWA)           ✅ done
+P5e  (template ecosystem)    next
 P5f  (plugin extension)      last (needs stable exporter)
 ```
 
@@ -355,7 +365,7 @@ from the latest `master` and merge back when green.
 | `feature/ai-css-assistant`        | P4e  | ⏳ Optional         |
 | `feature/token-aware-inspector`   | P5b  | ✅ Merged to master |
 | `feature/zip-export`              | P5c  | ✅ Merged to master |
-| `feature/pwa-offline`             | P5d  | ⏳ Planned          |
+| `feature/pwa-offline`             | P5d  | ✅ Merged to master |
 | `feature/template-ecosystem`      | P5e  | ⏳ Planned          |
 | `feature/plugin-extension-points` | P5f  | ⏳ Planned          |
 
@@ -376,3 +386,4 @@ from the latest `master` and merge back when green.
 | 2026-07-31 | P4d (design tokens) done in `feature/design-tokens` — token panel in the CSS sidebar (`tokenEditor.js`), per-project token storage (LocalStorage + `.lcproj`), `:root` output in compiled/exported CSS, rehydration on load/import. Also fixed a latent bug: `window.saveProject` was never assigned, so drop-in templates and token saves silently didn't persist — now exposed from app.js. +18 tests; vitest `hookTimeout`/`testTimeout` raised to 30s for parallel workers.              |
 | 2026-07-31 | P5b (token-aware design system UI) done in `feature/token-aware-inspector` — palette-button token popup on every CSS block value input and Inspector style row (insert `var(--name)` / save current value as token via `tokenPicker.js`); `cssState.replaceTokenRef()` rewrites `var()` refs incl. nested rules on token rename; templates `navbar`/`dashboard-layout`/`signup-form` seed tokens on replace and merge on append. +12 tests (185 total).                                      |
 | 2026-07-31 | P5c (whole-site zip export) done in `feature/zip-export` — export dropdown gained "Whole-site ZIP (HTML + CSS + assets)". New zero-dependency `zipWriter.js` (native `CompressionStream` deflate-raw + store fallback, hand-rolled CRC32); `extractDataImages()` moves `data:image` URIs into `assets/` with relative `src` rewrites; `buildSiteZip()` bundles `index.html` + `style.css` + assets. Tests parse + inflate the produced zip (deflate and store paths). +11 tests (196 total). |
+| 2026-07-31 | P5d (offline PWA) done in `feature/pwa-offline` — zero-dep SW via `scripts/pwa.js` Vite plugin (closeBundle scans `dist/`, inlines precache list, cache name `lc-<hash>` with stale-cache purge); cache-first fetch with network fallback so the jsdelivr SortableJS script works offline after first visit; `public/manifest.webmanifest` + maskable SVG icon + `theme-color`; SW registration ignores dev 404s. +6 tests (202 total).                                                      |

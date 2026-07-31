@@ -68,3 +68,9 @@ scratchpad of _why_ things were done a certain way.
   screen will fall back to a screenshot — accepted, noted.
 - Dev mode: `register('./sw.js')` 404s silently (`.catch(() => {})`), no
   PROD gate needed.
+- DONE: committed on `feature/pwa-offline` (generator + manifest + html
+  wiring, then prettier fix). Build emits `dist/sw.js` with the full
+  precache list (verified: sw.js excluded from its own list). `vite
+preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
+  all 200. 202 tests green, lint/format/build clean, merged to master.
+  Next per execution order: P5e (template ecosystem).
