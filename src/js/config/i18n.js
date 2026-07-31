@@ -63,6 +63,8 @@ const DICTIONARY = {
                 detect: '🎯 Detect',
                 blinking: '🎯 Blinking',
                 selectorExistsAlert: 'Name exists!',
+                collapse: 'Collapse rule',
+                expand: 'Expand rule',
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `Enter ${attr}...`,
@@ -176,6 +178,8 @@ const DICTIONARY = {
                 detect: '🎯 檢測',
                 blinking: '🎯 閃爍',
                 selectorExistsAlert: '名稱已存在！',
+                collapse: '收闔規則',
+                expand: '展開規則',
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `輸入 ${attr}...`,
@@ -289,6 +293,8 @@ const DICTIONARY = {
                 detect: '🎯 検出',
                 blinking: '🎯 点滅',
                 selectorExistsAlert: '名前は既に存在します！',
+                collapse: 'ルールを折りたたむ',
+                expand: 'ルールを展開',
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `${attr} を入力...`,

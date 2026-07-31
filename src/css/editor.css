@@ -1596,6 +1596,34 @@ body.mode-css .right-sidebar {
     gap: 8px;
 }
 
+.css-rule-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    color: #64748b;
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.css-rule-toggle:hover {
+    color: var(--primary);
+}
+
+.css-rule-box.collapsed .css-rule-toggle {
+    transform: rotate(-90deg);
+}
+
+.css-rule-box.collapsed .css-rule-body-dropzone,
+.css-rule-box.collapsed .css-rule-close,
+.css-rule-box.collapsed .btn-add-nested-rule {
+    display: none;
+}
+
 .btn-delete-rule {
     background: transparent;
     border: none;

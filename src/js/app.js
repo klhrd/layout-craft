@@ -17,6 +17,7 @@ import { push as pushHistory } from './modules/history.js';
 import {
     initVisualCssActions,
     initCssEditorCollapse,
+    initRuleBoxCollapse,
     compileAndRenderCss,
     setDraggedCssBlockData,
 } from './modules/cssEditor.js';
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initModeSwitcher();
     initVisualCssActions();
     initCssEditorCollapse();
+    initRuleBoxCollapse();
     initHistoryUI();
     initOutlinesToggle();
     initImporter();

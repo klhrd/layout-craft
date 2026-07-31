@@ -93,6 +93,18 @@ export function initCssEditorCollapse() {
     });
 }
 
+export function initRuleBoxCollapse() {
+    if (!visualCssContainer) return;
+    visualCssContainer.addEventListener('click', (e) => {
+        const toggle = e.target.closest('.css-rule-toggle');
+        if (!toggle) return;
+        const ruleBox = toggle.closest('.css-rule-box');
+        if (!ruleBox) return;
+        const collapsed = ruleBox.classList.toggle('collapsed');
+        toggle.title = collapsed ? t('ui.detection.expand') : t('ui.detection.collapse');
+    });
+}
+
 export function createContainerBoxUI(block) {
     const container = document.createElement('div');
     container.className = 'css-rule-box css-container-box';
@@ -103,6 +115,7 @@ export function createContainerBoxUI(block) {
 
     container.innerHTML = `
         <div class="css-rule-header">
+            <button type="button" class="css-rule-toggle" title="${t('ui.detection.collapse')}"><span class="mat-icon">keyboard_arrow_down</span></button>
             <div style="display: flex; align-items: center; gap: 4px; flex:1;">
                 <span style="color:#6366f1;font-size:0.75rem;font-weight:600;text-transform:uppercase">${label}</span>
                 <input type="text" class="editable-selector-input" value="${block.selector}" style="font-family:monospace">
@@ -114,7 +127,7 @@ export function createContainerBoxUI(block) {
         </div>
         <div class="css-rule-body-dropzone"></div>
         <button class="btn-add-nested-rule" style="margin:6px 0 0 auto;display:block;background:none;border:1px dashed #6366f1;color:#6366f1;border-radius:4px;padding:4px 12px;cursor:pointer;font-size:0.8rem">+ Add Nested Rule</button>
-        <div style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
+        <div class="css-rule-close" style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
     `;
 
     const selectorInput = container.querySelector('.editable-selector-input');
@@ -247,6 +260,7 @@ function createNestedRuleBoxUI(block, parentSelector) {
 
     ruleBox.innerHTML = `
         <div class="css-rule-header">
+            <button type="button" class="css-rule-toggle" title="${t('ui.detection.collapse')}"><span class="mat-icon">keyboard_arrow_down</span></button>
             <div style="display: flex; align-items: center; gap: 4px;">
                 <input type="text" class="editable-selector-input" value="${block.selector}">
                 <span style="color: #94a3b8">{</span>
@@ -257,7 +271,7 @@ function createNestedRuleBoxUI(block, parentSelector) {
             </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
-        <div style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
+        <div class="css-rule-close" style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
     `;
 
     const selectorInput = ruleBox.querySelector('.editable-selector-input');
@@ -405,6 +419,7 @@ export function createRuleBoxUI(selector) {
 
     ruleBox.innerHTML = `
         <div class="css-rule-header">
+            <button type="button" class="css-rule-toggle" title="${t('ui.detection.collapse')}"><span class="mat-icon">keyboard_arrow_down</span></button>
             <div style="display: flex; align-items: center; gap: 4px;">
                 <input type="text" class="editable-selector-input" value="${selector}">
                 <span style="color: #94a3b8">{</span>
@@ -415,7 +430,7 @@ export function createRuleBoxUI(selector) {
             </div>
         </div>
         <div class="css-rule-body-dropzone"></div>
-        <div style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
+        <div class="css-rule-close" style="font-weight: bold; font-size: 0.85rem; color: #334155;">}</div>
     `;
 
     const selectorInput = ruleBox.querySelector('.editable-selector-input');

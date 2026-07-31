@@ -234,6 +234,40 @@ describe('initCssEditorCollapse behavior', () => {
         expect(parent.classList.contains('collapsed')).toBe(false);
     });
 
+    it('clicking rule-box toggle collapses that rule box only', async () => {
+        const { initRuleBoxCollapse } = await import('../src/js/modules/cssEditor.js');
+        initRuleBoxCollapse();
+        const container = document.getElementById('visual-css-container');
+        container.innerHTML = `
+            <div class="css-rule-box" data-selector=".first">
+                <div class="css-rule-header">
+                    <button type="button" class="css-rule-toggle"><span class="mat-icon">keyboard_arrow_down</span></button>
+                    <div class="editable-selector-input">.first</div>
+                </div>
+                <div class="css-rule-body-dropzone"></div>
+                <div class="css-rule-close">}</div>
+            </div>
+            <div class="css-rule-box" data-selector=".second">
+                <div class="css-rule-header">
+                    <button type="button" class="css-rule-toggle"><span class="mat-icon">keyboard_arrow_down</span></button>
+                    <div class="editable-selector-input">.second</div>
+                </div>
+                <div class="css-rule-body-dropzone"></div>
+                <div class="css-rule-close">}</div>
+            </div>
+        `;
+        const first = container.querySelector('.css-rule-box[data-selector=".first"]');
+        const second = container.querySelector('.css-rule-box[data-selector=".second"]');
+        const toggle = first.querySelector('.css-rule-toggle');
+
+        toggle.click();
+        expect(first.classList.contains('collapsed')).toBe(true);
+        expect(second.classList.contains('collapsed')).toBe(false);
+
+        toggle.click();
+        expect(first.classList.contains('collapsed')).toBe(false);
+    });
+
     it('compileAndRenderCss requires live-styles element', async () => {
         vi.resetModules();
         document.body.innerHTML = baseDom();
