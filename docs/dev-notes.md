@@ -2,7 +2,7 @@
 
 Ad-hoc notes taken during feature work (decisions, dead-ends, next steps).
 Canonical status lives in `progress.md` / `ROADMAP.md`; this file is the
-scratchpad of *why* things were done a certain way.
+scratchpad of _why_ things were done a certain way.
 
 ## 2026-07-31 — P5b token-aware UI (done, merged `5f67842`)
 

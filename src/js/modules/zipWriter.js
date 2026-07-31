@@ -27,11 +27,9 @@ async function deflateRaw(bytes) {
     const reader = cs.readable.getReader();
     const chunks = [];
     let total = 0;
-    while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        chunks.push(value);
-        total += value.byteLength;
+    for (let res = await reader.read(); !res.done; res = await reader.read()) {
+        chunks.push(res.value);
+        total += res.value.byteLength;
     }
     const out = new Uint8Array(total);
     let off = 0;

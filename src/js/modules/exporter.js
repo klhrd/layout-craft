@@ -229,16 +229,19 @@ const MIME_EXT = {
 export function extractDataImages(html) {
     const assets = [];
     let counter = 0;
-    const rewritten = html.replace(/src="(data:image\/([a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=]+))"/g, (match, uri, mime, b64) => {
-        counter++;
-        const ext = MIME_EXT[mime] || 'bin';
-        const filename = `assets/img-${counter}.${ext}`;
-        const binary = atob(b64);
-        const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        assets.push({ name: filename, data: bytes });
-        return `src="./${filename}"`;
-    });
+    const rewritten = html.replace(
+        /src="(data:image\/([a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=]+))"/g,
+        (match, uri, mime, b64) => {
+            counter++;
+            const ext = MIME_EXT[mime] || 'bin';
+            const filename = `assets/img-${counter}.${ext}`;
+            const binary = atob(b64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            assets.push({ name: filename, data: bytes });
+            return `src="./${filename}"`;
+        },
+    );
     return { html: rewritten, assets };
 }
 
