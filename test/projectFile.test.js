@@ -23,7 +23,7 @@ describe('buildProjectFile', () => {
     it('creates a .lcproj-shaped object with html and cssData', () => {
         const file = buildProjectFile('My_Project', '<div></div>', { '.x': { color: 'red' } });
         expect(file.app).toBe('layoutcraft');
-        expect(file.version).toBe(1);
+        expect(file.version).toBe(2);
         expect(file.name).toBe('My_Project');
         expect(file.html).toBe('<div></div>');
         expect(file.cssData).toEqual({ '.x': { color: 'red' } });
@@ -33,6 +33,14 @@ describe('buildProjectFile', () => {
     it('defaults cssData to an empty object', () => {
         const file = buildProjectFile('P', '<p></p>');
         expect(file.cssData).toEqual({});
+    });
+
+    it('includes design tokens in the file', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setToken('--color-primary', '#2563eb');
+        const file = buildProjectFile('P', '<div></div>', []);
+        expect(file.tokens).toEqual({ '--color-primary': '#2563eb' });
     });
 });
 
@@ -66,6 +74,14 @@ describe('validateProjectFile', () => {
         expect(validateProjectFile({ app: 'layoutcraft', html: '<div></div>', cssData: 'nope' })).toBe(false);
     });
 
+    it('rejects non-object tokens', () => {
+        expect(validateProjectFile({ app: 'layoutcraft', html: '<div></div>', tokens: 'nope' })).toBe(false);
+    });
+
+    it('accepts missing tokens (older files)', () => {
+        expect(validateProjectFile({ app: 'layoutcraft', html: '<div></div>' })).toBe(true);
+    });
+
     it('rejects null and undefined', () => {
         expect(validateProjectFile(null)).toBe(false);
         expect(validateProjectFile(undefined)).toBe(false);
@@ -76,12 +92,17 @@ describe('serializeProjectFile', () => {
     it('reads the stored project from localStorage', () => {
         localStorage.setItem(
             'layoutcraft_proj_Stored',
-            JSON.stringify({ html: '<b>hi</b>', cssData: { '.b': { fontWeight: '700' } } }),
+            JSON.stringify({
+                html: '<b>hi</b>',
+                cssData: { '.b': { fontWeight: '700' } },
+                tokens: { '--space': '8px' },
+            }),
         );
         const file = serializeProjectFile('Stored');
         expect(file.name).toBe('Stored');
         expect(file.html).toBe('<b>hi</b>');
         expect(file.cssData).toEqual({ '.b': { fontWeight: '700' } });
+        expect(file.tokens).toEqual({ '--space': '8px' });
     });
 
     it('falls back to the canvas content when the project is not stored', () => {

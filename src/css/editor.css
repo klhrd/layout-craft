@@ -977,6 +977,7 @@ h3.category-header.active::after {
 
 .css-editor-panel.collapsed .css-editor-hint,
 .css-editor-panel.collapsed .css-selector-creator,
+.css-editor-panel.collapsed .css-tokens-section,
 .css-editor-panel.collapsed .css-rules-container {
     display: none;
 }
@@ -1002,6 +1003,98 @@ h3.category-header.active::after {
     padding: 6px 8px;
     font-size: 0.75rem;
     flex: 0 0 auto;
+}
+
+/* ── Design tokens section ── */
+.css-tokens-section {
+    border: 1px dashed var(--border-color, #555);
+    border-radius: 8px;
+    padding: 8px;
+    background: var(--bg-panel-2, rgba(255, 255, 255, 0.03));
+}
+
+.css-tokens-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.css-tokens-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.btn-add-token {
+    background: none;
+    border: 1px solid var(--border-color, #555);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+}
+
+.btn-add-token:hover {
+    background: var(--bg-hover, rgba(255, 255, 255, 0.06));
+}
+
+.css-tokens-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.css-tokens-empty {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    padding: 4px 0;
+}
+
+.css-token-row {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.css-token-row input {
+    margin-top: 0;
+    font-size: 0.75rem;
+    padding: 3px 5px;
+}
+
+.token-name-input {
+    flex: 0 0 42%;
+    min-width: 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.token-value-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.btn-delete-token {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 2px;
+    font-size: 0.8rem;
+    flex: 0 0 auto;
+}
+
+.btn-delete-token:hover {
+    color: #e57373;
 }
 
 /* ── WebKit scrollbar styling ── */

@@ -763,6 +763,15 @@ function emitBlock(block, indent) {
 
 export function compileAndRenderCss() {
     let cssString = '';
+    const tokens = cssState.getTokens();
+    const tokenEntries = Object.entries(tokens);
+    if (tokenEntries.length) {
+        cssString += ':root {\n';
+        for (const [name, value] of tokenEntries) {
+            cssString += `  ${name}: ${value};\n`;
+        }
+        cssString += '}\n\n';
+    }
     for (const block of cssState.getBlocks()) {
         cssString += emitBlock(block, 0);
     }

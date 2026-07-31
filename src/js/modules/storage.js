@@ -135,6 +135,7 @@ export function saveProject(projName, showAlert = false) {
     const projectData = {
         html: canvasHtml,
         cssData: cssState.serialize(),
+        tokens: cssState.getTokens(),
         updated_at: new Date().toISOString(),
     };
 
@@ -174,6 +175,7 @@ export function loadProject(projName) {
     const projectData = JSON.parse(rawData);
     canvas.innerHTML = projectData.html;
     cssState.deserialize(projectData.cssData || {});
+    cssState.setTokens(projectData.tokens);
 
     // Key rehydration: restore the drag/sort behaviors (Sortable) for the loaded HTML.
     CONTAINER_TAGS.forEach((tag) => {
@@ -185,6 +187,9 @@ export function loadProject(projName) {
     // This uses the global rehydration interface provided by app.js.
     if (window.rebuildCssRulesUI) {
         window.rebuildCssRulesUI();
+    }
+    if (window.rebuildTokenUI) {
+        window.rebuildTokenUI();
     }
     if (window.refreshLayers) {
         window.refreshLayers();

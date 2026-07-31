@@ -70,6 +70,15 @@ const DICTIONARY = {
                 collapse: 'Collapse rule',
                 expand: 'Expand rule',
             },
+            tokens: {
+                title: 'Design Tokens',
+                add: 'Add token',
+                delete: 'Delete token',
+                namePrompt: 'Enter token name (must start with --, e.g., --color-primary):',
+                invalidName: 'Token names must start with --',
+                exists: 'This token already exists',
+                empty: 'No tokens yet. Click + to add a design token.',
+            },
             inspector: {
                 enterAttrPlaceholder: (attr) => `Enter ${attr}...`,
                 styles: 'Styles',
@@ -189,6 +198,15 @@ const DICTIONARY = {
                 collapse: '收闔規則',
                 expand: '展開規則',
             },
+            tokens: {
+                title: '設計 Token',
+                add: '新增 Token',
+                delete: '刪除 Token',
+                namePrompt: '輸入 Token 名稱（須以 -- 開頭，例如 --color-primary）：',
+                invalidName: 'Token 名稱必須以 -- 開頭',
+                exists: '此 Token 已存在',
+                empty: '尚無 Token。按 + 新增設計 Token。',
+            },
             inspector: {
                 enterAttrPlaceholder: (attr) => `輸入 ${attr}...`,
                 styles: '樣式',
@@ -307,6 +325,15 @@ const DICTIONARY = {
                 selectorExistsAlert: '名前は既に存在します！',
                 collapse: 'ルールを折りたたむ',
                 expand: 'ルールを展開',
+            },
+            tokens: {
+                title: 'デザイントークン',
+                add: 'トークンを追加',
+                delete: 'トークンを削除',
+                namePrompt: 'トークン名を入力（-- で始まる必要があります。例: --color-primary）：',
+                invalidName: 'トークン名は -- で始まる必要があります',
+                exists: 'このトークンは既に存在します',
+                empty: 'トークンはまだありません。+ をクリックしてデザイントークンを追加。',
             },
             inspector: {
                 enterAttrPlaceholder: (attr) => `${attr} を入力...`,

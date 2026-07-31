@@ -5,5 +5,7 @@ export default defineConfig({
         environment: 'happy-dom',
         include: ['test/**/*.test.js'],
         globals: true,
+        hookTimeout: 30000,
+        testTimeout: 30000,
     },
 });

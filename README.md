@@ -33,6 +33,9 @@ framework, no build step beyond Vite for the dev server.
 - **File-first sharing** — projects export/import as `.lcproj` JSON (File menu
   or drag the file onto the window); exports include single-file HTML with
   inlined CSS.
+- **Design tokens** — CSS custom properties (colors, spacing, type scale) live
+  in a token panel inside the CSS sidebar, persist with the project (LocalStorage
+    - `.lcproj`), and export as a `:root { … }` block in every CSS output.
 - **Optional cloud sync** — Supabase auth (email magic-link / GitHub OAuth),
   debounced push after edits, pull on start, "Cloud is newer — Pull / Keep
   local" conflict prompt. Fully offline-capable when env vars are absent.
@@ -135,7 +138,7 @@ layout-craft/
         │   ├── elements.js       # Draggable HTML element catalogue + tag labels
         │   ├── i18n.js           # t() lookup dictionary (en/zh-TW/ja)
         │   ├── styleProps.js     # Inspector style editor grid (font/color/spacing widgets)
-        │   └── templates.js      # 5 MVP starter templates
+        │   └── templates.js      # 22 built-in starter templates
         └── modules/         # DOM-aware feature modules
             ├── canvas.js        # Drag/drop + SortableJS wiring
             ├── canvasHelpers.js # Snap grid, guides, resize handles
@@ -155,6 +158,7 @@ layout-craft/
             ├── sync.js          # Optional Supabase cloud sync
             ├── templateGallery.js # Template gallery modal
             ├── templateLoader.js  # Template replace/append insertion
+            ├── tokenEditor.js   # Design tokens panel (:root CSS variables)
             ├── yjsAdapter.js    # Yjs DOM<->Y.Doc + cssState<->Y.Map bridge
             └── codegen/
                 ├── domWalker.js  # DOM tree walker for exporters

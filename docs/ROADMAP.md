@@ -8,7 +8,7 @@ by priority and annotated with the corresponding feature branch name.
 - **Branch**: `master`
 - **Stack**: Vite + Vitest + ESLint + Prettier + Supabase SDK (Vanilla ES Modules)
 - **Scope**: Single-page editor (`index.html` + source files under `src/`)
-- **Tests**: tests across 12 files, all green
+- **Tests**: 173 tests across 15 files, all green
 - **Lint / Format**: clean
 
 ## Product Positioning
@@ -183,7 +183,9 @@ All items below are **local-first and account-free**.
 - Template gallery consumes the same JSON files; make it a plain folder of
   templates users can drop into their install (`templates/` directory scan)
 - Export full static site (HTML + CSS + assets zip) — single-file HTML with
-  inlined CSS added as an export option#### P4c. Template library expansion ✅ done
+  inlined CSS added as an export option
+
+#### P4c. Template library expansion ✅ done
 
 **Branch**: `feature/template-library`
 **Effort**: ~10–14 days
@@ -192,7 +194,7 @@ All items below are **local-first and account-free**.
 - Category browse/search UI (no account)
 - Community templates = drop-in JSON files, no server
 
-#### P4d. Design tokens
+#### P4d. Design tokens ✅ done
 
 **Branch**: `feature/design-tokens`
 **Effort**: ~10–14 days
@@ -200,6 +202,13 @@ All items below are **local-first and account-free**.
 - CSS custom property tokens (colors, spacing, type scale) defined in a token
   panel and shared across rules/projects
 - Tokens live in the project JSON, export as `:root { … }`
+- ✅ **Done 2026-07-31** — token panel inside the Visual CSS Rules sidebar
+  (`src/js/modules/tokenEditor.js`); tokens stored per-project (LocalStorage +
+  `.lcproj` files) via `cssState.setToken/getTokens`; compiled to a `:root`
+  block at the top of exported CSS; `window.rebuildTokenUI` rehydrates the
+  panel on project load/import. Known limitation: tokens are not synced by the
+  optional cloud add-on (`sync.js`) — they stay local-first, matching the
+  product positioning.
 
 #### P4e. Optional AI assistant
 
@@ -226,8 +235,8 @@ P3b  (template marketplace)  ✅ done
 P4a  (self-host quickstart)  ✅ done
 P4b  (file-first sharing)    ✅ done
 P4c  (template library)      ✅ done
-P4d  (design tokens)         next
-P4e  (AI assistant)          optional
+P4d  (design tokens)         ✅ done
+P4e  (AI assistant)          next (optional)
 ```
 
 ---
@@ -251,20 +260,21 @@ from the latest `master` and merge back when green.
 | `feature/self-host-quickstart` | P4a  | ✅ Merged to master |
 | `feature/file-sharing`         | P4b  | ✅ Merged to master |
 | `feature/template-library`     | P4c  | ✅ Merged to master |
-| `feature/design-tokens`        | P4d  | ⏳ Planned          |
+| `feature/design-tokens`        | P4d  | ✅ Merged to master |
 | `feature/ai-css-assistant`     | P4e  | ⏳ Optional         |
 
 ### Execution log
 
-| Date       | Action                                                                                                                                                                                                                                                                                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged                                                                                                                                                                                                                                                                                  |
-| 2026-07-29 | P1a (split app.js) + P1c (cssState module) done in `feature/split-app-modules`, merged                                                                                                                                                                                                                                                                       |
-| 2026-07-29 | P1d (svg icons) done in `feature/svg-icons`, merged to master                                                                                                                                                                                                                                                                                                |
-| 2026-07-30 | P2b (backend cloud sync) done in `feature/backend-sync`, merged to master                                                                                                                                                                                                                                                                                    |
-| 2026-07-30 | P3b (template marketplace) done in `feature/template-marketplace` — 5 MVP templates, gallery modal, replace/append insertion, tests, merged to master                                                                                                                                                                                                        |
-| 2026-07-30 | P3a (realtime collaboration) done in `feature/collab` — Yjs adapter, presence overlay, follow mode, merged to master                                                                                                                                                                                                                                         |
-| 2026-07-31 | Product positioning decided: open-source, self-hostable, local-first tool. No login/account features on the roadmap; cloud sync + collab stay as optional self-hosted add-ons. Future plan rewritten as P4 (self-host quickstart, file-first sharing, template library, design tokens, optional AI assistant).                                               |
-| 2026-07-31 | P4a (self-host quickstart) done — Dockerfile, docker-compose, nginx.conf, docs/self-hosting.md.                                                                                                                                                                                                                                                              |
-| 2026-07-31 | P4b (file-first sharing) done in `feature/file-sharing` — `.lcproj` export/import (File menu + drag-and-drop onto window), single-file HTML export option, drop-in template folder `public/templates/` (manifest-driven, merged into gallery at runtime). +12 tests.                                                                                         |
-| 2026-07-31 | P4c (template library) done in `feature/template-library` — 5 → 22 templates: hero split, feature grid, testimonials, CTA banner, stats, team, blog cards, FAQ, dashboard shell, profile card, chat list, todo list, signup/contact/newsletter forms, product grid, cart summary. Gallery icons for all 22. +17 tests via `it.each` data-structure coverage. |
+| Date       | Action                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-07-29 | P1b (tests) + P2a (Web Component export) assigned to subagents, both merged                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 2026-07-29 | P1a (split app.js) + P1c (cssState module) done in `feature/split-app-modules`, merged                                                                                                                                                                                                                                                                                                                                                                                          |
+| 2026-07-29 | P1d (svg icons) done in `feature/svg-icons`, merged to master                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| 2026-07-30 | P2b (backend cloud sync) done in `feature/backend-sync`, merged to master                                                                                                                                                                                                                                                                                                                                                                                                       |
+| 2026-07-30 | P3b (template marketplace) done in `feature/template-marketplace` — 5 MVP templates, gallery modal, replace/append insertion, tests, merged to master                                                                                                                                                                                                                                                                                                                           |
+| 2026-07-30 | P3a (realtime collaboration) done in `feature/collab` — Yjs adapter, presence overlay, follow mode, merged to master                                                                                                                                                                                                                                                                                                                                                            |
+| 2026-07-31 | Product positioning decided: open-source, self-hostable, local-first tool. No login/account features on the roadmap; cloud sync + collab stay as optional self-hosted add-ons. Future plan rewritten as P4 (self-host quickstart, file-first sharing, template library, design tokens, optional AI assistant).                                                                                                                                                                  |
+| 2026-07-31 | P4a (self-host quickstart) done — Dockerfile, docker-compose, nginx.conf, docs/self-hosting.md.                                                                                                                                                                                                                                                                                                                                                                                 |
+| 2026-07-31 | P4b (file-first sharing) done in `feature/file-sharing` — `.lcproj` export/import (File menu + drag-and-drop onto window), single-file HTML export option, drop-in template folder `public/templates/` (manifest-driven, merged into gallery at runtime). +12 tests.                                                                                                                                                                                                            |
+| 2026-07-31 | P4c (template library) done in `feature/template-library` — 5 → 22 templates: hero split, feature grid, testimonials, CTA banner, stats, team, blog cards, FAQ, dashboard shell, profile card, chat list, todo list, signup/contact/newsletter forms, product grid, cart summary. Gallery icons for all 22. +17 tests via `it.each` data-structure coverage.                                                                                                                    |
+| 2026-07-31 | P4d (design tokens) done in `feature/design-tokens` — token panel in the CSS sidebar (`tokenEditor.js`), per-project token storage (LocalStorage + `.lcproj`), `:root` output in compiled/exported CSS, rehydration on load/import. Also fixed a latent bug: `window.saveProject` was never assigned, so drop-in templates and token saves silently didn't persist — now exposed from app.js. +18 tests; vitest `hookTimeout`/`testTimeout` raised to 30s for parallel workers. |

@@ -1,9 +1,30 @@
 let _blocks = [];
 let _counter = 1;
 let _onChange = null;
+let _tokens = {};
 
 export function setOnChange(fn) {
     _onChange = fn;
+}
+
+export function getTokens() {
+    return { ..._tokens };
+}
+
+export function setTokens(tokens) {
+    _tokens = tokens && typeof tokens === 'object' ? { ...tokens } : {};
+    if (_onChange) _onChange();
+}
+
+export function setToken(name, value) {
+    if (!name || !name.startsWith('--')) return;
+    _tokens[name] = value;
+    if (_onChange) _onChange();
+}
+
+export function deleteToken(name) {
+    delete _tokens[name];
+    if (_onChange) _onChange();
 }
 
 function isOldFormat(data) {
@@ -25,6 +46,7 @@ function findBlockIndex(selector, list) {
 export function initCssState() {
     _blocks = [];
     _counter = 1;
+    _tokens = {};
     if (_onChange) _onChange();
 }
 

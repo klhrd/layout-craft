@@ -55,6 +55,8 @@ commit so the tree stays green.
 - `src/js/modules/inspector.js` — element property editor + dynamic attrs.
 - `src/js/modules/exporter.js` — preview/export preview flow.
 - `src/js/modules/storage.js` — multi-project LocalStorage manager + meter.
+- `src/js/modules/tokenEditor.js` — design tokens panel (`--css-*` variables,
+  stored per-project, emitted as `:root { … }`).
 - `src/js/modules/sync.js` — optional cloud sync via Supabase (auth, push/pull,
   debounced background sync, conflict prompt). Gracefully degrades when env vars
   are missing or the user is not authenticated.

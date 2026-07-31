@@ -14,6 +14,10 @@ import {
     getNestedProperty,
     serialize,
     deserialize,
+    getTokens,
+    setTokens,
+    setToken,
+    deleteToken,
 } from '../src/js/modules/cssState.js';
 
 beforeEach(() => {
@@ -111,5 +115,44 @@ describe('serialization', () => {
         expect(blocks[0].type).toBe('rule');
         expect(blocks[0].selector).toBe('.foo');
         expect(blocks[0].styles.color).toBe('red');
+    });
+});
+
+describe('design tokens', () => {
+    it('setToken/getTokens roundtrip', () => {
+        setToken('--color-primary', '#2563eb');
+        setToken('--space', '16px');
+        expect(getTokens()).toEqual({ '--color-primary': '#2563eb', '--space': '16px' });
+    });
+
+    it('setToken ignores names that do not start with --', () => {
+        setToken('color-primary', '#2563eb');
+        expect(getTokens()).toEqual({});
+    });
+
+    it('setToken overwrites existing token', () => {
+        setToken('--color-primary', '#2563eb');
+        setToken('--color-primary', '#111111');
+        expect(getTokens()['--color-primary']).toBe('#111111');
+    });
+
+    it('deleteToken removes the token', () => {
+        setToken('--color-primary', '#2563eb');
+        deleteToken('--color-primary');
+        expect(getTokens()).toEqual({});
+    });
+
+    it('setTokens replaces all tokens and tolerates empty input', () => {
+        setToken('--a', '1');
+        setTokens({ '--x': '2', '--y': '3' });
+        expect(getTokens()).toEqual({ '--x': '2', '--y': '3' });
+        setTokens();
+        expect(getTokens()).toEqual({});
+    });
+
+    it('initCssState clears tokens', () => {
+        setToken('--color-primary', '#2563eb');
+        initCssState();
+        expect(getTokens()).toEqual({});
     });
 });

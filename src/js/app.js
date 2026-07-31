@@ -27,9 +27,11 @@ import { initSupabase } from './modules/sync.js';
 import { createYDoc, initCanvasSync, initCssSync } from './modules/yjsAdapter.js';
 import { initPresence, setThrottledCursor, updateCursor } from './modules/presence.js';
 import { initFollowMode } from './modules/followMode.js';
+import { initTokenEditor } from './modules/tokenEditor.js';
 
 window.activeCssData = cssState.getRawData();
 window.refreshLayers = refreshLayers;
+window.saveProject = saveProject;
 let clipboardElement = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -60,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initVisualCssActions();
     initCssEditorCollapse();
     initRuleBoxCollapse();
+    initTokenEditor();
     initHistoryUI();
     initOutlinesToggle();
     initImporter();
@@ -318,7 +321,7 @@ function initMenus() {
     });
 }
 
-/* ── Theme toggling ── */
+/* ?�?� Theme toggling ?�?� */
 function setTheme(theme) {
     if (theme === 'system') {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -669,7 +672,7 @@ function initHistoryUI() {
             return;
         }
 
-        // Ctrl+D — Duplicate selected element
+        // Ctrl+D ??Duplicate selected element
         if (ctrl && key === 'd') {
             e.preventDefault();
             const sel = document.querySelector('.canvas-container .selected-element');
@@ -696,7 +699,7 @@ function initHistoryUI() {
             return;
         }
 
-        // Ctrl+/ — Toggle mode
+        // Ctrl+/ ??Toggle mode
         if (ctrl && key === '/') {
             e.preventDefault();
             const isVisual = document.body.classList.contains('mode-visual');
@@ -716,7 +719,7 @@ function initHistoryUI() {
             return;
         }
 
-        // Arrow keys — nudge selected element by 1px (or 10px with Shift)
+        // Arrow keys ??nudge selected element by 1px (or 10px with Shift)
         if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(key)) {
             const sel = document.querySelector('.canvas-container .selected-element');
             if (!sel) return;
@@ -850,7 +853,7 @@ function showConflictModal(projectName, remoteData) {
     const btnKeep = document.getElementById('btn-conflict-keep');
     const btnPull = document.getElementById('btn-conflict-pull');
     if (details) {
-        details.textContent = projectName.replace(/_/g, ' ') + ' — ' + new Date(remoteData.updated_at).toLocaleString();
+        details.textContent = projectName.replace(/_/g, ' ') + ' ??' + new Date(remoteData.updated_at).toLocaleString();
     }
     modal.style.display = 'flex';
     btnKeep.onclick = () => {

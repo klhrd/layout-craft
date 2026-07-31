@@ -10,13 +10,14 @@ import { updateStorageMeter } from './storage.js';
 const STORAGE_KEY_PREFIX = 'layoutcraft_proj_';
 const LIST_KEY = 'layoutcraft_project_list';
 
-export function buildProjectFile(projName, html, cssData) {
+export function buildProjectFile(projName, html, cssData, tokens) {
     return {
         app: 'layoutcraft',
-        version: 1,
+        version: 2,
         name: projName,
         html,
         cssData: cssData || {},
+        tokens: tokens || cssState.getTokens(),
         updated_at: new Date().toISOString(),
     };
 }
@@ -26,6 +27,7 @@ export function validateProjectFile(data) {
     if (data.app !== 'layoutcraft') return false;
     if (typeof data.html !== 'string') return false;
     if (data.cssData !== undefined && (typeof data.cssData !== 'object' || data.cssData === null)) return false;
+    if (data.tokens !== undefined && (typeof data.tokens !== 'object' || data.tokens === null)) return false;
     return true;
 }
 
@@ -36,6 +38,7 @@ export function serializeProjectFile(projName) {
         projName,
         stored && stored.html ? stored.html : document.getElementById('canvas').innerHTML,
         stored && stored.cssData ? stored.cssData : cssState.serialize(),
+        stored && stored.tokens ? stored.tokens : undefined,
     );
 }
 
@@ -64,6 +67,7 @@ function loadProjectFromData(projectData) {
 
     canvas.innerHTML = projectData.html;
     cssState.deserialize(projectData.cssData || {});
+    cssState.setTokens(projectData.tokens);
 
     CONTAINER_TAGS.forEach((tag) => {
         canvas.querySelectorAll(tag).forEach((el) => makeElementSortable(el));
@@ -71,6 +75,7 @@ function loadProjectFromData(projectData) {
     makeElementSortable(canvas);
 
     if (window.rebuildCssRulesUI) window.rebuildCssRulesUI();
+    if (window.rebuildTokenUI) window.rebuildTokenUI();
     if (window.refreshLayers) window.refreshLayers();
     compileAndRenderCss();
 }
@@ -96,7 +101,12 @@ export function importProjectFile(file) {
 
                 localStorage.setItem(
                     STORAGE_KEY_PREFIX + name,
-                    JSON.stringify({ html: data.html, cssData: data.cssData || {}, updated_at: data.updated_at }),
+                    JSON.stringify({
+                        html: data.html,
+                        cssData: data.cssData || {},
+                        tokens: data.tokens || {},
+                        updated_at: data.updated_at,
+                    }),
                 );
 
                 deselectAll();

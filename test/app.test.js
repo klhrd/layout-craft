@@ -108,6 +108,31 @@ describe('compileAndRenderCss', () => {
         expect(css).toContain('.a {');
         expect(css).toContain('.b {');
     });
+
+    it('renders :root block from design tokens', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        const { compileAndRenderCss } = await import('../src/js/modules/cssEditor.js');
+        cssState.initCssState();
+        cssState.setToken('--color-primary', '#2563eb');
+        cssState.setToken('--space', '16px');
+
+        compileAndRenderCss();
+        const css = liveStyles.textContent;
+        expect(css).toContain(':root {');
+        expect(css).toContain('--color-primary: #2563eb;');
+        expect(css).toContain('--space: 16px;');
+    });
+
+    it('omits :root block when no tokens exist', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        const { compileAndRenderCss } = await import('../src/js/modules/cssEditor.js');
+        cssState.initCssState();
+        cssState.setRule('.a', { color: 'red' });
+
+        compileAndRenderCss();
+        const css = liveStyles.textContent;
+        expect(css).not.toContain(':root');
+    });
 });
 
 describe('getActiveCssCode', () => {
@@ -274,5 +299,103 @@ describe('initCssEditorCollapse behavior', () => {
         await import('../src/js/app.js');
         const { compileAndRenderCss } = await import('../src/js/modules/cssEditor.js');
         expect(() => compileAndRenderCss()).not.toThrow();
+    });
+});
+
+describe('token editor UI', () => {
+    let panel;
+
+    beforeEach(async () => {
+        vi.resetModules();
+        document.body.innerHTML =
+            baseDom().replace('<div id="visual-css-container"></div>', '') +
+            '<aside class="css-editor-panel"><h3>Visual CSS Rules</h3><div id="visual-css-container"></div></aside>';
+        vi.clearAllMocks();
+        await import('../src/js/app.js');
+        const { initTokenEditor } = await import('../src/js/modules/tokenEditor.js');
+        initTokenEditor();
+        panel = document.querySelector('.css-editor-panel');
+    });
+
+    afterEach(() => {
+        document.body.innerHTML = '';
+        vi.unstubAllGlobals();
+    });
+
+    it('creates the tokens section inside the css editor panel', () => {
+        const section = panel.querySelector('.css-tokens-section');
+        expect(section).not.toBeNull();
+        expect(panel.querySelector('.btn-add-token')).not.toBeNull();
+        expect(panel.querySelector('.css-tokens-list')).not.toBeNull();
+    });
+
+    it('shows empty message when no tokens exist', () => {
+        expect(panel.querySelector('.css-tokens-empty')).not.toBeNull();
+    });
+
+    it('adding a token via prompt renders a row and compiles :root', async () => {
+        vi.stubGlobal(
+            'prompt',
+            vi.fn(() => '--my-color'),
+        );
+        const addBtn = panel.querySelector('.btn-add-token');
+        addBtn.click();
+
+        const row = panel.querySelector('.css-token-row');
+        expect(row).not.toBeNull();
+        expect(row.querySelector('.token-name-input').value).toBe('--my-color');
+        expect(document.getElementById('live-styles').textContent).toContain(':root');
+        expect(document.getElementById('live-styles').textContent).toContain('--my-color: ;');
+    });
+
+    it('rejects a prompt that does not start with --', async () => {
+        const alertSpy = vi.fn();
+        vi.stubGlobal(
+            'prompt',
+            vi.fn(() => 'my-color'),
+        );
+        vi.stubGlobal('alert', alertSpy);
+        panel.querySelector('.btn-add-token').click();
+
+        expect(alertSpy).toHaveBeenCalled();
+        expect(panel.querySelector('.css-token-row')).toBeNull();
+    });
+
+    it('typing a value updates the compiled CSS live', () => {
+        vi.stubGlobal(
+            'prompt',
+            vi.fn(() => '--color-primary'),
+        );
+        panel.querySelector('.btn-add-token').click();
+
+        const valueInput = panel.querySelector('.token-value-input');
+        valueInput.value = '#ff0000';
+        valueInput.dispatchEvent(new Event('input'));
+        expect(document.getElementById('live-styles').textContent).toContain('--color-primary: #ff0000;');
+    });
+
+    it('deleting a token removes the row and the :root entry', () => {
+        vi.stubGlobal(
+            'prompt',
+            vi.fn(() => '--color-primary'),
+        );
+        panel.querySelector('.btn-add-token').click();
+        expect(panel.querySelector('.css-token-row')).not.toBeNull();
+
+        panel.querySelector('.btn-delete-token').click();
+        expect(panel.querySelector('.css-token-row')).toBeNull();
+        expect(document.getElementById('live-styles').textContent).not.toContain(':root');
+    });
+
+    it('rebuildTokenUI re-renders rows from cssState', async () => {
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.initCssState();
+        cssState.setToken('--space', '16px');
+
+        window.rebuildTokenUI();
+        const row = panel.querySelector('.css-token-row');
+        expect(row).not.toBeNull();
+        expect(row.querySelector('.token-name-input').value).toBe('--space');
+        expect(row.querySelector('.token-value-input').value).toBe('16px');
     });
 });
