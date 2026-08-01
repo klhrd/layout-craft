@@ -102,9 +102,7 @@ describe('drop-in template loading (P5e)', () => {
         const { initTemplateGallery } = await import('../src/js/modules/templateGallery.js');
         initTemplateGallery();
         document.getElementById('btn-templates').click();
-        await vi.waitFor(() =>
-            expect(document.querySelectorAll('#template-grid .template-grid-item').length).toBe(23),
-        );
+        await vi.waitFor(() => expect(document.querySelectorAll('#template-grid .template-grid-item').length).toBe(23));
 
         const cards = document.querySelectorAll('#template-grid .template-grid-item');
         const hero = [...cards].find((card) => card.dataset.id === 'my-hero');
@@ -122,9 +120,7 @@ describe('drop-in template loading (P5e)', () => {
         const { initTemplateGallery } = await import('../src/js/modules/templateGallery.js');
         initTemplateGallery();
         document.getElementById('btn-templates').click();
-        await vi.waitFor(() =>
-            expect(document.querySelectorAll('#template-grid .template-grid-item').length).toBe(23),
-        );
+        await vi.waitFor(() => expect(document.querySelectorAll('#template-grid .template-grid-item').length).toBe(23));
 
         const hero = [...document.querySelectorAll('#template-grid .template-grid-item')].find(
             (card) => card.dataset.id === 'my-hero',
@@ -135,7 +131,10 @@ describe('drop-in template loading (P5e)', () => {
     });
 
     it('shows built-in templates only when the manifest is missing', async () => {
-        vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, json: async () => ({}) })));
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => ({ ok: false, json: async () => ({}) })),
+        );
         mountGalleryDom();
         const { initTemplateGallery } = await import('../src/js/modules/templateGallery.js');
         initTemplateGallery();
@@ -154,9 +153,7 @@ describe('drop-in template loading (P5e)', () => {
         const { initTemplateGallery } = await import('../src/js/modules/templateGallery.js');
         initTemplateGallery();
         document.getElementById('btn-templates').click();
-        await vi.waitFor(() =>
-            expect(document.querySelectorAll('#template-grid .template-grid-item').length).toBe(23),
-        );
+        await vi.waitFor(() => expect(document.querySelectorAll('#template-grid .template-grid-item').length).toBe(23));
 
         document.querySelector('#template-grid .template-grid-item[data-id="my-hero"]').click();
         document.getElementById('btn-template-replace').click();
