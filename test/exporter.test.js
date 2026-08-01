@@ -198,6 +198,53 @@ describe('preview mode', () => {
     });
 });
 
+describe('export dropdown driven by the registry (P5f)', () => {
+    let exporter;
+
+    beforeEach(async () => {
+        vi.resetModules();
+        document.body.innerHTML = `
+            <div id="canvas"></div>
+            <button id="btn-preview"></button>
+            <button id="btn-export"></button>
+            <div id="live-styles"></div>
+            <div id="editor-form"></div>
+            <div id="no-selection-msg" class="hidden"></div>
+            <div id="select-project"><option>Test</option></div>
+        `;
+        exporter = await import('../src/js/modules/exporter.js');
+        exporter.initExporter();
+    });
+
+    afterEach(() => {
+        document.body.innerHTML = '';
+    });
+
+    it('renders one dropdown item per registered target', () => {
+        document.getElementById('btn-export').click();
+        const items = document.querySelectorAll('#export-dropdown button');
+        expect(items.length).toBe(6);
+        expect([...items].map((b) => b.textContent).join(' ')).toContain('Whole-site ZIP');
+    });
+
+    it('includes third-party targets registered before init', async () => {
+        const registry = await import('../src/js/modules/exportRegistry.js');
+        registry.registerExportTarget({
+            id: 'my-format',
+            label: '🚀 My Format',
+            generate: () => ({ files: [{ name: 'out.txt', data: 'hello' }] }),
+        });
+        document.getElementById('btn-export').click();
+        const items = [...document.querySelectorAll('#export-dropdown button')];
+        expect(items.length).toBe(7);
+        expect(items.some((b) => b.textContent === '🚀 My Format')).toBe(true);
+    });
+
+    it('window.registerExportTarget is exposed by initExporter', () => {
+        expect(typeof window.registerExportTarget).toBe('function');
+    });
+});
+
 describe('downloadFile helper', () => {
     it('buildExportHtml produces a downloadable HTML string', () => {
         const html = buildExportHtml('<p>test</p>');
