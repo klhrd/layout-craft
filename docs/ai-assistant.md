@@ -10,12 +10,12 @@ from the browser.
 
 1. Click the **AI** button in the toolbar.
 2. Open **Settings** and fill in:
-   - **Base URL** — defaults to `https://api.openai.com/v1`.
-   - **Model** — defaults to `gpt-4o-mini`.
-   - **API key** — stored only in the browser's localStorage (`lc.aiConfig`),
-     never written into the project file (`.lcproj`).
-3. Type a prompt, e.g. *"A pricing section with three tiers and a highlighted
-   middle plan"*, and click **Generate**.
+    - **Base URL** — defaults to `https://api.openai.com/v1`.
+    - **Model** — defaults to `gpt-4o-mini`.
+    - **API key** — stored only in the browser's localStorage (`lc.aiConfig`),
+      never written into the project file (`.lcproj`).
+3. Type a prompt, e.g. _"A pricing section with three tiers and a highlighted
+   middle plan"_, and click **Generate**.
 4. Review the live preview + raw JSON, then **Insert Below** (appends to the
    canvas, merges CSS rules and tokens) or **Replace Canvas**.
 
@@ -23,13 +23,13 @@ from the browser.
 
 Any OpenAI-compatible `/chat/completions` endpoint works:
 
-| Provider     | Base URL                                | Notes                                     |
-| ------------ | --------------------------------------- | ----------------------------------------- |
-| OpenAI       | `https://api.openai.com/v1`             | default                                   |
-| OpenRouter   | `https://openrouter.ai/api/v1`          | many models, one key                      |
-| Ollama       | `http://localhost:11434/v1`             | fully local, e.g. model `llama3`          |
-| LM Studio    | `http://localhost:1234/v1`              | fully local                               |
-| Groq         | `https://api.groq.com/openai/v1`        | fast open models                          |
+| Provider   | Base URL                         | Notes                            |
+| ---------- | -------------------------------- | -------------------------------- |
+| OpenAI     | `https://api.openai.com/v1`      | default                          |
+| OpenRouter | `https://openrouter.ai/api/v1`   | many models, one key             |
+| Ollama     | `http://localhost:11434/v1`      | fully local, e.g. model `llama3` |
+| LM Studio  | `http://localhost:1234/v1`       | fully local                      |
+| Groq       | `https://api.groq.com/openai/v1` | fast open models                 |
 
 ## The contract
 
@@ -39,9 +39,9 @@ with **only** a JSON object:
 
 ```json
 {
-  "html": "<section class=\"...\">…</section>",
-  "cssData": { ".selector": { "css-property": "value" } },
-  "tokens": { "--custom-prop": "value" }
+    "html": "<section class=\"...\">…</section>",
+    "cssData": { ".selector": { "css-property": "value" } },
+    "tokens": { "--custom-prop": "value" }
 }
 ```
 
@@ -65,13 +65,13 @@ with **only** a JSON object:
 
 `src/js/modules/aiAssistant.js`:
 
-| export                 | role                                                        |
-| ---------------------- | ----------------------------------------------------------- |
-| `getCssProps()`        | flat property list from `CSS_DICTIONARY` (custom `--*` props excluded) |
-| `getTemplateIds()`     | ids from `TEMPLATES`                                        |
-| `buildMessages(prompt)`| system + user messages for `/chat/completions`              |
-| `parseAssistantReply()`| text → `{ html, cssData, tokens }` or `null`                |
-| `requestCompletion()`  | POST to `{baseUrl}/chat/completions`, returns reply text    |
-| `applyAiResult()`      | insert (merge) or replace (rehydrate) the canvas            |
-| `initAiAssistant()`    | modal/settings wiring (called from `app.js`)                |
-| `getAiConfig`/`saveAiConfig` | localStorage persistence (`lc.aiConfig`)              |
+| export                       | role                                                                   |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| `getCssProps()`              | flat property list from `CSS_DICTIONARY` (custom `--*` props excluded) |
+| `getTemplateIds()`           | ids from `TEMPLATES`                                                   |
+| `buildMessages(prompt)`      | system + user messages for `/chat/completions`                         |
+| `parseAssistantReply()`      | text → `{ html, cssData, tokens }` or `null`                           |
+| `requestCompletion()`        | POST to `{baseUrl}/chat/completions`, returns reply text               |
+| `applyAiResult()`            | insert (merge) or replace (rehydrate) the canvas                       |
+| `initAiAssistant()`          | modal/settings wiring (called from `app.js`)                           |
+| `getAiConfig`/`saveAiConfig` | localStorage persistence (`lc.aiConfig`)                               |
