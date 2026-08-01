@@ -71,6 +71,12 @@ commit so the tree stays green.
 - `src/js/modules/zipWriter.js` — zero-dependency ZIP writer (`CompressionStream`
   deflate-raw with store fallback, hand-rolled CRC32); consumed by the exporter
   for the whole-site zip export.
+- `src/js/modules/aiAssistant.js` — BYOK AI generation against any
+  OpenAI-compatible `/chat/completions` endpoint (config in localStorage
+  `lc.aiConfig`, never in project files). `buildMessages()` embeds the CSS
+  property list + template ids into the system prompt; results
+  `{ html, cssData, tokens? }` apply via insert (merge) or replace
+  (rehydrate). Contract: `docs/ai-assistant.md`.
 - `src/js/modules/sync.js` — optional cloud sync via Supabase (auth, push/pull,
   debounced background sync, conflict prompt). Gracefully degrades when env vars
   are missing or the user is not authenticated.

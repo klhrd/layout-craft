@@ -54,6 +54,12 @@ framework, no build step beyond Vite for the dev server.
 - **Offline PWA** — installable manifest + zero-dependency service worker
   (precaches the whole app at build time, cache-first serving) so the editor
   boots fully offline after the first visit.
+- **AI assistant** — generate a component from a natural-language prompt
+  (`"a pricing section with three tiers"`) via any OpenAI-compatible endpoint
+  (OpenAI, OpenRouter, Ollama, LM Studio…). Bring your own API key — stored
+  only in this browser, never in the project file. Results land as **Insert**
+  (merged into canvas + CSS rules + design tokens) or **Replace** (see
+  [`docs/ai-assistant.md`](docs/ai-assistant.md)).
 - **Undo/redo** — bounded command stack with debounced history entries.
 
 ## Quick start
@@ -172,6 +178,7 @@ layout-craft/
             ├── tokenPicker.js   # var(--token) picker popup
             ├── yjsAdapter.js    # Yjs DOM<->Y.Doc + cssState<->Y.Map bridge
             ├── zipWriter.js     # Zero-dep ZIP writer (CompressionStream)
+            ├── aiAssistant.js   # BYOK AI generation (OpenAI-compatible)
             └── codegen/
                 ├── domWalker.js  # DOM tree walker for exporters
                 ├── htmlExport.js # Pure HTML/CSS builders + zip pipeline
@@ -202,6 +209,7 @@ All project docs live in [`docs/`](docs/):
 | [`docs/collab.md`](docs/collab.md)                                                 | Realtime Yjs collaboration design (P3a)                                        |
 | [`docs/template-marketplace.md`](docs/template-marketplace.md)                     | Template marketplace design (P3b)                                              |
 | [`docs/export-plugin.md`](docs/export-plugin.md)                                   | Export plugin contract: registry + `window.registerExportTarget` (P5f)         |
+| [`docs/ai-assistant.md`](docs/ai-assistant.md)                                     | AI assistant: providers, reply contract, scope notes (P4e)                     |
 | [`docs/migrations/supabase-migration.sql`](docs/migrations/supabase-migration.sql) | Supabase `projects` table + RLS migration                                      |
 | [`public/templates/README.md`](public/templates/README.md)                         | Drop-in template folder format (`manifest.json` + JSON files)                  |
 

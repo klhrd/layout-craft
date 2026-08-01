@@ -136,3 +136,46 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   registry tests + contract doc + prettier). 217 tests green, lint/format/
   build clean, merged to master. **P5 complete** — the whole P4/P5 plan
   is shipped.
+
+## 2026-07-31 — P4e AI CSS assistant (done)
+
+- The last remaining roadmap item (P4e / P5a): natural-language
+  component/CSS generation, bring-your-own-key, no account.
+- DECIDED scope (smallest useful slice):
+    - OpenAI-compatible `/chat/completions` via the user's own endpoint —
+      default baseUrl `https://api.openai.com/v1`, model `gpt-4o-mini`,
+      configurable (works with OpenRouter, Ollama, LM Studio, etc.).
+      No backend, no proxy; key stored in localStorage only (`lc.aiConfig`),
+      never in `.lcproj`.
+    - One prompt box → JSON result `{ html, cssData, tokens? }` →
+      **Insert** (append to canvas, merge cssData + tokens) or **Replace**
+      (rehydrate canvas, same semantics as a template replace).
+    - "Edit selected element" (targeting an existing rule) is deferred —
+      v1 is component generation mapped onto the template pipeline, exactly
+      what the roadmap says. Noted in the doc.
+    - The system prompt embeds the supported CSS property list (from
+      `cssDictionary`) and template ids (from `templates.js`) so the model
+      stays inside the tool's vocabulary; reply parsing tolerates fenced
+      code blocks and prose around the JSON.
+    - AI result cssData merges into the rule tree via `cssState.setRule`
+      (existing selectors keep their other properties); tokens merge with
+      existing project tokens winning (same policy as template append).
+    - API-key/endpoint settings live in a collapsible section of the AI
+      modal; no network call happens until Send is clicked.
+- i18n strings under `ui.ai.*` in en/zh-TW/ja.
+- SHIPPED: `src/js/modules/aiAssistant.js` (see `docs/ai-assistant.md`):
+  `buildMessages/getCssProps/getTemplateIds`, tolerant
+  `parseAssistantReply`, `requestCompletion` (fetch POST with auth header,
+  throws on missing key / non-OK / empty reply), `applyAiResult(insert|replace)`
+  with token merge (project wins) and rule merge via `cssState.setRule`,
+  `getAiConfig/saveAiConfig`; `initAiAssistant` wires the AI modal (collapsible
+  settings, prompt, preview + raw JSON, insert/replace/cancel), hooked from
+  `app.js` via dynamic import. Toolbar `#btn-ai` + modal in `index.html`,
+  `.ai-*` styles in `editor.css`.
+- TEST FIX: cssEditor.js module-level code overwrites any
+  `window.rebuildCssRulesUI` stub; the test DOM must include the visual CSS
+  container (`#visual-css-container`) and `applyAiResult` guards the UI-refresh
+  calls (tests run outside a full DOM). Generate only fills the result
+  preview — the canvas is untouched until Insert/Replace, matching the UI.
+- +12 tests in `test/aiAssistant.test.js` (229 total green); lint, format,
+  build clean. **Full roadmap complete.**

@@ -2060,6 +2060,97 @@ body.mode-css .right-sidebar {
     justify-content: flex-end;
 }
 
+/* ── AI assistant panel ── */
+.ai-settings-toggle {
+    margin-left: auto;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+}
+
+.ai-settings {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--bg-main);
+}
+
+.ai-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: var(--text-main);
+}
+
+.ai-field input {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: var(--text-main);
+    font-size: 0.85rem;
+}
+
+.ai-settings-note {
+    margin: 4px 0 0;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.ai-prompt {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text-main);
+    font-size: 0.85rem;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.ai-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.ai-status {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.ai-result {
+    margin-top: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.ai-result-preview {
+    padding: 16px;
+    background: var(--bg-main);
+    overflow-x: auto;
+}
+
+.ai-result-raw {
+    margin: 0;
+    padding: 12px;
+    background: var(--bg-canvas);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    max-height: 160px;
+    overflow: auto;
+    white-space: pre-wrap;
+    border-top: 1px solid var(--border-color);
+}
+
 /* ── Open project list ── */
 .open-project-list {
     max-height: 300px;

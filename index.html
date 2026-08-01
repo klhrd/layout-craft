@@ -142,6 +142,12 @@
 
                     <div class="toolbar-sep"></div>
 
+                    <button id="btn-ai" class="btn-secondary" title="AI Assistant">
+                        <span class="mat-icon">auto_awesome</span> AI
+                    </button>
+
+                    <div class="toolbar-sep"></div>
+
                     <button id="btn-preview" class="btn-secondary" title="Preview">
                         <span class="mat-icon">visibility</span> Preview
                     </button>
@@ -358,6 +364,57 @@
 
                 <div class="modal-actions">
                     <button id="btn-template-close" class="btn-secondary">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="ai-modal" class="modal-overlay">
+            <div class="modal-dialog modal-dialog-wide">
+                <h2 class="modal-title">
+                    <span class="mat-icon">auto_awesome</span>
+                    <span id="ai-modal-title">AI Assistant</span>
+                    <button id="btn-ai-settings" class="btn-secondary ai-settings-toggle">
+                        <span class="mat-icon">settings</span> <span id="ai-settings-label">Settings</span>
+                    </button>
+                </h2>
+
+                <div id="ai-settings" class="ai-settings hidden">
+                    <label class="ai-field">
+                        <span data-i18n="ui.ai.baseUrl">Base URL</span>
+                        <input type="text" id="ai-base-url" value="https://api.openai.com/v1" />
+                    </label>
+                    <label class="ai-field">
+                        <span data-i18n="ui.ai.model">Model</span>
+                        <input type="text" id="ai-model" value="gpt-4o-mini" />
+                    </label>
+                    <label class="ai-field">
+                        <span data-i18n="ui.ai.apiKey">API key</span>
+                        <input type="password" id="ai-api-key" placeholder="sk-..." />
+                    </label>
+                    <p class="ai-settings-note" data-i18n="ui.ai.settingsNote">
+                        Bring your own key — stored only in this browser, never in the project file. Works with any
+                        OpenAI-compatible endpoint (OpenRouter, Ollama, LM Studio...).
+                    </p>
+                </div>
+
+                <textarea
+                    id="ai-prompt"
+                    class="ai-prompt"
+                    rows="3"
+                    placeholder="e.g. A pricing section with three tiers and a highlighted middle plan"
+                ></textarea>
+                <div class="ai-actions">
+                    <button id="btn-ai-send" class="primary-btn">
+                        <span class="mat-icon">send</span> <span data-i18n="ui.ai.send">Generate</span>
+                    </button>
+                </div>
+                <div id="ai-status" class="ai-status"></div>
+                <div id="ai-result" class="ai-result"></div>
+
+                <div class="modal-actions">
+                    <button id="btn-ai-replace" class="btn-secondary" data-i18n="ui.ai.replace">Replace Canvas</button>
+                    <button id="btn-ai-insert" class="primary-btn" data-i18n="ui.ai.insert">Insert Below</button>
+                    <button id="btn-ai-close" class="btn-secondary" data-i18n="ui.ai.cancel">Cancel</button>
                 </div>
             </div>
         </div>

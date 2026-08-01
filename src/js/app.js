@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initProjectFileDrop();
     initIcons();
     import('./modules/templateGallery.js').then(({ initTemplateGallery }) => initTemplateGallery());
+    import('./modules/aiAssistant.js').then(({ initAiAssistant }) => initAiAssistant());
     initCollab();
 
     // Auto-silently save every 30 seconds as a safety net.
@@ -321,7 +322,7 @@ function initMenus() {
     });
 }
 
-/* ?€?€ Theme toggling ?€?€ */
+/* ?ï¿½?ï¿½ Theme toggling ?ï¿½?ï¿½ */
 function setTheme(theme) {
     if (theme === 'system') {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
