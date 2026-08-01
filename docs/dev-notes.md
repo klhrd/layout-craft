@@ -132,3 +132,7 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
     - Public hook: `window.registerExportTarget` exposed by the exporter so
       users can drop a snippet into the console/devtools or a bookmarklet
       without forking. Documented in `docs/export-plugin.md`.
+- DONE: committed on `feature/plugin-extension-points` (refactor +
+  registry tests + contract doc + prettier). 217 tests green, lint/format/
+  build clean, merged to master. **P5 complete** — the whole P4/P5 plan
+  is shipped.

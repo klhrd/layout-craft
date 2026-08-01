@@ -314,7 +314,7 @@ items, as it can reuse the token panel and template pipeline.
   `preview.svg`, token-seeded) replacing the dormant example. +5 tests
   (207 total).
 
-#### P5f. Stable export/plugin extension points
+#### P5f. Stable export/plugin extension points ✅ done
 
 **Branch**: `feature/plugin-extension-points`
 **Effort**: ~14–21 days
@@ -322,6 +322,15 @@ items, as it can reuse the token panel and template pipeline.
 - Stabilize the exporter API (`buildExportHtml` / `buildExportCss` /
   `buildSingleFileHtml` / zip pipeline) into a documented contract
 - Third-party export targets plug in via a small registry, no fork required
+- ✅ **Done 2026-07-31** — pure builders extracted to
+  `codegen/htmlExport.js` (sibling of jsx/vue/wc exporters; `exporter.js`
+  re-exports them). New DOM-free `exportRegistry.js`: six built-in targets
+  plus validated `registerExportTarget` (unique id, label, `generate`),
+  exposed as `window.registerExportTarget`. Contract:
+  `generate({ innerHtml, cssCode, rawCssCode, canvasClone })` →
+  `{ files: [{ name, data }] }` (string | Uint8Array), sync or async;
+  dropdown and dispatch driven entirely by the registry. Documented in
+  `docs/export-plugin.md`. +10 tests (217 total).
 
 ---
 
@@ -345,7 +354,7 @@ P5b  (token-aware inspector) ✅ done
 P5c  (zip export)            ✅ done
 P5d  (offline PWA)           ✅ done
 P5e  (template ecosystem)    ✅ done
-P5f  (plugin extension)      next (needs stable exporter)
+P5f  (plugin extension)      ✅ done — P5 complete
 ```
 
 ---
@@ -375,7 +384,7 @@ from the latest `master` and merge back when green.
 | `feature/zip-export`              | P5c  | ✅ Merged to master |
 | `feature/pwa-offline`             | P5d  | ✅ Merged to master |
 | `feature/template-ecosystem`      | P5e  | ✅ Merged to master |
-| `feature/plugin-extension-points` | P5f  | ⏳ Planned          |
+| `feature/plugin-extension-points` | P5f  | ✅ Merged to master |
 
 ### Execution log
 
@@ -396,3 +405,4 @@ from the latest `master` and merge back when green.
 | 2026-07-31 | P5c (whole-site zip export) done in `feature/zip-export` — export dropdown gained "Whole-site ZIP (HTML + CSS + assets)". New zero-dependency `zipWriter.js` (native `CompressionStream` deflate-raw + store fallback, hand-rolled CRC32); `extractDataImages()` moves `data:image` URIs into `assets/` with relative `src` rewrites; `buildSiteZip()` bundles `index.html` + `style.css` + assets. Tests parse + inflate the produced zip (deflate and store paths). +11 tests (196 total).                        |
 | 2026-07-31 | P5d (offline PWA) done in `feature/pwa-offline` — zero-dep SW via `scripts/pwa.js` Vite plugin (closeBundle scans `dist/`, inlines precache list, cache name `lc-<hash>` with stale-cache purge); cache-first fetch with network fallback so the jsdelivr SortableJS script works offline after first visit; `public/manifest.webmanifest` + maskable SVG icon + `theme-color`; SW registration ignores dev 404s. +6 tests (202 total).                                                                             |
 | 2026-07-31 | P5e (template ecosystem) done in `feature/template-ecosystem` — manifest entries support optional `preview` (path/data URI) and subfolder `file` paths (one folder = multiple variants); template JSONs carry `tokens` seeded on apply; gallery cards lazy-load preview images with emoji fallback. Shipped real `manifest.json` + `my-hero/` folder (dark/light variants + `preview.svg` + tokens), removed dormant example files; `public/templates/README.md` documents the folder format. +5 tests (207 total). |
+| 2026-07-31 | P5f (export plugin extension points) done in `feature/plugin-extension-points` — pure HTML/CSS builders extracted to `codegen/htmlExport.js` (re-exported by exporter.js for compat); new DOM-free `exportRegistry.js` with 6 built-in targets + validated `registerExportTarget` (exposed as `window.registerExportTarget`); dropdown and dispatch fully registry-driven; contract documented in `docs/export-plugin.md`. +10 tests (217 total) — P5 complete.                                                     |
