@@ -8,13 +8,33 @@ building.
 
 ## How it works
 
-1. `manifest.json` lists the templates (id, title, category, tags, and the
-   JSON file containing the actual markup/styles).
-2. Each referenced file holds the template content: `{ "html": "...",
-"cssData": { ".selector": { "prop": "value" } } }`.
+1. `manifest.json` lists the templates (id, title, category, tags, the JSON
+   file containing markup/styles, and an optional `preview` image).
+2. Each referenced file holds the template content:
+   `{ "html": "...", "cssData": { ".selector": { "prop": "value" } } }` —
+   an optional `tokens` object (`{ "--name": "value" }`) seeds the project's
+   design tokens when the template is applied.
 3. On app start, the gallery fetches `./templates/manifest.json` (relative to
-   the served root). If it is missing, the built-in 5 templates are shown —
-   the app never breaks over a missing manifest.
+   the served root). If it is missing, the built-in templates are shown — the
+   app never breaks over a missing manifest.
+
+## Folder layout
+
+Use subfolders to bundle a template family: one folder can hold several
+variants plus a shared preview image.
+
+```
+public/templates/
+├── manifest.json          # gallery entries (required)
+└── my-hero/
+    ├── hero.json          # variant 1 (dark theme + tokens)
+    ├── hero-light.json    # variant 2 (same structure, light tokens)
+    └── preview.svg        # optional preview shown in the gallery
+```
+
+`preview` is a path relative to `templates/` (or a `data:` URI). Any browser-
+renderable format works — SVG, PNG, JPEG, WebP. The gallery shows the image
+when `preview` is set, otherwise the per-template emoji icon.
 
 ## Example
 
@@ -24,26 +44,28 @@ building.
     "templates": [
         {
             "id": "my-hero",
-            "title": "My Hero",
+            "title": "My Hero (Dark)",
             "category": "marketing",
             "tags": ["hero", "landing"],
-            "file": "my-hero.json"
+            "file": "my-hero/hero.json",
+            "preview": "my-hero/preview.svg"
         }
     ]
 }
 ```
 
 ```json
-// my-hero.json
+// my-hero/hero.json
 {
     "html": "<section class=\"my-hero\"><h1>Hello</h1></section>",
     "cssData": {
-        ".my-hero": { "background": "#0f172a", "padding": "80px", "textAlign": "center" }
+        ".my-hero": { "background": "var(--hero-bg)", "padding": "80px" }
+    },
+    "tokens": {
+        "--hero-bg": "#0f172a"
     }
 }
 ```
 
 Categories used by the built-in gallery UI: `marketing`, `appshell`,
 `forms`, `ecommerce` — pick one of these so the category filter shows it.
-
-See `manifest.example.json` in this folder for a copy-paste start.

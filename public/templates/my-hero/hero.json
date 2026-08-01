@@ -1,0 +1,50 @@
+{
+    "html": "<section class=\"my-hero\"><span class=\"my-hero-badge\">New: LayoutCraft 2.0</span><h1 class=\"my-hero-title\">Design beautiful pages in minutes</h1><p class=\"my-hero-desc\">A visual builder for teams that want pixel-perfect results without fighting code. Drag, style, export - done.</p><div class=\"my-hero-actions\"><button class=\"my-hero-btn-primary\">Start Free Trial</button><a class=\"my-hero-btn-link\" href=\"#\">Watch demo →</a></div></section>",
+    "cssData": {
+        ".my-hero": {
+            "background": "var(--hero-bg)",
+            "color": "var(--hero-fg)",
+            "padding": "80px",
+            "textAlign": "center"
+        },
+        ".my-hero-badge": {
+            "background": "var(--hero-badge-bg)",
+            "color": "var(--hero-badge-fg)",
+            "padding": "4px 12px",
+            "borderRadius": "999px",
+            "fontSize": "0.8rem",
+            "fontWeight": "600"
+        },
+        ".my-hero-title": {
+            "fontSize": "2.5rem",
+            "margin": "16px 0 12px"
+        },
+        ".my-hero-desc": {
+            "maxWidth": "480px",
+            "margin": "0 auto 24px",
+            "color": "var(--hero-muted)"
+        },
+        ".my-hero-btn-primary": {
+            "background": "var(--hero-accent)",
+            "color": "#ffffff",
+            "border": "none",
+            "padding": "12px 24px",
+            "borderRadius": "8px",
+            "fontSize": "1rem",
+            "cursor": "pointer"
+        },
+        ".my-hero-btn-link": {
+            "color": "var(--hero-fg)",
+            "marginLeft": "12px",
+            "textDecoration": "none"
+        }
+    },
+    "tokens": {
+        "--hero-bg": "#0f172a",
+        "--hero-fg": "#f8fafc",
+        "--hero-badge-bg": "#2563eb",
+        "--hero-badge-fg": "#ffffff",
+        "--hero-muted": "#94a3b8",
+        "--hero-accent": "#2563eb"
+    }
+}

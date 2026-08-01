@@ -31,7 +31,7 @@ const ICONS = {
     'cart-summary': '🛒',
 };
 
-async function loadDropInTemplates() {
+export async function loadDropInTemplates() {
     try {
         const res = await fetch('./templates/manifest.json', { cache: 'no-store' });
         if (!res.ok) return;
@@ -48,8 +48,10 @@ async function loadDropInTemplates() {
                         title: entry.title,
                         category: entry.category || 'marketing',
                         tags: entry.tags || [],
+                        preview: entry.preview || '',
                         html: content.html || '',
                         cssData: content.cssData || {},
+                        tokens: content.tokens || {},
                     };
                 } catch (e) {
                     return null;
@@ -91,9 +93,17 @@ function renderGrid() {
         item.className = 'template-grid-item';
         item.dataset.id = tmpl.id;
 
-        const icon = document.createElement('div');
-        icon.className = 'template-grid-item-icon';
-        icon.textContent = ICONS[tmpl.id] || '📄';
+        const visual = document.createElement('div');
+        visual.className = tmpl.preview ? 'template-grid-item-preview' : 'template-grid-item-icon';
+        if (tmpl.preview) {
+            const img = document.createElement('img');
+            img.src = tmpl.preview.startsWith('data:') ? tmpl.preview : `./templates/${tmpl.preview}`;
+            img.alt = tmpl.title;
+            img.loading = 'lazy';
+            visual.appendChild(img);
+        } else {
+            visual.textContent = ICONS[tmpl.id] || '📄';
+        }
 
         const title = document.createElement('div');
         title.className = 'template-grid-item-title';
@@ -108,7 +118,7 @@ function renderGrid() {
             tags.appendChild(span);
         });
 
-        item.appendChild(icon);
+        item.appendChild(visual);
         item.appendChild(title);
         item.appendChild(tags);
 
