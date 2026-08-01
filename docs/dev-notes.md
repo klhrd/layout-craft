@@ -71,7 +71,7 @@ scratchpad of _why_ things were done a certain way.
 - DONE: committed on `feature/pwa-offline` (generator + manifest + html
   wiring, then prettier fix). Build emits `dist/sw.js` with the full
   precache list (verified: sw.js excluded from its own list). `vite
-  preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
+preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   all 200. 202 tests green, lint/format/build clean, merged to master.
   Next per execution order: P5e (template ecosystem).
 
@@ -85,19 +85,23 @@ scratchpad of _why_ things were done a certain way.
   example), so drop-ins are dormant until a user renames it. Preview
   images and multi-variant folders don't exist yet.
 - DECIDED (keep it simple, stay backwards-compatible):
-  - Manifest entries keep `id/title/category/tags/file`; gain optional
-    `preview` (relative path or data URI). `file` may include a folder
-    path (`my-hero/hero.json`) — the fetch already concatenates.
-    "A template folder with multiple variants" = several manifest
-    entries pointing into the same folder. No new schema concept.
-  - Template JSONs may carry `tokens` — gallery passes them through;
-    `instantiateTemplate` already seeds them.
-  - Gallery cards render `<img>` when `preview` exists (SVG/PNG/JPEG/
-    data URI), emoji icon otherwise. Lazy-loading.
-  - Ship a real `manifest.json` this time (my-hero folder with two
-    variants + hand-written SVG preview) so the mechanism is actually
-    exercised out of the box. Delete `manifest.example.json`.
-  - SVG preview instead of PNG: no image pipeline in the repo (same
-    call as P5d icon). Browsers render SVG in `<img>` fine.
+    - Manifest entries keep `id/title/category/tags/file`; gain optional
+      `preview` (relative path or data URI). `file` may include a folder
+      path (`my-hero/hero.json`) — the fetch already concatenates.
+      "A template folder with multiple variants" = several manifest
+      entries pointing into the same folder. No new schema concept.
+    - Template JSONs may carry `tokens` — gallery passes them through;
+      `instantiateTemplate` already seeds them.
+    - Gallery cards render `<img>` when `preview` exists (SVG/PNG/JPEG/
+      data URI), emoji icon otherwise. Lazy-loading.
+    - Ship a real `manifest.json` this time (my-hero folder with two
+      variants + hand-written SVG preview) so the mechanism is actually
+      exercised out of the box. Delete `manifest.example.json`.
+    - SVG preview instead of PNG: no image pipeline in the repo (same
+      call as P5d icon). Browsers render SVG in `<img>` fine.
 - Storage-quota warning (templateLoader) counts html+cssData only —
   preview images are not stored in the project, so no quota impact.
+- DONE: committed on `feature/template-ecosystem` (gallery + folder
+  structure + tests, then prettier). 207 tests green, lint/format/build
+  clean, preview-served assets verified, merged to master. Remaining in
+  the plan: P5f (stable export/plugin extension points).
