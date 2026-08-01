@@ -47,9 +47,7 @@ afterEach(() => {
 
 describe('buildMessages', () => {
     it('embeds the css property list and template ids in the system prompt', async () => {
-        const { buildMessages, getCssProps, getTemplateIds } = await import(
-            '../src/js/modules/aiAssistant.js'
-        );
+        const { buildMessages, getCssProps, getTemplateIds } = await import('../src/js/modules/aiAssistant.js');
         const messages = buildMessages('A pricing section', {
             cssProps: ['display', 'gap', 'color'],
             templateIds: ['navbar', 'hero-split'],
@@ -122,10 +120,11 @@ describe('requestCompletion', () => {
 
     it('throws on non-ok responses', async () => {
         const { requestCompletion } = await import('../src/js/modules/aiAssistant.js');
-        vi.stubGlobal('fetch', vi.fn(async () => ({ ok: false, status: 401, json: async () => ({}) })));
-        await expect(
-            requestCompletion({ baseUrl: 'x', apiKey: 'k', model: 'm' }, []),
-        ).rejects.toThrow(/401/);
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => ({ ok: false, status: 401, json: async () => ({}) })),
+        );
+        await expect(requestCompletion({ baseUrl: 'x', apiKey: 'k', model: 'm' }, [])).rejects.toThrow(/401/);
     });
 });
 
@@ -154,10 +153,7 @@ describe('applyAiResult', () => {
     it('replace mode rehydrates the canvas', async () => {
         const ai = await import('../src/js/modules/aiAssistant.js');
         document.getElementById('canvas').innerHTML = '<p>Old</p>';
-        ai.applyAiResult(
-            { html: '<p>New</p>', cssData: { '.p': { color: 'red' } }, tokens: {} },
-            'replace',
-        );
+        ai.applyAiResult({ html: '<p>New</p>', cssData: { '.p': { color: 'red' } }, tokens: {} }, 'replace');
         expect(document.getElementById('canvas').innerHTML).toContain('<p>New</p>');
         expect(document.getElementById('canvas').innerHTML).not.toContain('Old');
     });
@@ -165,19 +161,22 @@ describe('applyAiResult', () => {
 
 describe('initAiAssistant flow', () => {
     it('generates a component and inserts it into the canvas', async () => {
-        vi.stubGlobal('fetch', vi.fn(async () => ({
-            ok: true,
-            json: async () => ({
-                choices: [
-                    {
-                        message: {
-                            content:
-                                '```json\n{"html":"<div class=\\"ai-hero\\">Hi</div>","cssData":{".ai-hero":{"padding":"20px"}},"tokens":{}}\n```',
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => ({
+                ok: true,
+                json: async () => ({
+                    choices: [
+                        {
+                            message: {
+                                content:
+                                    '```json\n{"html":"<div class=\\"ai-hero\\">Hi</div>","cssData":{".ai-hero":{"padding":"20px"}},"tokens":{}}\n```',
+                            },
                         },
-                    },
-                ],
-            }),
-        })));
+                    ],
+                }),
+            })),
+        );
 
         const ai = await import('../src/js/modules/aiAssistant.js');
         const cssState = await import('../src/js/modules/cssState.js');

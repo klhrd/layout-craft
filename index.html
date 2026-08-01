@@ -392,12 +392,17 @@
                         <input type="password" id="ai-api-key" placeholder="sk-..." />
                     </label>
                     <p class="ai-settings-note" data-i18n="ui.ai.settingsNote">
-                        Bring your own key — stored only in this browser, never in the project file.
-                        Works with any OpenAI-compatible endpoint (OpenRouter, Ollama, LM Studio...).
+                        Bring your own key — stored only in this browser, never in the project file. Works with any
+                        OpenAI-compatible endpoint (OpenRouter, Ollama, LM Studio...).
                     </p>
                 </div>
 
-                <textarea id="ai-prompt" class="ai-prompt" rows="3" placeholder="e.g. A pricing section with three tiers and a highlighted middle plan"></textarea>
+                <textarea
+                    id="ai-prompt"
+                    class="ai-prompt"
+                    rows="3"
+                    placeholder="e.g. A pricing section with three tiers and a highlighted middle plan"
+                ></textarea>
                 <div class="ai-actions">
                     <button id="btn-ai-send" class="primary-btn">
                         <span class="mat-icon">send</span> <span data-i18n="ui.ai.send">Generate</span>
