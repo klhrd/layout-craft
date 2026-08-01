@@ -117,18 +117,18 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   module from a registry would run `document.getElementById` at load time
   and break tests.
 - DECIDED:
-  - Move the pure builders to `src/js/modules/codegen/htmlExport.js`
-    (sibling of jsx/vue/wc exporters); `exporter.js` re-exports them so
-    existing imports/tests keep working. This makes every export target a
-    pure module — the "stabilized API" is literally the codegen contract.
-  - New `src/js/modules/exportRegistry.js` (DOM-free): built-in targets
-    registered at module load (html-single, zip, html, react, vue, wc),
-    plus `registerExportTarget(target)` for third parties with validation
-    (unique id, label, generate function) and `getExportTargets()`.
-  - Target contract: `generate({ innerHtml, cssCode, canvasClone })`
-    returns `{ files: [{ name, data }] }` (data: string | Uint8Array),
-    sync or async. Exporter renders the dropdown from the registry and
-    downloads each file (data-URI for text, Blob for bytes).
-  - Public hook: `window.registerExportTarget` exposed by the exporter so
-    users can drop a snippet into the console/devtools or a bookmarklet
-    without forking. Documented in `docs/export-plugin.md`.
+    - Move the pure builders to `src/js/modules/codegen/htmlExport.js`
+      (sibling of jsx/vue/wc exporters); `exporter.js` re-exports them so
+      existing imports/tests keep working. This makes every export target a
+      pure module — the "stabilized API" is literally the codegen contract.
+    - New `src/js/modules/exportRegistry.js` (DOM-free): built-in targets
+      registered at module load (html-single, zip, html, react, vue, wc),
+      plus `registerExportTarget(target)` for third parties with validation
+      (unique id, label, generate function) and `getExportTargets()`.
+    - Target contract: `generate({ innerHtml, cssCode, canvasClone })`
+      returns `{ files: [{ name, data }] }` (data: string | Uint8Array),
+      sync or async. Exporter renders the dropdown from the registry and
+      downloads each file (data-URI for text, Blob for bytes).
+    - Public hook: `window.registerExportTarget` exposed by the exporter so
+      users can drop a snippet into the console/devtools or a bookmarklet
+      without forking. Documented in `docs/export-plugin.md`.

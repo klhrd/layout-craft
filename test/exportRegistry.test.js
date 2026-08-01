@@ -36,17 +36,15 @@ describe('export registry (P5f)', () => {
 
     it('rejects duplicate ids', async () => {
         const { registerExportTarget } = await freshRegistry();
-        expect(() =>
-            registerExportTarget({ id: 'html', label: 'dup', generate: () => ({ files: [] }) }),
-        ).toThrow(/already registered/);
+        expect(() => registerExportTarget({ id: 'html', label: 'dup', generate: () => ({ files: [] }) })).toThrow(
+            /already registered/,
+        );
     });
 
     it('rejects targets missing id, label, or generate', async () => {
         const { registerExportTarget } = await freshRegistry();
         expect(() => registerExportTarget({ label: 'x', generate: () => ({}) })).toThrow(/id/);
-        expect(() =>
-            registerExportTarget({ id: 'x', generate: () => ({ files: [] }) }),
-        ).toThrow(/label/);
+        expect(() => registerExportTarget({ id: 'x', generate: () => ({ files: [] }) })).toThrow(/label/);
         expect(() => registerExportTarget({ id: 'x', label: 'x' })).toThrow(/generate/);
     });
 

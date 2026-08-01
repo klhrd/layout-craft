@@ -8,12 +8,11 @@ bookmarklet, or a `<script>` you ship next to your own install.
 
 ```js
 window.registerExportTarget({
-    id: 'my-format',           // unique, non-empty string
-    label: '🚀 My Format',     // shown in the export dropdown
-    generate(ctx) {            // sync or async
-        return { files: [
-            { name: 'out.txt', data: 'hello' },
-        ] };
+    id: 'my-format', // unique, non-empty string
+    label: '🚀 My Format', // shown in the export dropdown
+    generate(ctx) {
+        // sync or async
+        return { files: [{ name: 'out.txt', data: 'hello' }] };
     },
 });
 ```
@@ -25,17 +24,19 @@ function is exported by the module as `registerTarget`.
 
 `generate` receives one argument, `ctx`:
 
-| field          | type        | description                                  |
-| -------------- | ----------- | -------------------------------------------- |
-| `innerHtml`    | `string`    | Canvas HTML with editor classes cleaned      |
-| `cssCode`      | `string`    | CSS wrapped with header comment + body reset |
-| `rawCssCode`   | `string`    | Raw compiled CSS, no wrapper                 |
-| `canvasClone`  | `Element`   | Cloned canvas element (for DOM walkers)      |
+| field         | type      | description                                  |
+| ------------- | --------- | -------------------------------------------- |
+| `innerHtml`   | `string`  | Canvas HTML with editor classes cleaned      |
+| `cssCode`     | `string`  | CSS wrapped with header comment + body reset |
+| `rawCssCode`  | `string`  | Raw compiled CSS, no wrapper                 |
+| `canvasClone` | `Element` | Cloned canvas element (for DOM walkers)      |
 
 ## The result object
 
 ```js
-{ files: [{ name: string, data: string | Uint8Array }] }
+{
+    files: [{ name: string, data: string | Uint8Array }];
+}
 ```
 
 - `data` as string is downloaded as UTF-8 text (data URI).
@@ -50,6 +51,7 @@ console); targets should catch their own failures if they want a graceful UI.
 ## Validation
 
 `registerExportTarget` throws on:
+
 - missing/empty `id`,
 - missing/empty `label`,
 - missing `generate` function,
@@ -58,14 +60,14 @@ console); targets should catch their own failures if they want a graceful UI.
 
 ## Internal architecture
 
-| module                        | role                                      |
-| ----------------------------- | ----------------------------------------- |
+| module                          | role                                                                                                                          |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `modules/codegen/htmlExport.js` | Pure builders: `buildExportHtml`, `buildSingleFileHtml`, `buildExportCss`, `cleanStyles`, `extractDataImages`, `buildSiteZip` |
-| `modules/codegen/jsxExport.js`  | React JSX builder                        |
-| `modules/codegen/vueExport.js`  | Vue SFC builder                          |
-| `modules/codegen/wcExport.js`   | Web Component builder                    |
-| `modules/exportRegistry.js`    | Registry: built-in targets + `registerExportTarget` / `getExportTargets` (DOM-free) |
-| `modules/exporter.js`          | Preview mode + dropdown UI + downloads; re-exports the codegen builders for compatibility |
+| `modules/codegen/jsxExport.js`  | React JSX builder                                                                                                             |
+| `modules/codegen/vueExport.js`  | Vue SFC builder                                                                                                               |
+| `modules/codegen/wcExport.js`   | Web Component builder                                                                                                         |
+| `modules/exportRegistry.js`     | Registry: built-in targets + `registerExportTarget` / `getExportTargets` (DOM-free)                                           |
+| `modules/exporter.js`           | Preview mode + dropdown UI + downloads; re-exports the codegen builders for compatibility                                     |
 
 Built-in targets are pure modules — anything you can build by hand in
 `generate` has the same behaviour as the built-ins.

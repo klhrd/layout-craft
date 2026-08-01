@@ -161,7 +161,11 @@ function doExport(target) {
     Promise.resolve(target.generate(ctx)).then((result) => {
         for (const file of result.files) {
             if (file.data instanceof Uint8Array) {
-                downloadBytes(file.name, file.data, file.name.endsWith('.zip') ? 'application/zip' : 'application/octet-stream');
+                downloadBytes(
+                    file.name,
+                    file.data,
+                    file.name.endsWith('.zip') ? 'application/zip' : 'application/octet-stream',
+                );
             } else {
                 downloadFile(file.name, file.data);
             }

@@ -1,12 +1,7 @@
 import { buildJsxExport } from './codegen/jsxExport.js';
 import { buildVueExport } from './codegen/vueExport.js';
 import { exportAsWebComponent } from './codegen/wcExport.js';
-import {
-    buildExportHtml,
-    buildSingleFileHtml,
-    buildExportCss,
-    buildSiteZip,
-} from './codegen/htmlExport.js';
+import { buildExportHtml, buildSingleFileHtml, buildExportCss, buildSiteZip } from './codegen/htmlExport.js';
 
 const targets = [];
 
