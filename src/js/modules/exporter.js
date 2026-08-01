@@ -3,46 +3,19 @@ import { getActiveCssCode } from './cssEditor.js';
 import { cancelActiveInlineEdit } from './canvas.js';
 import { t } from '../config/i18n.js';
 import { DEVICES } from '../config/devices.js';
-import { buildJsxExport } from './codegen/jsxExport.js';
-import { buildVueExport } from './codegen/vueExport.js';
-import { exportAsWebComponent } from './codegen/wcExport.js';
-import { makeZip } from './zipWriter.js';
+import { getExportTargets, registerExportTarget } from './exportRegistry.js';
 
-export function buildExportHtml(innerHtml) {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LayoutCraft Site</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-${innerHtml.trim()}
-</body>
-</html>`;
-}
-
-export function buildSingleFileHtml(innerHtml, cssCode) {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LayoutCraft Site</title>
-    <style>
-${cssCode}
-    </style>
-</head>
-<body>
-${innerHtml.trim()}
-</body>
-</html>`;
-}
-
-export function buildExportCss(cssCode) {
-    return `/* Generated via LayoutCraft Visual CSS Builder */\nbody { margin: 0; padding: 0; font-family: sans-serif; }\n\n${cssCode}`;
-}
+// Pure HTML/CSS builders live in codegen/htmlExport.js — the documented
+// export contract (see docs/export-plugin.md). Re-exported here for
+// backwards compatibility with existing imports/tests.
+export {
+    buildExportHtml,
+    buildSingleFileHtml,
+    buildExportCss,
+    cleanStyles,
+    extractDataImages,
+    buildSiteZip,
+} from './codegen/htmlExport.js';
 
 const canvas = document.getElementById('canvas');
 const btnPreview = document.getElementById('btn-preview');
@@ -59,6 +32,8 @@ function getCanvasContent() {
 }
 
 export function initExporter() {
+    window.registerExportTarget = registerExportTarget;
+
     btnPreview.addEventListener('click', () => {
         cancelActiveInlineEdit();
         deselectAll();
@@ -138,19 +113,13 @@ export function initExporter() {
             box-shadow: 0 8px 24px rgba(0,0,0,0.3);
         `;
 
-        const items = [
-            { label: '📄 Single-file HTML (inlined CSS)', format: 'html-single' },
-            { label: '📦 Whole-site ZIP (HTML + CSS + assets)', format: 'zip' },
-            { label: '🌐 HTML + CSS', format: 'html' },
-            { label: '⚛️ React JSX + CSS', format: 'react' },
-            { label: '💚 Vue SFB (scoped)', format: 'vue' },
-            { label: '🧩 Web Component (.js)', format: 'wc' },
-        ];
+        const targets = getExportTargets();
 
-        items.forEach((item) => {
+        targets.forEach((target) => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.textContent = item.label;
+            btn.textContent = target.label;
+            btn.dataset.target = target.id;
             btn.style.cssText = `
                 background: transparent; border: none; color: #e2e8f0;
                 padding: 8px 12px; text-align: left; border-radius: 4px;
@@ -163,7 +132,7 @@ export function initExporter() {
                 btn.style.background = 'transparent';
             });
             btn.addEventListener('click', () => {
-                doExport(item.format);
+                doExport(target);
                 dropdown.remove();
             });
             dropdown.appendChild(btn);
@@ -184,75 +153,31 @@ export function initExporter() {
     });
 }
 
-function doExport(format) {
+function doExport(target) {
     const canvasClone = getCanvasContent();
-    const cssCode = buildExportCss(getActiveCssCode());
-
-    if (format === 'html-single') {
-        const html = buildSingleFileHtml(canvasClone.innerHTML, cssCode);
-        downloadFile('index.html', html);
-    } else if (format === 'zip') {
-        buildSiteZip(canvasClone.innerHTML, cssCode).then((bytes) => {
-            downloadBytes('site.zip', bytes, 'application/zip');
-        });
-    } else if (format === 'html') {
-        const html = buildExportHtml(canvasClone.innerHTML);
-        downloadFile('index.html', html);
-        downloadFile('style.css', cssCode);
-    } else if (format === 'react') {
-        const jsx = buildJsxExport(canvasClone);
-        downloadFile('App.jsx', jsx);
-        downloadFile('style.css', cssCode);
-    } else if (format === 'vue') {
-        const vue = buildVueExport(canvasClone, cssCode);
-        downloadFile('App.vue', vue);
-    } else if (format === 'wc') {
-        const wc = exportAsWebComponent(canvasClone, getActiveCssCode());
-        downloadFile('layout-craft-block.js', wc);
-    }
+    const rawCssCode = getActiveCssCode();
+    const cssCode = buildExportCss(rawCssCode);
+    const ctx = { innerHtml: canvasClone.innerHTML, cssCode, rawCssCode, canvasClone };
+    Promise.resolve(target.generate(ctx)).then((result) => {
+        for (const file of result.files) {
+            if (file.data instanceof Uint8Array) {
+                downloadBytes(
+                    file.name,
+                    file.data,
+                    file.name.endsWith('.zip') ? 'application/zip' : 'application/octet-stream',
+                );
+            } else {
+                downloadFile(file.name, file.data);
+            }
+        }
+    });
 }
 
-export function cleanStyles(element) {
-    element.classList.remove('selected-element');
-    Array.from(element.children).forEach((child) => cleanStyles(child));
-}
-
-const MIME_EXT = {
-    png: 'png',
-    jpeg: 'jpg',
-    jpg: 'jpg',
-    gif: 'gif',
-    webp: 'webp',
-    'svg+xml': 'svg',
-};
-
-export function extractDataImages(html) {
-    const assets = [];
-    let counter = 0;
-    const rewritten = html.replace(
-        /src="(data:image\/([a-zA-Z0-9.+-]+);base64,([A-Za-z0-9+/=]+))"/g,
-        (match, uri, mime, b64) => {
-            counter++;
-            const ext = MIME_EXT[mime] || 'bin';
-            const filename = `assets/img-${counter}.${ext}`;
-            const binary = atob(b64);
-            const bytes = new Uint8Array(binary.length);
-            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-            assets.push({ name: filename, data: bytes });
-            return `src="./${filename}"`;
-        },
-    );
-    return { html: rewritten, assets };
-}
-
-export async function buildSiteZip(innerHtml, cssCode) {
-    const { html, assets } = extractDataImages(innerHtml);
-    const files = [
-        { name: 'index.html', data: buildExportHtml(html) },
-        { name: 'style.css', data: buildExportCss(cssCode) },
-        ...assets,
-    ];
-    return makeZip(files);
+// Public plugin hook: third-party export targets register here
+// (contract: docs/export-plugin.md). Also exposed as
+// window.registerExportTarget by initExporter().
+export function registerTarget(target) {
+    return registerExportTarget(target);
 }
 
 function downloadBytes(filename, bytes, mime) {

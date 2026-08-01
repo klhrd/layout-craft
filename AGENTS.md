@@ -53,7 +53,16 @@ commit so the tree stays green.
   `templates.js`, `i18n.js`. No DOM access here; these are data only.
 - `src/js/modules/canvas.js` — drag/drop + Sortable wiring.
 - `src/js/modules/inspector.js` — element property editor + dynamic attrs.
-- `src/js/modules/exporter.js` — preview/export preview flow.
+- `src/js/modules/exporter.js` — preview mode + export dropdown UI; the
+  dropdown and dispatch are driven by the export registry.
+- `src/js/modules/exportRegistry.js` — DOM-free export target registry:
+  built-in targets (`html-single`, `zip`, `html`, `react`, `vue`, `wc`) and
+  `registerExportTarget`/`getExportTargets`; exposed to the page as
+  `window.registerExportTarget`. Contract: `docs/export-plugin.md`.
+- `src/js/modules/codegen/htmlExport.js` — pure HTML/CSS builders
+  (`buildExportHtml`, `buildSingleFileHtml`, `buildExportCss`,
+  `cleanStyles`, `extractDataImages`, `buildSiteZip`); re-exported by
+  `exporter.js` for backwards compatibility.
 - `src/js/modules/storage.js` — multi-project LocalStorage manager + meter.
 - `src/js/modules/tokenEditor.js` — design tokens panel (`--css-*` variables,
   stored per-project, emitted as `:root { … }`).

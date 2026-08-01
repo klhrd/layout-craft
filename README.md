@@ -48,7 +48,9 @@ framework, no build step beyond Vite for the dev server.
 - **Multi-project LocalStorage** with 5 MB meter and 85% red warning.
 - **Export** — standalone HTML/CSS, whole-site ZIP (HTML + CSS + images in an
   `assets/` folder), React JSX, Vue SFC, or Web Component (Custom Element with
-  shadow DOM).
+  shadow DOM). The export system is a small registry — third-party formats
+  plug in via `window.registerExportTarget` (see
+  [`docs/export-plugin.md`](docs/export-plugin.md)).
 - **Offline PWA** — installable manifest + zero-dependency service worker
   (precaches the whole app at build time, cache-first serving) so the editor
   boots fully offline after the first visit.
@@ -152,7 +154,8 @@ layout-craft/
             ├── contextMenu.js   # Right-click context menu
             ├── cssEditor.js     # Visual CSS Rules (drag/drop/delete)
             ├── cssState.js      # Mutable CSS state (tree data model)
-            ├── exporter.js      # Preview mode + HTML/CSS download
+            ├── exporter.js      # Preview mode + export dropdown (registry-driven)
+            ├── exportRegistry.js # Export targets registry + plugin hook
             ├── followMode.js    # Collab Follow mode + peer highlight
             ├── history.js       # Undo/redo command stack
             ├── icons.js         # Inline SVG icon set + MutationObserver
@@ -171,6 +174,7 @@ layout-craft/
             ├── zipWriter.js     # Zero-dep ZIP writer (CompressionStream)
             └── codegen/
                 ├── domWalker.js  # DOM tree walker for exporters
+                ├── htmlExport.js # Pure HTML/CSS builders + zip pipeline
                 ├── jsxExport.js  # React JSX export
                 ├── vueExport.js  # Vue SFC export
                 └── wcExport.js   # Web Component export
@@ -197,6 +201,7 @@ All project docs live in [`docs/`](docs/):
 | [`docs/i18n-theming.md`](docs/i18n-theming.md)                                     | i18n + light/dark theme design                                                 |
 | [`docs/collab.md`](docs/collab.md)                                                 | Realtime Yjs collaboration design (P3a)                                        |
 | [`docs/template-marketplace.md`](docs/template-marketplace.md)                     | Template marketplace design (P3b)                                              |
+| [`docs/export-plugin.md`](docs/export-plugin.md)                                   | Export plugin contract: registry + `window.registerExportTarget` (P5f)         |
 | [`docs/migrations/supabase-migration.sql`](docs/migrations/supabase-migration.sql) | Supabase `projects` table + RLS migration                                      |
 | [`public/templates/README.md`](public/templates/README.md)                         | Drop-in template folder format (`manifest.json` + JSON files)                  |
 
