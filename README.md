@@ -29,7 +29,8 @@ framework, no build step beyond Vite for the dev server.
   product grids, checkout…), insertable via **Replace** or **Append** with
   storage quota warning. Drop extra templates into `public/templates/`
   (manifest-driven, no code changes) to extend the gallery of your own
-  install.
+  install — subfolders bundle multiple variants, optional preview images,
+  and templates can seed design tokens.
 - **File-first sharing** — projects export/import as `.lcproj` JSON (File menu
   or drag the file onto the window); exports include single-file HTML with
   inlined CSS.

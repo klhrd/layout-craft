@@ -1,0 +1,20 @@
+{
+    "templates": [
+        {
+            "id": "my-hero",
+            "title": "My Hero (Dark)",
+            "category": "marketing",
+            "tags": ["hero", "landing", "tokens"],
+            "file": "my-hero/hero.json",
+            "preview": "my-hero/preview.svg"
+        },
+        {
+            "id": "my-hero-light",
+            "title": "My Hero (Light)",
+            "category": "marketing",
+            "tags": ["hero", "landing", "light"],
+            "file": "my-hero/hero-light.json",
+            "preview": "my-hero/preview.svg"
+        }
+    ]
+}
