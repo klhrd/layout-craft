@@ -105,3 +105,30 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   structure + tests, then prettier). 207 tests green, lint/format/build
   clean, preview-served assets verified, merged to master. Remaining in
   the plan: P5f (stable export/plugin extension points).
+
+## 2026-07-31 — P5f export plugin extension points (in progress)
+
+- Goal: stabilize the exporter API into a documented contract + a small
+  registry so third-party export targets plug in without forking.
+- Current state: export menu items are hardcoded in `initExporter`;
+  `doExport(format)` is an if/else chain. Pure builders (`buildExportHtml`,
+  `buildSingleFileHtml`, `buildExportCss`, `cleanStyles`, `extractDataImages`,
+  `buildSiteZip`) live in `exporter.js` next to DOM code — importing that
+  module from a registry would run `document.getElementById` at load time
+  and break tests.
+- DECIDED:
+  - Move the pure builders to `src/js/modules/codegen/htmlExport.js`
+    (sibling of jsx/vue/wc exporters); `exporter.js` re-exports them so
+    existing imports/tests keep working. This makes every export target a
+    pure module — the "stabilized API" is literally the codegen contract.
+  - New `src/js/modules/exportRegistry.js` (DOM-free): built-in targets
+    registered at module load (html-single, zip, html, react, vue, wc),
+    plus `registerExportTarget(target)` for third parties with validation
+    (unique id, label, generate function) and `getExportTargets()`.
+  - Target contract: `generate({ innerHtml, cssCode, canvasClone })`
+    returns `{ files: [{ name, data }] }` (data: string | Uint8Array),
+    sync or async. Exporter renders the dropdown from the registry and
+    downloads each file (data-URI for text, Blob for bytes).
+  - Public hook: `window.registerExportTarget` exposed by the exporter so
+    users can drop a snippet into the console/devtools or a bookmarklet
+    without forking. Documented in `docs/export-plugin.md`.
