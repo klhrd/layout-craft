@@ -96,7 +96,11 @@ Key merge commits:
 | `i18n.test.js`          | 7     | string/nested key lookup, fallback to `en`, function leaf with args, missing key → raw path, setLocale, getLocale |
 | `storage.meter.test.js` | 5     | UTF-16 byte calc, 5 MB percentage, colour thresholds, save with showAlert, save with false                        |
 
-Run: `npm test` (Vitest, happy-dom environment).
+Plus 20 more files under `test/` (cssState, canvas, exporter, projectFile,
+aiAssistant, tokenEditor, i18nApplier, modalA11y, windowHooks, …).
+
+Run: `npm test` (Vitest, happy-dom environment) — currently **259 tests across
+23 files**.
 
 ---
 
@@ -118,6 +122,18 @@ Run: `npm test` (Vitest, happy-dom environment).
 - **CSS.escape() in app.js** — The redo/rollback for CSS block value edits
   uses `CSS.escape()` on the selector when querying `.css-rule-box`. Make sure
   any new query follows the same pattern.
+- **Module-level `window.*` hooks** — `cssEditor.js` / `tokenEditor.js`
+  unconditionally assign `window.rebuildCssRulesUI` / `window.rebuildTokenUI`
+  at module load (tests must stub these AFTER importing the module — a
+  "skip if present" guard breaks under `vi.resetModules()` because the stale
+  closure reads the old cssState; see dev-notes).
+- **i18n marking rules** — `data-i18n` elements must be leaf text nodes
+  (children are replaced by the localized text); `t()` does not substitute
+  `{0}` placeholders — keys needing arguments must be function leaves.
+  Locales: en, zh-TW (ja was dropped).
+- **Modal a11y** — `modalA11y.js` watches `style` attributes for open/close;
+  Escape is handled in the capture phase with `stopImmediatePropagation` to
+  beat app.js's global Escape → deselectAll.
 
 ---
 

@@ -57,10 +57,12 @@ framework, no build step beyond Vite for the dev server.
   (precaches the whole app at build time, cache-first serving) so the editor
   boots fully offline after the first visit.
 - **AI assistant** — generate a component from a natural-language prompt
-  (`"a pricing section with three tiers"`) via any OpenAI-compatible endpoint
+  (`"a pricing section with three tiers"`) or restyle a selected element
+  (`"make it dark with rounded corners"`) via any OpenAI-compatible endpoint
   (OpenAI, OpenRouter, Ollama, LM Studio…). Bring your own API key — stored
   only in this browser, never in the project file. Results land as **Insert**
-  (merged into canvas + CSS rules + design tokens) or **Replace** (see
+  (merged into canvas + CSS rules + design tokens), **Replace**, or
+  **Apply Changes** on the selected element's rule (see
   [`docs/ai-assistant.md`](docs/ai-assistant.md)).
 - **Undo/redo** — bounded command stack with debounced history entries.
 
@@ -171,6 +173,7 @@ layout-craft/
             ├── importer.js      # HTML/CSS paste import + sanitisation
             ├── inspector.js     # Property inspector + dynamic attrs
             ├── layers.js        # Layers tree panel
+            ├── modalA11y.js     # Focus trap + dialog semantics for modals
             ├── presence.js      # Remote cursor/selection overlay
             ├── projectFile.js   # .lcproj export/import + drag-and-drop
             ├── storage.js       # Multi-project LocalStorage + quota meter
