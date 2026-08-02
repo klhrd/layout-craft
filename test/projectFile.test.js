@@ -5,6 +5,7 @@ let mod;
 let buildProjectFile;
 let validateProjectFile;
 let serializeProjectFile;
+let migrateProjectFile;
 
 beforeEach(async () => {
     install();
@@ -12,6 +13,7 @@ beforeEach(async () => {
     buildProjectFile = mod.buildProjectFile;
     validateProjectFile = mod.validateProjectFile;
     serializeProjectFile = mod.serializeProjectFile;
+    migrateProjectFile = mod.migrateProjectFile;
 });
 
 afterEach(() => {
@@ -85,6 +87,44 @@ describe('validateProjectFile', () => {
     it('rejects null and undefined', () => {
         expect(validateProjectFile(null)).toBe(false);
         expect(validateProjectFile(undefined)).toBe(false);
+    });
+
+    it('rejects a future version', () => {
+        expect(validateProjectFile({ app: 'layoutcraft', version: 3, html: '<div></div>' })).toBe(false);
+    });
+
+    it('rejects a non-numeric version', () => {
+        expect(validateProjectFile({ app: 'layoutcraft', version: 'two', html: '<div></div>' })).toBe(false);
+    });
+
+    it('accepts the current version', () => {
+        expect(validateProjectFile({ app: 'layoutcraft', version: 2, html: '<div></div>' })).toBe(true);
+    });
+});
+
+describe('migrateProjectFile', () => {
+    it('upgrades a v1 file (no version field) with an empty token map', () => {
+        const migrated = migrateProjectFile({ app: 'layoutcraft', html: '<div></div>', cssData: {} });
+        expect(migrated.version).toBe(2);
+        expect(migrated.tokens).toEqual({});
+        expect(migrated.html).toBe('<div></div>');
+    });
+
+    it('keeps existing tokens when migrating', () => {
+        const migrated = migrateProjectFile({
+            app: 'layoutcraft',
+            html: '<div></div>',
+            cssData: {},
+            tokens: { '--c': '#fff' },
+        });
+        expect(migrated.version).toBe(2);
+        expect(migrated.tokens).toEqual({ '--c': '#fff' });
+    });
+
+    it('leaves a current-version file untouched apart from the version stamp', () => {
+        const input = { app: 'layoutcraft', version: 2, html: '<p>hi</p>', cssData: { '.p': {} } };
+        const migrated = migrateProjectFile(input);
+        expect(migrated).toEqual(input);
     });
 });
 

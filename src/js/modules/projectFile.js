@@ -9,11 +9,12 @@ import { updateStorageMeter } from './storage.js';
 
 const STORAGE_KEY_PREFIX = 'layoutcraft_proj_';
 const LIST_KEY = 'layoutcraft_project_list';
+const PROJECT_FILE_VERSION = 2;
 
 export function buildProjectFile(projName, html, cssData, tokens) {
     return {
         app: 'layoutcraft',
-        version: 2,
+        version: PROJECT_FILE_VERSION,
         name: projName,
         html,
         cssData: cssData || {},
@@ -25,10 +26,28 @@ export function buildProjectFile(projName, html, cssData, tokens) {
 export function validateProjectFile(data) {
     if (!data || typeof data !== 'object') return false;
     if (data.app !== 'layoutcraft') return false;
+    const version = data.version === undefined ? 1 : data.version;
+    if (typeof version !== 'number' || version < 1 || version > PROJECT_FILE_VERSION) return false;
     if (typeof data.html !== 'string') return false;
     if (data.cssData !== undefined && (typeof data.cssData !== 'object' || data.cssData === null)) return false;
     if (data.tokens !== undefined && (typeof data.tokens !== 'object' || data.tokens === null)) return false;
     return true;
+}
+
+/**
+ * Upgrade an older .lcproj payload to the current schema. v1 files (no
+ * version field) predate design tokens; seed an empty token map. Unknown
+ * future versions are rejected by validateProjectFile() before this runs.
+ */
+export function migrateProjectFile(data) {
+    if (!data || typeof data !== 'object') return data;
+    const version = data.version === undefined ? 1 : data.version;
+    const migrated = { ...data };
+    if (version < 2 && (migrated.tokens === undefined || migrated.tokens === null)) {
+        migrated.tokens = {};
+    }
+    migrated.version = PROJECT_FILE_VERSION;
+    return migrated;
 }
 
 export function serializeProjectFile(projName) {
@@ -85,11 +104,12 @@ export function importProjectFile(file) {
         const reader = new FileReader();
         reader.onload = () => {
             try {
-                const data = JSON.parse(reader.result);
-                if (!validateProjectFile(data)) {
+                const raw = JSON.parse(reader.result);
+                if (!validateProjectFile(raw)) {
                     reject(new Error(t('ui.project.importInvalid')));
                     return;
                 }
+                const data = migrateProjectFile(raw);
 
                 const list = JSON.parse(localStorage.getItem(LIST_KEY)) || [];
                 let name = (data.name || file.name.replace(/\.lcproj$/i, '')).replace(/\s+/g, '_');
