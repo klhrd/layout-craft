@@ -228,7 +228,7 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   modal (happy-dom tests confirm activeElement behaviour).
 - destroyModalA11y() exported for tests. +5 tests (241 total).
 
-## 2026-08-02 ¡X .lcproj version validation + migration
+## 2026-08-02 ï¿½X .lcproj version validation + migration
 
 - validateProjectFile() never checked version despite version: 2 in
   buildProjectFile(); future-schema files would import as garbage and old
