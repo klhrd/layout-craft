@@ -251,3 +251,26 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
 - CONTRACT: module-level window.* assignments always run. Tests must stub
   AFTER importing the module (or provide the DOM the real hook needs).
 - +3 tests in test/windowHooks.test.js pinning the install behaviour.
+
+## 2026-08-02 - AI edit mode for the selected element
+
+- New edit flow in aiAssistant.js: with a canvas element selected (and at
+  least one of its classes already having a rule), the AI modal switches to
+  "edit" mode - getSelectionTarget() finds the first class with a rule (same
+  convention as the resize-handle commit), buildEditMessages() tells the
+  model the exact selector + current property set and demands a cssData-only
+  reply restating the selector, parseEditReply() accepts only cssData,
+  applyAiEdit() REPLACES the rule (insert mode merges; edit replies are the
+  full desired set, so merge would leak stale properties).
+- parseEditReply bug found while testing: a second parseAssistantReply() call
+  was fed an object instead of text. Fixed by extracting shared
+  extractAssistantJson() (fenced/prose-tolerant) used by both parsers.
+- t() does not substitute {0} placeholders - only function leaves receive
+  args. editTarget and importSuccess are function leaves; importSuccess had
+  been broken since P4b (rendered the literal "{0}").
+- renderResult() now escapes the preview HTML (was raw innerHTML). Existing
+  flow test asserted a live .ai-hero node in the preview - changed to assert
+  the escaped JSON in the <pre>.
+- Window-hook contract strikes again: test stubs for rebuildCssRulesUI must
+  be set AFTER import (cssEditor.js re-assigns the plain function at module
+  load via templateLoader -> canvas chain). +9 tests (259 total).
