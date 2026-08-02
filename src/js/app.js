@@ -29,6 +29,7 @@ import { initPresence, setThrottledCursor, updateCursor } from './modules/presen
 import { initFollowMode } from './modules/followMode.js';
 import { initTokenEditor } from './modules/tokenEditor.js';
 import { applyI18n } from './modules/i18nApplier.js';
+import { initModalA11y } from './modules/modalA11y.js';
 
 window.activeCssData = cssState.getRawData();
 window.refreshLayers = refreshLayers;
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     applySavedTheme();
     initZoom();
     initBreakpoints();
+    initModalA11y();
 
     initSupabase();
     initStorage(); // Boot the storage manager.

@@ -210,3 +210,20 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   imported setLocale() and the dynamically imported applier see different
   module instances �X import i18n dynamically in the test too.
 - 236 tests green; lint + format + build clean.
+
+## 2026-08-02 �X Modal a11y (focus trap + dialog semantics)
+
+- All five modals (.modal-overlay: import, template, AI, open, conflict)
+  plus the template preview overlay lacked role=dialog, aria-modal, focus
+  trapping and Escape-to-close; Tab could reach the page behind a modal.
+- New src/js/modules/modalA11y.js, ZERO-INVASION approach: a MutationObserver
+  on the style attribute detects open/close (every modal toggles
+  display:none/flex), so no existing display-toggle code had to change.
+  Nested overlays resolve to the innermost open one (DOM order = preview
+  overlay sits after template-modal), so Escape closes the preview first.
+- Escape is handled in the capture phase with stopImmediatePropagation to
+  suppress app.js's global Escape->deselectAll while a modal is open.
+- Focus restore: previous activeElement is re-focused when the last modal
+  closes (matches the trigger-button UX); Tab/Shift+Tab wrap inside the
+  modal (happy-dom tests confirm activeElement behaviour).
+- destroyModalA11y() exported for tests. +5 tests (241 total).
