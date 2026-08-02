@@ -387,6 +387,9 @@ function createNestedRuleBoxUI(block, parentSelector) {
     return ruleBox;
 }
 
+// Module-level window hook: rebuilds the Visual CSS Rules sidebar from
+// cssState. Tests that stub window.rebuildCssRulesUI must do so AFTER
+// importing this module (the assignment below always runs).
 window.rebuildCssRulesUI = function () {
     visualCssContainer.innerHTML = '';
     for (const block of cssState.getBlocks()) {
