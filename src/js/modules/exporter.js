@@ -7,8 +7,9 @@ import { getExportTargets, registerExportTarget } from './exportRegistry.js';
 
 // Pure HTML/CSS builders live in codegen/htmlExport.js — the documented
 // export contract (see docs/export-plugin.md). Re-exported here for
-// backwards compatibility with existing imports/tests.
-export {
+// backwards compatibility with existing imports/tests. They are imported
+// (not re-export syntax) so this module can also call them directly.
+import {
     buildExportHtml,
     buildSingleFileHtml,
     buildExportCss,
@@ -16,6 +17,7 @@ export {
     extractDataImages,
     buildSiteZip,
 } from './codegen/htmlExport.js';
+export { buildExportHtml, buildSingleFileHtml, buildExportCss, cleanStyles, extractDataImages, buildSiteZip };
 
 const canvas = document.getElementById('canvas');
 const btnPreview = document.getElementById('btn-preview');

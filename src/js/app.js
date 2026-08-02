@@ -28,6 +28,7 @@ import { createYDoc, initCanvasSync, initCssSync } from './modules/yjsAdapter.js
 import { initPresence, setThrottledCursor, updateCursor } from './modules/presence.js';
 import { initFollowMode } from './modules/followMode.js';
 import { initTokenEditor } from './modules/tokenEditor.js';
+import { applyI18n } from './modules/i18nApplier.js';
 
 window.activeCssData = cssState.getRawData();
 window.refreshLayers = refreshLayers;
@@ -358,6 +359,7 @@ function applySavedLocale() {
     if (saved) {
         setLocale(saved);
     }
+    applyI18n();
 }
 
 function initZoom() {

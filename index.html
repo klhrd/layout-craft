@@ -19,93 +19,152 @@
                     <span class="brand-title">LayoutCraft Studio</span>
 
                     <div class="menu-dropdown">
-                        <button class="menu-trigger" data-menu="file-menu">File <span class="arrow">▾</span></button>
+                        <button class="menu-trigger" data-menu="file-menu">
+                            <span data-i18n="ui.menus.file">File</span> <span class="arrow">▾</span>
+                        </button>
                         <div id="file-menu" class="menu-panel">
-                            <button data-action="open"><span class="mat-icon">folder_open</span> Open Project</button>
-                            <button data-action="save"><span class="mat-icon">save</span> Save</button>
+                            <button data-action="open">
+                                <span class="mat-icon">folder_open</span>
+                                <span data-i18n="ui.menus.openProject">Open Project</span>
+                            </button>
+                            <button data-action="save">
+                                <span class="mat-icon">save</span> <span data-i18n="ui.menus.save">Save</span>
+                            </button>
                             <div class="menu-sep"></div>
                             <!-- Disabled with account-free positioning: cloud sync requires auth. See docs/ROADMAP.md.
                             <button data-action="pull-cloud">
                                 <span class="mat-icon">cloud_download</span> Pull from cloud
                             </button>
                             -->
-                            <button data-action="import"><span class="mat-icon">upload</span> Import HTML/CSS</button>
+                            <button data-action="import">
+                                <span class="mat-icon">upload</span>
+                                <span data-i18n="ui.menus.importHtml">Import HTML/CSS</span>
+                            </button>
                             <button data-action="import-project">
-                                <span class="mat-icon">file_open</span> Import Project (.lcproj)
+                                <span class="mat-icon">file_open</span>
+                                <span data-i18n="ui.menus.importProject">Import Project (.lcproj)</span>
                             </button>
                             <button data-action="export-project">
-                                <span class="mat-icon">file_download</span> Export Project (.lcproj)
+                                <span class="mat-icon">file_download</span>
+                                <span data-i18n="ui.menus.exportProject">Export Project (.lcproj)</span>
                             </button>
-                            <button data-action="export"><span class="mat-icon">download</span> Export</button>
+                            <button data-action="export">
+                                <span class="mat-icon">download</span> <span data-i18n="ui.menus.export">Export</span>
+                            </button>
                             <input type="file" id="import-project-input" accept=".lcproj,application/json" hidden />
                         </div>
                     </div>
 
                     <div class="menu-dropdown">
-                        <button class="menu-trigger" data-menu="edit-menu">Edit <span class="arrow">▾</span></button>
+                        <button class="menu-trigger" data-menu="edit-menu">
+                            <span data-i18n="ui.menus.edit">Edit</span> <span class="arrow">▾</span>
+                        </button>
                         <div id="edit-menu" class="menu-panel">
-                            <button id="menu-undo" data-action="undo"><span class="mat-icon">undo</span> Undo</button>
-                            <button id="menu-redo" data-action="redo"><span class="mat-icon">redo</span> Redo</button>
+                            <button id="menu-undo" data-action="undo">
+                                <span class="mat-icon">undo</span> <span data-i18n="ui.menus.undo">Undo</span>
+                            </button>
+                            <button id="menu-redo" data-action="redo">
+                                <span class="mat-icon">redo</span> <span data-i18n="ui.menus.redo">Redo</span>
+                            </button>
                             <div class="menu-sep"></div>
-                            <button data-action="cut"><span class="mat-icon">content_cut</span> Cut</button>
-                            <button data-action="copy"><span class="mat-icon">content_copy</span> Copy</button>
-                            <button data-action="paste"><span class="mat-icon">content_paste</span> Paste</button>
+                            <button data-action="cut">
+                                <span class="mat-icon">content_cut</span> <span data-i18n="ui.menus.cut">Cut</span>
+                            </button>
+                            <button data-action="copy">
+                                <span class="mat-icon">content_copy</span> <span data-i18n="ui.menus.copy">Copy</span>
+                            </button>
+                            <button data-action="paste">
+                                <span class="mat-icon">content_paste</span>
+                                <span data-i18n="ui.menus.paste">Paste</span>
+                            </button>
                         </div>
                     </div>
 
                     <div class="menu-dropdown">
-                        <button class="menu-trigger" data-menu="view-menu">View <span class="arrow">▾</span></button>
+                        <button class="menu-trigger" data-menu="view-menu">
+                            <span data-i18n="ui.menus.view">View</span> <span class="arrow">▾</span>
+                        </button>
                         <div id="view-menu" class="menu-panel">
                             <button id="menu-preview" data-action="preview">
-                                <span class="mat-icon">visibility</span> Preview
+                                <span class="mat-icon">visibility</span>
+                                <span data-i18n="ui.menus.preview">Preview</span>
                             </button>
                             <div class="menu-sep"></div>
                             <button id="menu-grid" data-action="grid">
-                                <span class="mat-icon">grid_on</span> Grid
+                                <span class="mat-icon">grid_on</span> <span data-i18n="ui.menus.grid">Grid</span>
                             </button>
                             <button id="menu-outlines" data-action="outlines">
-                                <span class="mat-icon">border_style</span> Outlines
+                                <span class="mat-icon">border_style</span>
+                                <span data-i18n="ui.menus.outlines">Outlines</span>
                             </button>
                             <button id="menu-rulers" data-action="rulers">
-                                <span class="mat-icon">straighten</span> Rulers
+                                <span class="mat-icon">straighten</span>
+                                <span data-i18n="ui.menus.rulers">Rulers</span>
                             </button>
                             <div class="menu-sep"></div>
-                            <button data-action="theme-light"><span class="mat-icon">light_mode</span> Light</button>
-                            <button data-action="theme-dark"><span class="mat-icon">dark_mode</span> Dark</button>
+                            <button data-action="theme-light">
+                                <span class="mat-icon">light_mode</span>
+                                <span data-i18n="ui.menus.themeLight">Light</span>
+                            </button>
+                            <button data-action="theme-dark">
+                                <span class="mat-icon">dark_mode</span>
+                                <span data-i18n="ui.menus.themeDark">Dark</span>
+                            </button>
                             <button data-action="theme-system">
-                                <span class="mat-icon">settings_brightness</span> System
+                                <span class="mat-icon">settings_brightness</span>
+                                <span data-i18n="ui.menus.themeSystem">System</span>
                             </button>
                             <div class="menu-sep"></div>
-                            <button data-action="locale-en"><span class="mat-icon">language</span> English</button>
-                            <button data-action="locale-zh-TW"><span class="mat-icon">language</span> 中文</button>
+                            <button data-action="locale-en">
+                                <span class="mat-icon">language</span> <span data-i18n="ui.menus.english">English</span>
+                            </button>
+                            <button data-action="locale-zh-TW">
+                                <span class="mat-icon">language</span> <span data-i18n="ui.menus.chinese">中文</span>
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="toolbar-actions">
-                    <button id="btn-new-project" class="btn-secondary" title="New Project">
-                        <span class="mat-icon">add</span> New
+                    <button
+                        id="btn-new-project"
+                        class="btn-secondary"
+                        data-i18n-title="ui.toolbar.newProject"
+                        title="New Project"
+                    >
+                        <span class="mat-icon">add</span>
+                        <span data-i18n="ui.project.new">New</span>
                     </button>
-                    <button id="btn-save-project" class="btn-secondary" title="Save Project">
-                        <span class="mat-icon">save</span> Save
+                    <button
+                        id="btn-save-project"
+                        class="btn-secondary"
+                        data-i18n-title="ui.toolbar.saveProject"
+                        title="Save Project"
+                    >
+                        <span class="mat-icon">save</span>
+                        <span data-i18n="ui.project.save">Save</span>
                     </button>
 
                     <div class="toolbar-sep"></div>
 
-                    <button id="btn-undo" class="btn-secondary" disabled title="Undo">
+                    <button id="btn-undo" class="btn-secondary" disabled data-i18n-title="ui.toolbar.undo" title="Undo">
                         <span class="mat-icon">undo</span>
                     </button>
-                    <button id="btn-redo" class="btn-secondary" disabled title="Redo">
+                    <button id="btn-redo" class="btn-secondary" disabled data-i18n-title="ui.toolbar.redo" title="Redo">
                         <span class="mat-icon">redo</span>
                     </button>
 
                     <div class="toolbar-sep"></div>
 
-                    <select id="select-project" title="Switch project"></select>
+                    <select
+                        id="select-project"
+                        data-i18n-title="ui.toolbar.switchProject"
+                        title="Switch project"
+                    ></select>
 
                     <div class="toolbar-sep"></div>
 
-                    <span class="zoom-controls" title="Zoom level">
+                    <span class="zoom-controls" data-i18n-title="ui.toolbar.zoomLevel" title="Zoom level">
                         <button id="btn-zoom-out" class="btn-secondary"><span class="mat-icon">zoom_out</span></button>
                         <span id="zoom-level">100%</span>
                         <button id="btn-zoom-in" class="btn-secondary"><span class="mat-icon">zoom_in</span></button>
@@ -113,7 +172,11 @@
 
                     <div class="toolbar-sep"></div>
 
-                    <span class="bp-toggle" title="Viewport breakpoints">
+                    <span
+                        class="bp-toggle"
+                        data-i18n-title="ui.toolbar.viewportBreakpoints"
+                        title="Viewport breakpoints"
+                    >
                         <button id="bp-desktop" class="btn-secondary active" data-bp="none">
                             <span class="mat-icon">desktop_windows</span>
                         </button>
@@ -136,23 +199,31 @@
 
                     <div class="toolbar-sep"></div>
 
-                    <button id="btn-templates" class="btn-secondary" title="Templates">
-                        <span class="mat-icon">dashboard</span> Templates
+                    <button
+                        id="btn-templates"
+                        class="btn-secondary"
+                        data-i18n-title="ui.toolbar.templates"
+                        title="Templates"
+                    >
+                        <span class="mat-icon">dashboard</span>
+                        <span data-i18n="ui.toolbar.templates">Templates</span>
                     </button>
 
                     <div class="toolbar-sep"></div>
 
-                    <button id="btn-ai" class="btn-secondary" title="AI Assistant">
-                        <span class="mat-icon">auto_awesome</span> AI
+                    <button id="btn-ai" class="btn-secondary" data-i18n-title="ui.toolbar.ai" title="AI Assistant">
+                        <span class="mat-icon">auto_awesome</span> <span data-i18n="ui.toolbar.aiButton">AI</span>
                     </button>
 
                     <div class="toolbar-sep"></div>
 
-                    <button id="btn-preview" class="btn-secondary" title="Preview">
-                        <span class="mat-icon">visibility</span> Preview
+                    <button id="btn-preview" class="btn-secondary" data-i18n-title="ui.toolbar.preview" title="Preview">
+                        <span class="mat-icon">visibility</span>
+                        <span data-i18n="ui.menus.preview">Preview</span>
                     </button>
-                    <button id="btn-export" class="btn-secondary" title="Export">
-                        <span class="mat-icon">download</span> Export
+                    <button id="btn-export" class="btn-secondary" data-i18n-title="ui.toolbar.export" title="Export">
+                        <span class="mat-icon">download</span>
+                        <span data-i18n="ui.menus.export">Export</span>
                     </button>
 
                     <div class="toolbar-sep"></div>
@@ -192,22 +263,26 @@
                                 <div class="placeholder-icon">
                                     <span class="mat-icon" style="font-size: 3rem">palette</span>
                                 </div>
-                                <h2 class="placeholder-title">Start Building</h2>
-                                <p class="placeholder-subtitle">
+                                <h2 class="placeholder-title" data-i18n="ui.placeholder.startBuilding">
+                                    Start Building
+                                </h2>
+                                <p class="placeholder-subtitle" data-i18n="ui.placeholder.subtitle">
                                     Drag elements from the toolbox onto the canvas, or get started quickly:
                                 </p>
                                 <div class="placeholder-actions">
                                     <button id="btn-quick-start" class="primary-btn">
-                                        <span class="mat-icon">rocket_launch</span> Quick Start
+                                        <span class="mat-icon">rocket_launch</span>
+                                        <span data-i18n="ui.placeholder.quickStart">Quick Start</span>
                                     </button>
                                     <button id="btn-load-sample" class="btn-secondary">
-                                        <span class="mat-icon">folder_open</span> Load Sample
+                                        <span class="mat-icon">folder_open</span>
+                                        <span data-i18n="ui.placeholder.loadSample">Load Sample</span>
                                     </button>
                                 </div>
                                 <div class="placeholder-hints">
-                                    <small
-                                        ><span class="mat-icon" style="font-size: 0.75rem">lightbulb</span> Ctrl+Z undo
-                                        · Ctrl+C/V copy/paste · Del delete · Right-click for more</small
+                                    <span class="mat-icon" style="font-size: 0.75rem">lightbulb</span>
+                                    <small data-i18n="ui.placeholder.hints"
+                                        >Ctrl+Z undo · Ctrl+C/V copy/paste · Del delete · Right-click for more</small
                                     >
                                 </div>
                             </div>
@@ -217,80 +292,147 @@
 
                 <div class="right-sidebar">
                     <aside class="properties-panel">
-                        <h3>Inspector</h3>
-                        <div id="no-selection-msg">Select an element on the canvas to edit its properties.</div>
+                        <h3 data-i18n="ui.panels.inspector">Inspector</h3>
+                        <div id="no-selection-msg" data-i18n="ui.panels.noSelection">
+                            Select an element on the canvas to edit its properties.
+                        </div>
                         <div id="collab-controls" class="collab-controls">
-                            <button id="btn-follow" class="btn-secondary" title="Follow a remote peer">
-                                <span class="mat-icon">visibility</span> Follow
+                            <button
+                                id="btn-follow"
+                                class="btn-secondary"
+                                data-i18n-title="ui.editor.follow"
+                                title="Follow a remote peer"
+                            >
+                                <span class="mat-icon">visibility</span>
+                                <span data-i18n="ui.editor.follow">Follow</span>
                             </button>
                             <label class="collab-anon-label">
-                                <input type="checkbox" id="chk-anonymous" /> Anonymous
+                                <input type="checkbox" id="chk-anonymous" />
+                                <span data-i18n="ui.editor.anonymous">Anonymous</span>
                             </label>
                         </div>
                         <div id="editor-form" class="hidden">
-                            <p>Selected Element: <strong id="selected-tag-name">-</strong></p>
-                            <label for="input-id">ID</label>
-                            <input type="text" id="input-id" placeholder="e.g., hero-section" />
-                            <label for="input-class">Classes</label>
-                            <input type="text" id="input-class" placeholder="e.g., container text-center" />
-                            <label for="input-text">Text Content</label>
-                            <textarea id="input-text" rows="2" placeholder="Enter inner text..."></textarea>
+                            <p>
+                                <span data-i18n="ui.editor.selectedElement">Selected Element:</span>
+                                <strong id="selected-tag-name">-</strong>
+                            </p>
+                            <label for="input-id" data-i18n="ui.labels.id">ID</label>
+                            <input
+                                type="text"
+                                id="input-id"
+                                data-i18n-placeholder="ui.labels.idPlaceholder"
+                                placeholder="e.g., hero-section"
+                            />
+                            <label for="input-class" data-i18n="ui.labels.classes">Classes</label>
+                            <input
+                                type="text"
+                                id="input-class"
+                                data-i18n-placeholder="ui.labels.classPlaceholder"
+                                placeholder="e.g., container text-center"
+                            />
+                            <label for="input-text" data-i18n="ui.labels.textContent">Text Content</label>
+                            <textarea
+                                id="input-text"
+                                rows="2"
+                                data-i18n-placeholder="ui.labels.textPlaceholder"
+                                placeholder="Enter inner text..."
+                            ></textarea>
                             <div id="dynamic-properties"></div>
                             <div id="style-editor"></div>
 
                             <div id="hierarchy-controls" class="hierarchy-controls hidden">
-                                <div class="hierarchy-section-title">Hierarchy</div>
-                                <div class="hierarchy-parent">Parent: <span id="hierarchy-parent-name">-</span></div>
+                                <div class="hierarchy-section-title" data-i18n="ui.editor.hierarchy">Hierarchy</div>
+                                <div class="hierarchy-parent">
+                                    <span data-i18n="ui.editor.parent">Parent:</span>
+                                    <span id="hierarchy-parent-name">-</span>
+                                </div>
                                 <div class="hierarchy-actions">
-                                    <button id="btn-move-up" class="btn-secondary" title="Move Up">
+                                    <button
+                                        id="btn-move-up"
+                                        class="btn-secondary"
+                                        data-i18n-title="ui.editor.moveUp"
+                                        title="Move Up"
+                                    >
                                         <span class="mat-icon">keyboard_arrow_up</span>
                                     </button>
-                                    <button id="btn-move-down" class="btn-secondary" title="Move Down">
+                                    <button
+                                        id="btn-move-down"
+                                        class="btn-secondary"
+                                        data-i18n-title="ui.editor.moveDown"
+                                        title="Move Down"
+                                    >
                                         <span class="mat-icon">keyboard_arrow_down</span>
                                     </button>
                                 </div>
                                 <div class="hierarchy-wrap">
                                     <button id="btn-wrap-div" class="btn-secondary" style="width: 100%">
-                                        <span class="mat-icon">wrap_text</span> Wrap in div
+                                        <span class="mat-icon">wrap_text</span>
+                                        <span data-i18n="ui.editor.wrapInDiv">Wrap in div</span>
                                     </button>
                                     <div style="display: flex; gap: 4px">
                                         <button id="btn-wrap-section" class="btn-secondary" style="flex: 1">
-                                            <span class="mat-icon">wrap_text</span> section
+                                            <span class="mat-icon">wrap_text</span>
+                                            <span data-i18n="ui.editor.section">section</span>
                                         </button>
                                         <button id="btn-unwrap" class="btn-secondary" style="flex: 1">
-                                            <span class="mat-icon">unfold_more</span> Unwrap
+                                            <span class="mat-icon">unfold_more</span>
+                                            <span data-i18n="ui.editor.unwrap">Unwrap</span>
                                         </button>
                                     </div>
                                 </div>
                             </div>
 
                             <button id="btn-lift-out" class="btn-secondary" style="margin-top: 6px; width: 100%">
-                                <span class="mat-icon">unfold_more</span> Lift Out
+                                <span class="mat-icon">unfold_more</span>
+                                <span data-i18n="ui.editor.liftOut">Lift Out</span>
                             </button>
                             <button id="btn-delete" class="danger-btn">
-                                <span class="mat-icon">delete</span> Delete Element
+                                <span class="mat-icon">delete</span>
+                                <span data-i18n="ui.panels.deleteElement">Delete Element</span>
                             </button>
                         </div>
                     </aside>
 
                     <aside class="layers-panel">
-                        <h3>Layers</h3>
+                        <h3 data-i18n="ui.editor.layers">Layers</h3>
                         <div id="layers-tree"></div>
                     </aside>
 
                     <aside class="css-editor-panel">
-                        <h3 id="css-editor-toggle">Visual CSS Rules</h3>
-                        <div class="css-editor-hint">Create a selector, then drag CSS blocks inside it.</div>
+                        <h3 id="css-editor-toggle" data-i18n="ui.panels.visualCssRules">Visual CSS Rules</h3>
+                        <div class="css-editor-hint" data-i18n="ui.panels.visualCssHint">
+                            Create a selector, then drag CSS blocks inside it.
+                        </div>
 
                         <div class="css-selector-creator">
-                            <input type="text" id="input-new-selector" placeholder="e.g., .my-card or h1:hover" />
-                            <button id="btn-add-selector" class="btn-secondary" title="Add Rule">
+                            <input
+                                type="text"
+                                id="input-new-selector"
+                                data-i18n-placeholder="ui.panels.addSelectorPlaceholder"
+                                placeholder="e.g., .my-card or h1:hover"
+                            />
+                            <button
+                                id="btn-add-selector"
+                                class="btn-secondary"
+                                data-i18n-title="ui.editor.addRule"
+                                title="Add Rule"
+                            >
                                 <span class="mat-icon">add</span>
                             </button>
-                            <button id="btn-add-media" class="btn-secondary" title="Add Media Query">
+                            <button
+                                id="btn-add-media"
+                                class="btn-secondary"
+                                data-i18n-title="ui.editor.addMediaQuery"
+                                title="Add Media Query"
+                            >
                                 <span class="mat-icon">devices</span>
                             </button>
-                            <button id="btn-add-keyframes" class="btn-secondary" title="Add Keyframes">
+                            <button
+                                id="btn-add-keyframes"
+                                class="btn-secondary"
+                                data-i18n-title="ui.editor.addKeyframes"
+                                title="Add Keyframes"
+                            >
                                 <span class="mat-icon">animation</span>
                             </button>
                         </div>
@@ -303,26 +445,33 @@
 
         <div id="import-modal" class="modal-overlay">
             <div class="modal-dialog">
-                <h2 class="modal-title"><span class="mat-icon">upload</span> Import HTML / CSS</h2>
-                <label class="modal-field-label">HTML</label>
+                <h2 class="modal-title">
+                    <span class="mat-icon">upload</span> <span data-i18n="ui.importModal.title">Import HTML / CSS</span>
+                </h2>
+                <label class="modal-field-label" data-i18n="ui.importModal.htmlLabel">HTML</label>
                 <textarea
                     id="import-html-input"
                     rows="6"
                     class="modal-textarea"
+                    data-i18n-placeholder="ui.importModal.htmlPlaceholder"
                     placeholder="Paste HTML here..."
                 ></textarea>
                 <label class="modal-field-label modal-field-label-secondary"
-                    >CSS <span class="modal-optional-tag">(optional)</span></label
+                    ><span data-i18n="ui.importModal.cssLabel">CSS</span>
+                    <span class="modal-optional-tag" data-i18n="ui.importModal.optional">(optional)</span></label
                 >
                 <textarea
                     id="import-css-input"
                     rows="4"
                     class="modal-textarea"
+                    data-i18n-placeholder="ui.importModal.cssPlaceholder"
                     placeholder="Paste CSS here..."
                 ></textarea>
                 <div class="modal-actions">
-                    <button id="btn-import-cancel" class="btn-secondary">Cancel</button>
-                    <button id="btn-import-submit" class="primary-btn">Import</button>
+                    <button id="btn-import-cancel" class="btn-secondary" data-i18n="ui.importModal.cancel">
+                        Cancel
+                    </button>
+                    <button id="btn-import-submit" class="primary-btn" data-i18n="ui.importModal.submit">Import</button>
                 </div>
             </div>
         </div>
@@ -335,16 +484,35 @@
 
                 <div class="template-toolbar">
                     <div class="template-categories" id="template-categories">
-                        <button class="template-cat-btn active" data-cat="all">All</button>
-                        <button class="template-cat-btn" data-cat="marketing">Marketing</button>
-                        <button class="template-cat-btn" data-cat="app-shell">App Shell</button>
-                        <button class="template-cat-btn" data-cat="forms">Forms</button>
-                        <button class="template-cat-btn" data-cat="e-commerce">E-commerce</button>
+                        <button class="template-cat-btn active" data-cat="all" data-i18n="ui.templates.categoryAll">
+                            All
+                        </button>
+                        <button
+                            class="template-cat-btn"
+                            data-cat="marketing"
+                            data-i18n="ui.templates.categoryMarketing"
+                        >
+                            Marketing
+                        </button>
+                        <button class="template-cat-btn" data-cat="app-shell" data-i18n="ui.templates.categoryAppShell">
+                            App Shell
+                        </button>
+                        <button class="template-cat-btn" data-cat="forms" data-i18n="ui.templates.categoryForms">
+                            Forms
+                        </button>
+                        <button
+                            class="template-cat-btn"
+                            data-cat="e-commerce"
+                            data-i18n="ui.templates.categoryEcommerce"
+                        >
+                            E-commerce
+                        </button>
                     </div>
                     <input
                         type="text"
                         id="template-search"
                         class="template-search-input"
+                        data-i18n-placeholder="ui.templates.searchPlaceholder"
                         placeholder="Search templates..."
                     />
                 </div>
@@ -363,7 +531,9 @@
                 </div>
 
                 <div class="modal-actions">
-                    <button id="btn-template-close" class="btn-secondary">Close</button>
+                    <button id="btn-template-close" class="btn-secondary" data-i18n="ui.templateModal.close">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -372,9 +542,10 @@
             <div class="modal-dialog modal-dialog-wide">
                 <h2 class="modal-title">
                     <span class="mat-icon">auto_awesome</span>
-                    <span id="ai-modal-title">AI Assistant</span>
+                    <span id="ai-modal-title" data-i18n="ui.ai.title">AI Assistant</span>
                     <button id="btn-ai-settings" class="btn-secondary ai-settings-toggle">
-                        <span class="mat-icon">settings</span> <span id="ai-settings-label">Settings</span>
+                        <span class="mat-icon">settings</span>
+                        <span id="ai-settings-label" data-i18n="ui.ai.settings">Settings</span>
                     </button>
                 </h2>
 
@@ -401,6 +572,7 @@
                     id="ai-prompt"
                     class="ai-prompt"
                     rows="3"
+                    data-i18n-placeholder="ui.aiModal.promptPlaceholder"
                     placeholder="e.g. A pricing section with three tiers and a highlighted middle plan"
                 ></textarea>
                 <div class="ai-actions">
@@ -421,12 +593,14 @@
 
         <div id="open-modal" class="modal-overlay">
             <div class="modal-dialog">
-                <h2 class="modal-title"><span class="mat-icon">folder_open</span> Open Project</h2>
+                <h2 class="modal-title">
+                    <span class="mat-icon">folder_open</span> <span data-i18n="ui.openModal.title">Open Project</span>
+                </h2>
                 <div id="open-project-list" class="open-project-list">
-                    <div class="open-project-empty">No saved projects found.</div>
+                    <div class="open-project-empty" data-i18n="ui.openModal.empty">No saved projects found.</div>
                 </div>
                 <div class="modal-actions">
-                    <button id="btn-open-cancel" class="btn-secondary">Cancel</button>
+                    <button id="btn-open-cancel" class="btn-secondary" data-i18n="ui.openModal.cancel">Cancel</button>
                 </div>
             </div>
         </div>
