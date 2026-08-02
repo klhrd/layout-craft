@@ -211,7 +211,7 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   module instances ï¿½X import i18n dynamically in the test too.
 - 236 tests green; lint + format + build clean.
 
-## 2026-08-02 ¡X Modal a11y (focus trap + dialog semantics)
+## 2026-08-02 ï¿½X Modal a11y (focus trap + dialog semantics)
 
 - All five modals (.modal-overlay: import, template, AI, open, conflict)
   plus the template preview overlay lacked role=dialog, aria-modal, focus
