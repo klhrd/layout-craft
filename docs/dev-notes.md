@@ -180,7 +180,7 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
 - +12 tests in `test/aiAssistant.test.js` (229 total green); lint, format,
   build clean. **Full roadmap complete.**
 
-## 2026-08-02 ¡X i18n applied pipeline + ja removal
+## 2026-08-02 ï¿½X i18n applied pipeline + ja removal
 
 - AUDIT FINDING: index.html had data-i18n attributes (added with P4e) that
   nothing ever applied; locale switching left ~90% of static UI in English.
@@ -190,23 +190,23 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   textContent, data-i18n-placeholder -> placeholder, data-i18n-title ->
   title; unknown keys (t() returns the raw path) leave hardcoded fallback
   text untouched; root===document also sets <html lang>.
-  IMPORTANT: mark only leaf text spans ¡X a data-i18n element with child
+  IMPORTANT: mark only leaf text spans ï¿½X a data-i18n element with child
   markup (e.g. .mat-icon) has its children replaced by textContent.
-- DECISION (user): drop the ja locale ¡X dictionaries were complete and
+- DECISION (user): drop the ja locale ï¿½X dictionaries were complete and
   matching (117 keys x 3) but View menu only offered en/zh-TW and app.js
   only handled those two. setLocale('ja') now silently falls back to en
   (DICTIONARY has no ja entry). README/docs updated to "two locales".
-- New i18n keys: ui.menus.*, ui.toolbar.*, ui.placeholder.*, ui.editor.*,
-  ui.importModal.*, ui.templateModal.*, ui.aiModal.*, ui.openModal.* in
+- New i18n keys: ui.menus._, ui.toolbar._, ui.placeholder._, ui.editor._,
+  ui.importModal._, ui.templateModal._, ui.aiModal._, ui.openModal._ in
   en + zh-TW. Reused existing keys where sensible (ui.project.new/save,
   ui.toolbar.aiButton 'AI' is its own short key, ui.templates.category*).
 - LATENT BUG FIXED: exporter.js used `export { x } from` re-export syntax
-  (no local binding) but called cleanStyles()/buildExportCss() internally ¡X
+  (no local binding) but called cleanStyles()/buildExportCss() internally ï¿½X
   would throw ReferenceError at runtime. Changed to import + export.
   (Found by eslint no-undef during this branch.)
 - test/i18nApplier.test.js (7 tests): text/placeholder/title application,
   icon-preservation (leaf span marking), unknown-key fallback, locale
   re-apply, ja fallback to en. gotcha: after vi.resetModules(), statically
   imported setLocale() and the dynamically imported applier see different
-  module instances ¡X import i18n dynamically in the test too.
+  module instances ï¿½X import i18n dynamically in the test too.
 - 236 tests green; lint + format + build clean.
