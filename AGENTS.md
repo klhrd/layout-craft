@@ -82,6 +82,11 @@ commit so the tree stays green.
   are missing or the user is not authenticated.
 - `src/js/config/i18n.js` — `t(path, ...args)` lookups with English default.
   Add new user-facing strings here; do not hardcode strings in module code.
+- `src/js/modules/i18nApplier.js` — `applyI18n(root)` applies the active
+  locale to static markup (`data-i18n` → textContent,
+  `data-i18n-placeholder`, `data-i18n-title`); called from `app.js` on boot.
+  Mark only leaf text elements — elements with child markup (icons) have
+  children replaced by the localized text.
 
 ## Cloud sync setup
 

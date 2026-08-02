@@ -23,7 +23,9 @@ framework, no build step beyond Vite for the dev server.
   duplicate, arrow nudge, Ctrl+/ toggle mode, Shift+arrow nudge 10px.
 - **Responsive preview** — Desktop / Tablet (768px) / Mobile (375px) frames.
 - **Canvas rulers + snap-to-grid** — draggable guide lines, 16px grid overlay.
-- **Light/dark theme** with CSS custom properties + three locales (en, zh-TW, ja).
+- **Light/dark theme** with CSS custom properties + two locales (en, zh-TW) —
+  static UI is fully localized via `data-i18n` attributes (menus, toolbars,
+  modals, placeholders, tooltips) applied at boot by `i18nApplier.js`.
 - **Template marketplace** — 22 starter templates across marketing, app
   shells, forms and e-commerce (heroes, feature grids, pricing, dashboards,
   product grids, checkout…), insertable via **Replace** or **Append** with
@@ -151,7 +153,7 @@ layout-craft/
         │   ├── cssDictionary.js  # CSS property block catalogue
         │   ├── devices.js        # Preview breakpoint presets (desktop/tablet/mobile)
         │   ├── elements.js       # Draggable HTML element catalogue + tag labels
-        │   ├── i18n.js           # t() lookup dictionary (en/zh-TW/ja)
+        │   ├── i18n.js           # t() lookup dictionary (en/zh-TW)
         │   ├── styleProps.js     # Inspector style editor grid (font/color/spacing widgets)
         │   └── templates.js      # 22 built-in starter templates
         └── modules/         # DOM-aware feature modules
@@ -164,6 +166,7 @@ layout-craft/
             ├── exportRegistry.js # Export targets registry + plugin hook
             ├── followMode.js    # Collab Follow mode + peer highlight
             ├── history.js       # Undo/redo command stack
+            ├── i18nApplier.js   # data-i18n static-UI localizer (boot)
             ├── icons.js         # Inline SVG icon set + MutationObserver
             ├── importer.js      # HTML/CSS paste import + sanitisation
             ├── inspector.js     # Property inspector + dynamic attrs
