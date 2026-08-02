@@ -227,3 +227,16 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   closes (matches the trigger-button UX); Tab/Shift+Tab wrap inside the
   modal (happy-dom tests confirm activeElement behaviour).
 - destroyModalA11y() exported for tests. +5 tests (241 total).
+
+## 2026-08-02 ¡X .lcproj version validation + migration
+
+- validateProjectFile() never checked version despite version: 2 in
+  buildProjectFile(); future-schema files would import as garbage and old
+  files had no migration path.
+- validateProjectFile() now: missing version -> treated as v1; version must
+  be a number in [1, 2] (future versions rejected -> importInvalid error).
+- New migrateProjectFile(): v1 files (pre-tokens) get a seeded empty tokens
+  map; always stamps version to 2. importProjectFile() migrates right after
+  validation. Next schema bump: raise PROJECT_FILE_VERSION, add an upgrade
+  step here.
+- +7 tests (247 total).
