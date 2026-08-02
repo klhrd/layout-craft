@@ -2126,6 +2126,15 @@ body.mode-css .right-sidebar {
     color: var(--text-muted);
 }
 
+.ai-edit-target {
+    margin-top: 10px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    background: var(--bg-accent, rgba(37, 99, 235, 0.08));
+    color: var(--text-muted);
+}
+
 .ai-result {
     margin-top: 12px;
     border: 1px solid var(--border-color);

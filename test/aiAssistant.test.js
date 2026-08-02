@@ -10,13 +10,16 @@ beforeEach(() => {
     document.body.innerHTML = `
         <div id="canvas"></div>
         <div id="visual-css-container"></div>
+        <div class="canvas-container"></div>
         <div id="ai-modal">
             <button id="btn-ai-settings"></button>
             <div id="ai-settings" class="hidden"></div>
             <textarea id="ai-prompt"></textarea>
             <button id="btn-ai-send"></button>
             <div id="ai-status"></div>
+            <div id="ai-edit-target"></div>
             <div id="ai-result"></div>
+            <button id="btn-ai-apply"></button>
             <button id="btn-ai-insert"></button>
             <button id="btn-ai-replace"></button>
             <button id="btn-ai-close"></button>
@@ -28,8 +31,8 @@ beforeEach(() => {
         <select id="select-project"><option>Test</option></select>
         <style id="live-styles"></style>
     `;
-    window.rebuildTokenUI = () => {};
-    window.rebuildCssRulesUI = () => {};
+    window.rebuildTokenUI = vi.fn();
+    window.rebuildCssRulesUI = vi.fn();
     window.refreshLayers = () => {};
     window.saveProject = () => {};
 });
@@ -190,7 +193,9 @@ describe('initAiAssistant flow', () => {
         document.getElementById('btn-ai-send').click();
 
         await vi.waitFor(() => {
-            expect(document.querySelector('#ai-result .ai-hero')).not.toBeNull();
+            const pre = document.querySelector('#ai-result pre');
+            expect(pre).not.toBeNull();
+            expect(pre.textContent).toContain('ai-hero');
         });
         expect(document.getElementById('canvas').querySelector('.ai-hero')).toBeNull();
 
@@ -207,5 +212,153 @@ describe('initAiAssistant flow', () => {
             model: 'llama3',
             apiKey: 'x',
         });
+    });
+});
+
+describe('buildEditMessages', () => {
+    it('tells the model to return the full property set for the given selector', async () => {
+        const { buildEditMessages } = await import('../src/js/modules/aiAssistant.js');
+        const messages = buildEditMessages('Make it dark', {
+            cssProps: ['display', 'color', 'background'],
+            selector: '.hero',
+            currentStyles: { color: '#222', background: '#fff' },
+        });
+        const system = messages[0].content;
+        expect(system).toContain('.hero');
+        expect(system).toContain('{"color":"#222","background":"#fff"}');
+        expect(system).toContain('display');
+        expect(system).toContain('background');
+        expect(messages[1].content).toContain('Make it dark');
+        expect(messages[0].role).toBe('system');
+        expect(messages[1].role).toBe('user');
+    });
+
+    it('never asks the model for html or tokens in edit mode', async () => {
+        const { buildEditMessages } = await import('../src/js/modules/aiAssistant.js');
+        const system = buildEditMessages('x', {
+            cssProps: ['color'],
+            selector: '.card',
+            currentStyles: {},
+        })[0].content;
+        expect(system).not.toContain('"html"');
+        expect(system).not.toContain('"tokens"');
+        expect(system).not.toContain('<html>');
+    });
+});
+
+describe('getSelectionTarget', () => {
+    it('returns the first class with a rule on the selected element', async () => {
+        const ai = await import('../src/js/modules/aiAssistant.js');
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.setRule('.hero', { color: 'red' });
+        cssState.setRule('.fancy', { padding: '4px' });
+        document.body.innerHTML = `
+            <div class="canvas-container">
+                <div class="hero fancy selected-element"></div>
+            </div>
+        `;
+        expect(ai.getSelectionTarget()).toEqual({
+            selector: '.hero',
+            currentStyles: { color: 'red' },
+        });
+    });
+
+    it('returns null when no selection or no matching rule', async () => {
+        const ai = await import('../src/js/modules/aiAssistant.js');
+        const cssState = await import('../src/js/modules/cssState.js');
+        expect(ai.getSelectionTarget()).toBeNull();
+        cssState.setRule('.hero', { color: 'red' });
+        document.body.innerHTML = '<div class="canvas-container"><div class="hero"></div></div>';
+        expect(ai.getSelectionTarget()).toBeNull();
+        document.body.innerHTML = '<div class="canvas-container"><div class="hero selected-element"></div></div>';
+        expect(ai.getSelectionTarget()).not.toBeNull();
+    });
+});
+
+describe('parseEditReply', () => {
+    it('accepts cssData-only replies in fenced blocks', async () => {
+        const { parseEditReply } = await import('../src/js/modules/aiAssistant.js');
+        const parsed = parseEditReply('```json\n{"cssData":{".hero":{"background":"#111"}}}\n```');
+        expect(parsed).toEqual({ cssData: { '.hero': { background: '#111' } } });
+    });
+
+    it('rejects replies that carry html or tokens', async () => {
+        const { parseEditReply } = await import('../src/js/modules/aiAssistant.js');
+        expect(parseEditReply('{"cssData":{".hero":{"background":"#111"}},"html":"<p>x</p>","tokens":{}}')).toBeNull();
+        expect(parseEditReply('no json here')).toBeNull();
+    });
+});
+
+describe('applyAiEdit', () => {
+    it('replaces the whole rule with the returned property set', async () => {
+        const ai = await import('../src/js/modules/aiAssistant.js');
+        const cssState = await import('../src/js/modules/cssState.js');
+        window.rebuildCssRulesUI = vi.fn();
+        cssState.setRule('.hero', { color: 'red', padding: '4px' });
+
+        ai.applyAiEdit({ cssData: { '.hero': { background: '#111', color: '#eee' } } });
+
+        expect(cssState.getRule('.hero')).toEqual({ background: '#111', color: '#eee' });
+        expect(window.rebuildCssRulesUI).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('initAiAssistant edit flow', () => {
+    it('edits the selected element and applies full replacement', async () => {
+        const ai = await import('../src/js/modules/aiAssistant.js');
+        const cssState = await import('../src/js/modules/cssState.js');
+        cssState.setRule('.hero', { color: 'red' });
+        const container = document.querySelector('.canvas-container');
+        const el = document.createElement('div');
+        el.className = 'hero selected-element';
+        container.appendChild(el);
+        vi.stubGlobal(
+            'fetch',
+            vi.fn(async () => ({
+                ok: true,
+                json: async () => ({
+                    choices: [
+                        {
+                            message: {
+                                content: '{"cssData":{".hero":{"background":"#111","color":"#eee"}}}',
+                            },
+                        },
+                    ],
+                }),
+            })),
+        );
+
+        ai.initAiAssistant();
+        document.getElementById('btn-ai').click();
+
+        const targetEl = document.getElementById('ai-edit-target');
+        expect(targetEl.textContent).toBe('Editing: .hero');
+        expect(targetEl.style.display).toBe('block');
+        expect(document.getElementById('btn-ai-apply').style.display).toBe('inline-flex');
+        expect(document.getElementById('btn-ai-insert').style.display).toBe('none');
+        expect(document.getElementById('btn-ai-replace').style.display).toBe('none');
+
+        document.getElementById('ai-prompt').value = 'Make it dark';
+        document.getElementById('ai-base-url').value = 'https://api.openai.com/v1';
+        document.getElementById('ai-model').value = 'gpt-4o-mini';
+        document.getElementById('ai-api-key').value = 'sk-test';
+        document.getElementById('btn-ai-send').click();
+
+        await vi.waitFor(() => {
+            expect(document.querySelector('#ai-result pre')).not.toBeNull();
+        });
+        document.getElementById('btn-ai-apply').click();
+
+        expect(cssState.getRule('.hero')).toEqual({ background: '#111', color: '#eee' });
+    });
+
+    it('shows insert/replace buttons when nothing is selected', async () => {
+        const ai = await import('../src/js/modules/aiAssistant.js');
+        ai.initAiAssistant();
+        document.getElementById('btn-ai').click();
+        expect(document.getElementById('ai-edit-target').style.display).toBe('none');
+        expect(document.getElementById('btn-ai-apply').style.display).toBe('none');
+        expect(document.getElementById('btn-ai-insert').style.display).toBe('');
+        expect(document.getElementById('btn-ai-replace').style.display).toBe('');
     });
 });

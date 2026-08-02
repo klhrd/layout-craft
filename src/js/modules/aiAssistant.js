@@ -33,6 +33,35 @@ export function getTemplateIds() {
     return TEMPLATES.map((tmpl) => tmpl.id);
 }
 
+/**
+ * Resolve the editing target for the currently selected canvas element:
+ * the first class that already has a CSS rule (same convention as the
+ * resize-handle commit in app.js). Returns null when nothing is selected
+ * or the selection has no rule yet.
+ */
+export function getSelectionTarget() {
+    const sel = document.querySelector('.canvas-container .selected-element');
+    if (!sel) return null;
+    const classList = Array.from(sel.classList).filter((c) => c !== 'selected-element' && c !== 'el-hover');
+    const cls = classList.find((c) => cssState.hasRule(`.${CSS.escape(c)}`));
+    if (!cls) return null;
+    const selector = `.${cls}`;
+    return { selector, currentStyles: cssState.getRule(selector) || {} };
+}
+
+export function buildEditMessages(prompt, { cssProps, selector, currentStyles }) {
+    const system = `You are a CSS stylist for a visual web builder.
+The selected element's selector is "${selector}" and its current properties are: ${JSON.stringify(currentStyles)}.
+The tool can represent CSS with these properties: ${cssProps.join(', ')}.
+Respond with ONLY a JSON object, no prose, in this exact shape:
+{"cssData": {"<the-same-selector>": {"<css-property>": "<value>"}}}
+Restate the target selector exactly. Include the FULL desired set of properties for that selector — keep every unchanged property, add or adjust only what the request changes. No html, no tokens.`;
+    return [
+        { role: 'system', content: system },
+        { role: 'user', content: prompt },
+    ];
+}
+
 export function buildMessages(prompt, { cssProps, templateIds }) {
     const system = `You are a component generator for a visual web builder.
 The tool can represent CSS with these properties: ${cssProps.join(', ')}.
@@ -46,25 +75,43 @@ Use simple, class-based selectors that match the html. The tokens object is opti
     ];
 }
 
-export function parseAssistantReply(text) {
+function extractAssistantJson(text) {
     if (typeof text !== 'string' || !text.trim()) return null;
     let candidate = text.trim();
     const fenced = candidate.match(/```(?:json)?\s*([\s\S]*?)```/i);
     if (fenced) candidate = fenced[1].trim();
     const jsonMatch = candidate.match(/\{[\s\S]*\}/);
-    if (jsonMatch) candidate = jsonMatch[0];
+    if (!jsonMatch) return null;
     try {
-        const data = JSON.parse(candidate);
-        if (typeof data.html !== 'string' || !data.html.trim()) return null;
-        if (!data.cssData || typeof data.cssData !== 'object' || Array.isArray(data.cssData)) return null;
-        return {
-            html: data.html,
-            cssData: data.cssData,
-            tokens: data.tokens && typeof data.tokens === 'object' ? data.tokens : {},
-        };
+        return JSON.parse(jsonMatch[0]);
     } catch (e) {
         return null;
     }
+}
+
+export function parseAssistantReply(text) {
+    const data = extractAssistantJson(text);
+    if (!data) return null;
+    if (typeof data.html !== 'string' || !data.html.trim()) return null;
+    if (!data.cssData || typeof data.cssData !== 'object' || Array.isArray(data.cssData)) return null;
+    return {
+        html: data.html,
+        cssData: data.cssData,
+        tokens: data.tokens && typeof data.tokens === 'object' ? data.tokens : {},
+    };
+}
+
+/**
+ * Parse an "edit" reply: cssData-only object describing changes for the
+ * selected element's rule. Reuses the fenced/prose-tolerant extraction of
+ * parseAssistantReply but requires cssData instead of html.
+ */
+export function parseEditReply(text) {
+    const data = extractAssistantJson(text);
+    if (!data) return null;
+    if (!data.cssData || typeof data.cssData !== 'object' || Array.isArray(data.cssData)) return null;
+    if (typeof data.html === 'string' && data.html.trim()) return null;
+    return { cssData: data.cssData };
 }
 
 export async function requestCompletion({ baseUrl, apiKey, model }, messages) {
@@ -116,6 +163,25 @@ export function applyAiResult(result, mode) {
     }
 }
 
+/**
+ * Apply an edit-mode result: merge cssData into existing rules (existing
+ * properties win on conflict is NOT desired here — the model returns the
+ * full desired property set, so the reply REPLACES the rule). The canvas
+ * DOM is untouched; only the rule tree and its UI refresh.
+ */
+export function applyAiEdit(result) {
+    for (const [selector, rule] of Object.entries(result.cssData || {})) {
+        if (!rule || typeof rule !== 'object') continue;
+        cssState.setRule(selector, { ...rule });
+    }
+    try {
+        if (window.rebuildCssRulesUI) window.rebuildCssRulesUI();
+        if (window.refreshLayers) window.refreshLayers();
+    } catch (e) {
+        // Silently skip UI refresh when running outside a full DOM environment (tests).
+    }
+}
+
 export function initAiAssistant() {
     const modal = document.getElementById('ai-modal');
     const btnOpen = document.getElementById('btn-ai');
@@ -131,6 +197,8 @@ export function initAiAssistant() {
     const apiKeyInput = document.getElementById('ai-api-key');
     const insertBtn = document.getElementById('btn-ai-insert');
     const replaceBtn = document.getElementById('btn-ai-replace');
+    const editTargetEl = document.getElementById('ai-edit-target');
+    const applyBtn = document.getElementById('btn-ai-apply');
 
     if (!modal || !btnOpen) return;
 
@@ -140,10 +208,27 @@ export function initAiAssistant() {
     apiKeyInput.value = config.apiKey || '';
 
     let lastResult = null;
+    let editTarget = null;
 
     const setStatus = (msg) => {
         statusEl.textContent = msg || '';
         statusEl.style.display = msg ? 'block' : 'none';
+    };
+
+    const setEditMode = (target) => {
+        editTarget = target;
+        if (target) {
+            editTargetEl.textContent = t('ui.ai.editTarget', target.selector);
+            editTargetEl.style.display = 'block';
+            applyBtn.style.display = 'inline-flex';
+            insertBtn.style.display = 'none';
+            replaceBtn.style.display = 'none';
+        } else {
+            editTargetEl.style.display = 'none';
+            applyBtn.style.display = 'none';
+            insertBtn.style.display = '';
+            replaceBtn.style.display = '';
+        }
     };
 
     const renderResult = () => {
@@ -151,12 +236,16 @@ export function initAiAssistant() {
             resultArea.innerHTML = '';
             return;
         }
-        resultArea.innerHTML = `<div class="ai-result-preview">${lastResult.html}</div><pre class="ai-result-raw">${escapeHtml(JSON.stringify(lastResult, null, 2))}</pre>`;
+        resultArea.innerHTML = `<div class="ai-result-preview">${editTarget ? '' : escapeHtml(lastResult.html)}</div><pre class="ai-result-raw">${escapeHtml(JSON.stringify(lastResult, null, 2))}</pre>`;
     };
 
     const applyResult = (mode) => {
         if (!lastResult) return;
-        applyAiResult(lastResult, mode);
+        if (editTarget) {
+            applyAiEdit(lastResult);
+        } else {
+            applyAiResult(lastResult, mode);
+        }
         resultArea.innerHTML = '';
         lastResult = null;
         setStatus(t('ui.ai.applied'));
@@ -169,6 +258,7 @@ export function initAiAssistant() {
         resultArea.innerHTML = '';
         lastResult = null;
         setStatus('');
+        setEditMode(getSelectionTarget());
         modal.style.display = 'flex';
     });
 
@@ -196,12 +286,18 @@ export function initAiAssistant() {
         sendBtn.disabled = true;
         try {
             const config = getAiConfig();
-            const messages = buildMessages(prompt, {
-                cssProps: getCssProps(),
-                templateIds: getTemplateIds(),
-            });
+            const messages = editTarget
+                ? buildEditMessages(prompt, {
+                      cssProps: getCssProps(),
+                      selector: editTarget.selector,
+                      currentStyles: editTarget.currentStyles,
+                  })
+                : buildMessages(prompt, {
+                      cssProps: getCssProps(),
+                      templateIds: getTemplateIds(),
+                  });
             const reply = await requestCompletion(config, messages);
-            const parsed = parseAssistantReply(reply);
+            const parsed = editTarget ? parseEditReply(reply) : parseAssistantReply(reply);
             if (!parsed) {
                 setStatus(t('ui.ai.badReply'));
                 return;
@@ -218,6 +314,7 @@ export function initAiAssistant() {
 
     insertBtn.addEventListener('click', () => applyResult('insert'));
     replaceBtn.addEventListener('click', () => applyResult('replace'));
+    if (applyBtn) applyBtn.addEventListener('click', () => applyResult('apply'));
 }
 
 function escapeHtml(text) {
