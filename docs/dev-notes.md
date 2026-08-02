@@ -240,3 +240,14 @@ preview` served `/sw.js`, `/manifest.webmanifest`, `/icons/icon.svg`
   validation. Next schema bump: raise PROJECT_FILE_VERSION, add an upgrade
   step here.
 - +7 tests (247 total).
+
+## 2026-08-02 - Module-level window hook contract
+
+- Attempted "skip assignment when window.rebuildCssRulesUI already exists"
+  so tests could stub before importing cssEditor.js. FAILED: after
+  vi.resetModules() the stale closure from the previous module instance
+  survives on window and reads the OLD cssState instance, so rules set on
+  the fresh instance never render (app.test.js: 8 failures).
+- CONTRACT: module-level window.* assignments always run. Tests must stub
+  AFTER importing the module (or provide the DOM the real hook needs).
+- +3 tests in test/windowHooks.test.js pinning the install behaviour.
